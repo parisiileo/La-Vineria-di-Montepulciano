@@ -1,26 +1,357 @@
+/* Unica fonte di verità del design system: token cromatici, tipografici, spaziali e di easing.
+   Nessun file fuori da qui può dichiarare un colore, una durata o un easing letterale. */
+
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* ---------------------------------------------------------------- FONDO
+     Tufo: pietra vulcanica porosa, calda e opaca. Mai nero puro: il nero è
+     freddo e digitale, il tufo assorbe la luce invece di rifletterla. */
+  --color-tuff-deep:   #14100D;
+  --color-tuff:        #1A1512;
+  --color-tuff-light:  #241D18;
+  --color-tuff-raised: #2E2620;
+
+  /* ---------------------------------------------------------------- VINO
+     Accento del marchio, dal logo. Superficie massima ~10% del viewport. */
+  --color-wine-deep: #4A0E1C;
+  --color-wine:      #7B1E2B;
+  --color-wine-lit:  #93283A; /* solo riempimento hover del bottone primary */
+
+  /* --------------------------------------------------------------- OTTONE
+     Ottone spento, mai oro lucido: ~10 punti di saturazione in meno, e
+     cambia completamente la percezione di prezzo. */
+  --color-brass:     #B08D57;
+  --color-brass-dim: #8A6E43; /* NON-TESTO: bordi, filetti, tratti. Vedi DESIGN_NOTES §1 */
+
+  /* --------------------------------------------------------------- TESTO */
+  --color-cream:     #F4EFE6;
+  --color-stone:     #C9BFB2;
+  --color-stone-dim: #9B9086; /* corretto da #8F857A: vedi DESIGN_NOTES §1 */
+
+  /* ------------------------------------------------------------- SEGNALE */
+  --color-error: #D4736A; /* rosso spento, stessa temperatura del vino */
+
+  /* --------------------------------------------------------------- BORDI
+     --border          hairline decorativo, non portatore di informazione
+     --border-control  confine dei controlli interattivi, ≥3:1 (WCAG 1.4.11)
+     --border-hover    stato hover dei controlli */
+  --color-border:         rgba(201, 191, 178, 0.10);
+  --color-border-control: rgba(201, 191, 178, 0.52);
+  --color-border-hover:   rgba(176, 141, 87, 0.75);
+
+  /* ---------------------------------------------------------------- LUCE
+     La profondità si costruisce con la luce, non con ombre nere.
+     In questo sistema non esiste un token di ombra nera: è voluto. */
+  --glow-brass: 0 0 80px -30px rgba(176, 141, 87, 0.30);
+  --glow-wine:  0 0 100px -40px rgba(123, 30, 43, 0.40);
+  --glow-focus: 0 0 24px -6px rgba(176, 141, 87, 0.45);
+  --glow-error: 0 0 32px -12px rgba(212, 115, 106, 0.45);
+
+  /* ----------------------------------------------------------- TIPOGRAFIA */
+  --font-display: var(--font-cormorant), "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --font-sans:    var(--font-inter), ui-sans-serif, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-mono:    var(--font-jetbrains), ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, monospace;
+
+  /* Il minimo di ogni clamp è scelto guardando 390px, non dividendo il desktop. */
+  --text-hero: clamp(2.5rem, 7.5vw, 8rem);
+  --text-hero--line-height: 0.92;
+  --text-hero--letter-spacing: -0.035em;
+
+  --text-h2: clamp(1.875rem, 4.5vw, 4.5rem);
+  --text-h2--line-height: 1;
+  --text-h2--letter-spacing: -0.025em;
+
+  --text-h3: clamp(1.25rem, 2.4vw, 2rem);
+  --text-h3--line-height: 1.15;
+  --text-h3--letter-spacing: -0.015em;
+
+  --text-lead: clamp(1.125rem, 1.6vw, 1.5rem);
+  --text-lead--line-height: 1.55;
+  --text-lead--letter-spacing: -0.005em;
+
+  --text-body: clamp(1rem, 1.05vw, 1.125rem);
+  --text-body--line-height: 1.7;
+
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.1;
+  --text-label--letter-spacing: 0.2em;
+
+  --text-mono: 0.8125rem;
+  --text-mono--line-height: 1.4;
+  --text-mono--letter-spacing: 0.06em;
+
+  /* Corpo dei campi: 16px esatti e non fluidi. Sotto questa soglia iOS zooma
+     al focus e manda in pezzi il layout. Non è una scelta estetica. */
+  --text-field: 1rem;
+  --text-field--line-height: 1.4;
+
+  /* Fattore di scala dell'etichetta flottante quando sale. */
+  --label-scale: 0.78;
+
+  /* ------------------------------------------------------------- MOVIMENTO
+     Gemelli dei valori in lib/motion.ts. Le due liste vanno tenute allineate:
+     il controllo di parità è in scripts/audit.mjs. */
+  --ease-out:   cubic-bezier(0.16, 1, 0.30, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-soft:  cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-drift: cubic-bezier(0.33, 0, 0.15, 1);
+
+  --dur-micro: 200ms;
+  --dur-base:  600ms;
+  --dur-slow:  1100ms;
+  --dur-drift: 2200ms;
+
+  /* ------------------------------------------------------------ GEOMETRIA
+     Base 8px. Le eccezioni a 4px sono ammesse solo per micro-dettagli
+     (spessore dei filetti, offset del focus ring). */
+  --radius-xs:   2px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-pill: 999px;
+
+  --shell-max:   90rem;               /* 1440px */
+  --gutter:      clamp(1.25rem, 4vw, 6rem);
+  --section-py:  clamp(3.5rem, 11vh, 14rem);
+  --grid-gap:    clamp(1rem, 2vw, 2rem);
+
+  --tap-min: 44px;                    /* area tappabile minima */
+
+  /* Grana. Misurata, non scelta a occhio. A 0.14 la modulazione sul fondo
+     tufo è di ~3 livelli su 256, il testo crema resta invariato entro 1 livello
+     e i mezzitoni (vino, ottone) restano puliti. A 0.28 il bordeaux si sporca
+     visibilmente: `overlay` ha il massimo effetto proprio sui mezzitoni.
+     Metodo e numeri completi in DESIGN_NOTES §3. */
+  --grain-opacity: 0.14;
+
+  /* Ordine di impilamento, dichiarato in un solo posto. */
+  --z-overlay: 50;                    /* dialoghi, pannelli, menu */
+  --z-grain:   100;                   /* la grana sta sopra tutto */
+
+  /* Sporgenza delle discendenti: serve a SplitText, che ritaglia ogni parola
+     in un contenitore overflow-hidden. Senza, il serif perde la coda di "g". */
+  --split-descender: 0.16em;
+
+  /* Ampiezza delle risposte tattili. Due soli valori in tutto il sistema. */
+  --press-scale: 0.98;
+  --hover-lift: 1.02;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* Sotto 640px il tracking negativo del display stringe troppo: lo si allenta.
+   Non è una preferenza, è leggibilità a corpo piccolo su schermo piccolo. */
+@media (max-width: 639px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --text-hero--letter-spacing: -0.02em;
+    --text-h2--letter-spacing: -0.02em;
+    --text-h3--letter-spacing: -0.01em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* =============================================================== BASE === */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    /* Il documento è tufo dal primo paint: nessun flash bianco, mai. */
+    background-color: var(--color-tuff);
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+    scrollbar-color: rgba(176, 141, 87, 0.25) transparent;
+    scrollbar-width: thin;
+  }
+
+  body {
+    background-color: var(--color-tuff);
+    color: var(--color-stone);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    overscroll-behavior-y: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--color-cream);
+    font-weight: 400;
+    text-wrap: balance;
+  }
+
+  p { text-wrap: pretty; }
+
+  /* Il corsivo del serif è riservato alle parole emotive e prende l'ottone. */
+  h1 em, h2 em, h3 em { font-style: italic; color: var(--color-brass); }
+
+  ::selection { background-color: var(--color-wine); color: var(--color-cream); }
+
+  /* Nessun outline rimosso senza sostituto: qui il sostituto è più visibile
+     dell'originale. Ottone pieno = 4.80:1 sulla superficie peggiore. */
+  :focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* Scrollbar: traccia trasparente, thumb ottone al 25%, 6px. */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(176, 141, 87, 0.25);
+    border-radius: var(--radius-pill);
+  }
+  ::-webkit-scrollbar-thumb:hover { background-color: rgba(176, 141, 87, 0.45); }
+
+  /* Nessun elemento nativo sfugge: il reset è qui, lo stile completo sta
+     nelle primitive di components/ui. */
+  input, textarea, select, button { font: inherit; color: inherit; }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) sepia(1) saturate(0.4) hue-rotate(5deg);
+    cursor: pointer;
+  }
+}
+
+/* ========================================================== UTILITIES === */
+
+/* Contenitore di pagina: larghezza massima e gutter in un solo posto. */
+@utility shell {
+  width: 100%;
+  max-width: var(--shell-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Annulla il gutter dello shell: marquee, caroselli, immagini di apertura. */
+@utility full-bleed {
+  margin-inline: calc(var(--gutter) * -1);
+  width: calc(100% + var(--gutter) * 2);
+  max-width: none;
+}
+
+/* Ritmo verticale di sezione. */
+@utility section-y {
+  padding-block: var(--section-py);
+}
+
+/* Griglia editoriale a 12 colonne. */
+@utility grid-editorial {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+
+/* Lunghezza di riga leggibile: 45-70 caratteri. */
+@utility measure {
+  max-width: 62ch;
+}
+
+/* Estende l'area tappabile a 44×44px senza gonfiare il box visivo. */
+@utility tap-safe {
+  position: relative;
+}
+
+/* ------------------------------------------------------- STATO MOVIMENTO
+   L'attributo data-motion è scritto da uno script bloccante nel <head>,
+   PRIMA del primo paint, mai dopo l'idratazione. Se JS è disattivo, se
+   l'idratazione fallisce o se l'utente chiede reduced-motion, l'attributo
+   non c'è e ogni regola qui sotto è inerte: il contenuto resta visibile.
+   È il motivo per cui in questo sistema non esiste uno stato "nascosto di
+   default" in attesa di essere rivelato da JavaScript. */
+@layer components {
+  .tap-safe::after {
+    content: "";
+    position: absolute;
+    inset: 50% 50%;
+    min-width: var(--tap-min);
+    min-height: var(--tap-min);
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* ------------------------------------------------- COMPORTAMENTI TATTILI
+     Vivono qui e non nelle classi Tailwind perché sono comportamenti, non
+     decorazioni: un solo posto da cambiare per tutto il sito. */
+
+  /* Sollevamento all'hover e affondamento alla pressione. */
+  .press {
+    transition:
+      transform var(--dur-micro) var(--ease-soft),
+      border-color var(--dur-micro) var(--ease-soft),
+      background-color var(--dur-micro) var(--ease-soft),
+      color var(--dur-micro) var(--ease-soft);
+  }
+  .press:not(:disabled):hover { transform: scale(var(--hover-lift)); }
+  .press:not(:disabled):active { transform: scale(var(--press-scale)); }
+
+  /* Riempimento che entra da sinistra. Due velocità sullo stesso elemento:
+     lo sweep è un reveal (--dur-base), il colore è un'interazione (--dur-micro). */
+  .sweep::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-wine-lit);
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path var(--dur-base) var(--ease-out);
+  }
+  .sweep:not(:disabled):hover::before { clip-path: inset(0 0 0 0); }
+
+  /* Sottolineatura che cresce da sinistra. */
+  .underline-grow::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-micro) var(--ease-soft);
+  }
+  .underline-grow:hover::after,
+  .underline-grow:focus-visible::after { transform: scaleX(1); }
+
+  /* Scatto orizzontale di errore: ±3px, una volta sola. */
+  .shake { animation: shake-x var(--dur-base) var(--ease-inout) 1; }
+}
+
+@keyframes shake-x {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  20% { transform: translate3d(-3px, 0, 0); }
+  45% { transform: translate3d(3px, 0, 0); }
+  70% { transform: translate3d(-2px, 0, 0); }
+}
+
+/* Arco d'ottone che ruota: sostituisce lo spinner generico. */
+@keyframes arc-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Rete di sicurezza. I wrapper di movimento marcano se stessi con
+   [data-motion-guard]; Framer scrive il loro stato iniziale nascosto anche
+   nell'HTML del server. Se per qualsiasi motivo il movimento non è ammesso,
+   questa regola annulla quello stato con !important e il contenuto torna
+   visibile — senza attendere JavaScript, senza lampeggiare.
+   Copre i tre casi: JS disattivo, idratazione fallita, reduced-motion. */
+html:not([data-motion="on"]) [data-motion-guard] {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  clip-path: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-motion-guard] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+  }
 }

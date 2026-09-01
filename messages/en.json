@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "title": "La Vineria di Montepulciano",
+    "titleTemplate": "%s — La Vineria di Montepulciano",
+    "description": "Two rooms on Via di Gracciano nel Corso, a cellar cut into the tufa, and the family's own wine. In Montepulciano you eat on top of the history.",
+    "ogAlt": "La Vineria di Montepulciano, the Ercolani family"
+  },
+  "brand": {
+    "nome": "La Vineria",
+    "luogo": "di Montepulciano",
+    "famiglia": "The Ercolani family",
+    "tagline": "The table above. The centuries below.",
+    "concetto": "In Montepulciano you sit above the history, and drink what was made beneath your feet.",
+    "etichetta": "Il Brillo"
+  },
+  "nav": {
+    "skipToContent": "Skip to content",
+    "menuLabel": "Site navigation",
+    "home": "Home",
+    "locali": "The rooms",
+    "cantina": "The cellar",
+    "carta": "The list",
+    "vino": "Our wine",
+    "contatti": "Find us"
+  },
+  "common": {
+    "telefono": "Telephone",
+    "chiama": "Call us",
+    "prenota": "Book a table",
+    "scopri": "Go down to the cellar",
+    "indirizzo": "Address",
+    "civico": "Number",
+    "chiudi": "Close",
+    "apri": "Open",
+    "annulla": "Cancel",
+    "conferma": "Confirm",
+    "caricamento": "Loading",
+    "obbligatorio": "This field is required",
+    "torna": "Back to top",
+    "oraiNonDisponibili": "Opening hours are being updated — please call to confirm."
+  },
+  "locali": {
+    "titolo": "Two doors on the same street",
+    "sommario": "Two rooms a few steps apart, on Via di Gracciano nel Corso.",
+    "gracciano101": {
+      "nome": "Number 101",
+      "sommario": "The dining room and the way into the cellar: the descent starts here.",
+      "tratti": {
+        "cantina": "The family cellar",
+        "tunnel": "Medieval tunnels you can walk"
+      }
+    },
+    "gracciano72": {
+      "nome": "Number 72",
+      "sommario": "The well room: you eat over a medieval well, under a glass floor.",
+      "tratti": {
+        "pozzo": "Medieval well",
+        "vetro": "Glass floor"
+      }
+    }
+  },
+  "lang": {
+    "switchLabel": "Change language",
+    "it": "IT",
+    "en": "EN",
+    "itFull": "Italiano",
+    "enFull": "English"
+  },
+  "kitchenSink": {
+    "titolo": "Design system",
+    "sottotitolo": "The visual vocabulary of <em>La Vineria</em>",
+    "intro": "This page is not part of the public site. It gathers every token and every state of the primitives, so that building sections is composition rather than invention.",
+    "palette": {
+      "titolo": "Palette and contrast",
+      "nota": "Every pair reports its WCAG 2.1 contrast ratio, calculated rather than estimated.",
+      "colonnaCoppia": "Pair",
+      "colonnaCampione": "Swatch",
+      "bordoNorma": "Control boundary — WCAG 1.4.11",
+      "bordoDecorativo": "Decorative hairline, exempt",
+      "colonnaRatio": "Ratio",
+      "colonnaEsito": "Result",
+      "esitoAA": "AA — normal text",
+      "esitoAALarge": "AA — large text or non-text elements only",
+      "esitoFail": "Does not pass",
+      "campione": "Sample text Aa"
+    },
+    "tipografia": {
+      "titolo": "Type scale",
+      "nota": "The contrast between tight display and wide labels is what drives the whole design.",
+      "esempioHero": "Beneath the floor",
+      "esempioH2": "The well at number <em>seventy-two</em>",
+      "esempioH3": "Tunnels cut into the tufa",
+      "esempioLead": "You go down a narrow staircase and the air changes at once: under Montepulciano the stone is cool and porous, and it holds the damp the way a church does.",
+      "esempioBody": "The cellar is not a set piece. It is where the family's wine rests, well below the room where you drink it. The way down is short and steep, and worth taking.",
+      "esempioLabel": "Via di Gracciano nel Corso",
+      "esempioMono": "101 · 72 · 2019 · 0578 850153"
+    },
+    "movimento": {
+      "titolo": "Motion tokens",
+      "nota": "Four curves and four durations, one per register. Matter does not move the way an interface does.",
+      "colonnaToken": "Token",
+      "colonnaCurva": "Curve",
+      "colonnaUso": "Used for",
+      "riproduci": "Play",
+      "usoOut": "Reveals and entrances",
+      "usoInOut": "Two-way transitions",
+      "usoSoft": "Hover and micro-interactions",
+      "usoDrift": "Slow matter, 3D scene, parallax"
+    },
+    "primitive": {
+      "titolo": "Primitives",
+      "nota": "Every component in all of its states: default, hover, focus, pressed, disabled, error.",
+      "bottoni": "Buttons",
+      "campi": "Fields",
+      "selezione": "Selection",
+      "dialoghi": "Dialogs",
+      "movimento": "Motion wrappers",
+      "statoDefault": "Default",
+      "statoHover": "Hover",
+      "statoFocus": "Focus",
+      "statoActive": "Pressed",
+      "statoDisabled": "Disabled",
+      "statoLoading": "Loading",
+      "statoError": "Error"
+    },
+    "form": {
+      "nome": "Full name",
+      "email": "Email",
+      "coperti": "Guests",
+      "sede": "Room",
+      "sedePlaceholder": "Choose a room",
+      "note": "Notes for the kitchen",
+      "consenso": "I have read the privacy notice",
+      "erroreEmail": "Enter a valid email address",
+      "erroreNome": "We need a name at least"
+    },
+    "dialogo": {
+      "titolo": "Going down to the cellar",
+      "corpo": "The route runs down a narrow staircase and through a tunnel cut into the tufa. Call us to agree a time for the visit.",
+      "conferma": "Call the vineria"
+    },
+    "griglia": {
+      "titolo": "Grid and breathing room",
+      "nota": "Twelve columns, 1440px maximum width, fluid gutter.",
+      "colonna": "Column"
+    }
+  },
+  "a11y": {
+    "grana": "Decorative texture",
+    "esterno": "Opens in a new tab",
+    "corrente": "Current page",
+    "chiudiDialogo": "Close this dialog"
+  }
+}

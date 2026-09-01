@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "title": "La Vineria di Montepulciano",
+    "titleTemplate": "%s — La Vineria di Montepulciano",
+    "description": "Due sale su Via di Gracciano nel Corso, una cantina scavata nel tufo e il vino di famiglia. A Montepulciano si mangia sopra la storia.",
+    "ogAlt": "La Vineria di Montepulciano, famiglia Ercolani"
+  },
+  "brand": {
+    "nome": "La Vineria",
+    "luogo": "di Montepulciano",
+    "famiglia": "Famiglia Ercolani",
+    "tagline": "Sopra la tavola, sotto la storia.",
+    "concetto": "A Montepulciano si mangia sopra la storia e si beve quello che nasce sotto i tuoi piedi.",
+    "etichetta": "Il Brillo"
+  },
+  "nav": {
+    "skipToContent": "Salta al contenuto",
+    "menuLabel": "Menu di navigazione",
+    "home": "Home",
+    "locali": "I locali",
+    "cantina": "La cantina",
+    "carta": "La carta",
+    "vino": "Il nostro vino",
+    "contatti": "Contatti"
+  },
+  "common": {
+    "telefono": "Telefono",
+    "chiama": "Chiama",
+    "prenota": "Prenota un tavolo",
+    "scopri": "Scendi nella cantina",
+    "indirizzo": "Indirizzo",
+    "civico": "Civico",
+    "chiudi": "Chiudi",
+    "apri": "Apri",
+    "annulla": "Annulla",
+    "conferma": "Conferma",
+    "caricamento": "Caricamento in corso",
+    "obbligatorio": "Campo obbligatorio",
+    "torna": "Torna su",
+    "oraiNonDisponibili": "Orari in aggiornamento: chiamaci per conferma."
+  },
+  "locali": {
+    "titolo": "Due porte sulla stessa via",
+    "sommario": "Due sale a pochi passi l'una dall'altra, su Via di Gracciano nel Corso.",
+    "gracciano101": {
+      "nome": "Numero 101",
+      "sommario": "La sala e l'ingresso della cantina: da qui si scende nel tufo.",
+      "tratti": {
+        "cantina": "Cantina di famiglia",
+        "tunnel": "Tunnel medievali visitabili"
+      }
+    },
+    "gracciano72": {
+      "nome": "Numero 72",
+      "sommario": "La sala del pozzo: si mangia sopra un pozzo medievale, sotto un pavimento di vetro.",
+      "tratti": {
+        "pozzo": "Pozzo medievale",
+        "vetro": "Pavimento di vetro"
+      }
+    }
+  },
+  "lang": {
+    "switchLabel": "Cambia lingua",
+    "it": "IT",
+    "en": "EN",
+    "itFull": "Italiano",
+    "enFull": "English"
+  },
+  "kitchenSink": {
+    "titolo": "Design system",
+    "sottotitolo": "Vocabolario visivo de <em>La Vineria</em>",
+    "intro": "Questa pagina non è parte del sito pubblico. Raccoglie ogni token e ogni stato delle primitive, così che le sezioni siano composizione e non invenzione.",
+    "palette": {
+      "titolo": "Palette e contrasto",
+      "nota": "Ogni coppia riporta il rapporto di contrasto WCAG 2.1 calcolato, non stimato.",
+      "colonnaCoppia": "Coppia",
+      "colonnaCampione": "Campione",
+      "bordoNorma": "Confine di controllo — WCAG 1.4.11",
+      "bordoDecorativo": "Filetto decorativo, esente",
+      "colonnaRatio": "Rapporto",
+      "colonnaEsito": "Esito",
+      "esitoAA": "AA — testo normale",
+      "esitoAALarge": "AA — solo testo grande o elementi non testuali",
+      "esitoFail": "Non conforme",
+      "campione": "Testo di esempio Aa"
+    },
+    "tipografia": {
+      "titolo": "Scala tipografica",
+      "nota": "Il contrasto fra display stretto e label larghe è il motore visivo del sito.",
+      "esempioHero": "Sotto il pavimento",
+      "esempioH2": "Il pozzo al numero <em>settantadue</em>",
+      "esempioH3": "Tunnel scavati nel tufo",
+      "esempioLead": "Si scende per una scala stretta e l'aria cambia di colpo: sotto Montepulciano la pietra è fresca, porosa, e trattiene l'umidità come una chiesa.",
+      "esempioBody": "La cantina non è un allestimento. È il luogo dove il vino della famiglia riposa, dodici metri sotto la sala in cui lo si beve. Il percorso è breve e ripido, e vale la discesa.",
+      "esempioLabel": "Via di Gracciano nel Corso",
+      "esempioMono": "101 · 72 · 2019 · 0578 850153"
+    },
+    "movimento": {
+      "titolo": "Token di movimento",
+      "nota": "Quattro curve e quattro durate, una per ciascun registro. La materia non si muove come l'interfaccia.",
+      "colonnaToken": "Token",
+      "colonnaCurva": "Curva",
+      "colonnaUso": "Uso",
+      "riproduci": "Riproduci",
+      "usoOut": "Reveal ed entrate",
+      "usoInOut": "Transizioni bidirezionali",
+      "usoSoft": "Hover e micro-interazioni",
+      "usoDrift": "Materia lenta, scena 3D, parallasse"
+    },
+    "primitive": {
+      "titolo": "Primitive",
+      "nota": "Ogni componente in tutti i suoi stati: normale, hover, focus, premuto, disabilitato, errore.",
+      "bottoni": "Bottoni",
+      "campi": "Campi",
+      "selezione": "Selezione",
+      "dialoghi": "Dialoghi",
+      "movimento": "Wrapper di movimento",
+      "statoDefault": "Normale",
+      "statoHover": "Hover",
+      "statoFocus": "Focus",
+      "statoActive": "Premuto",
+      "statoDisabled": "Disabilitato",
+      "statoLoading": "In caricamento",
+      "statoError": "Errore"
+    },
+    "form": {
+      "nome": "Nome e cognome",
+      "email": "Email",
+      "coperti": "Coperti",
+      "sede": "Sede",
+      "sedePlaceholder": "Scegli una sala",
+      "note": "Note per la cucina",
+      "consenso": "Ho letto l'informativa privacy",
+      "erroreEmail": "Inserisci un indirizzo email valido",
+      "erroreNome": "Serve almeno il nome"
+    },
+    "dialogo": {
+      "titolo": "Scendere in cantina",
+      "corpo": "Il percorso passa da una scala stretta e da un tunnel scavato nel tufo. Chiamaci per concordare l'orario della visita.",
+      "conferma": "Chiama la vineria"
+    },
+    "griglia": {
+      "titolo": "Griglia e respiro",
+      "nota": "Dodici colonne, larghezza massima 1440px, gutter fluido.",
+      "colonna": "Colonna"
+    }
+  },
+  "a11y": {
+    "grana": "Trama decorativa",
+    "esterno": "Si apre in una nuova scheda",
+    "corrente": "Pagina corrente",
+    "chiudiDialogo": "Chiudi la finestra"
+  }
+}
