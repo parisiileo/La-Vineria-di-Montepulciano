@@ -55,6 +55,13 @@ export const stagger = {
   loose: 0.12,
 } as const;
 
+/**
+ * Scala di partenza dell'immagine dentro RevealImage: entra piu grande e si
+ * posa. Gemello di --foto-scala-ingresso in globals.css, la parita e
+ * verificata in scripts/audit.mjs.
+ */
+export const scalaIngressoFoto = 1.08;
+
 /** Margine di ingresso condiviso da tutti i reveal legati allo scroll. */
 export const viewportOnce = { once: true, margin: "-12% 0px" } as const;
 

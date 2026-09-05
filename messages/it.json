@@ -150,5 +150,83 @@
     "esterno": "Si apre in una nuova scheda",
     "corrente": "Pagina corrente",
     "chiudiDialogo": "Chiudi la finestra"
+  },
+  "foto": {
+    "salaBancone": "Il bancone della Vineria, con i salumi appesi e le lampade accese sopra il ripiano di legno",
+    "salaPareteBottiglie": "Sala interna con i tavoli apparecchiati e la parete di bottiglie sul fondo",
+    "pareteBottiglie": "Scaffalatura di bottiglie che copre l'intera parete della sala",
+    "squadraInVia": "La squadra della Vineria davanti al locale, in Via di Gracciano nel Corso",
+    "archivioErcolani": "Fotografia d'archivio della famiglia Ercolani su un carro carico di ceste da vendemmia",
+    "caliceInciso": "Un calice inciso con il nome della Vineria, riempito di vino rosso in mezzo alla via",
+    "taglieroAffettati": "Tagliere di affettati e crostini su un tavolo di legno",
+    "pastaFattaAMano": "Piatto di pasta fatta a mano con sugo di pomodoro e basilico",
+    "maniAlBancone": "Le mani di un ragazzo della squadra mentre compone un tagliere dietro il bancone",
+    "pecoriniEMarmellate": "Selezione di pecorini di Pienza e della Val d'Orcia con marmellate fatte in casa",
+    "facciata101": "La facciata del numero 101, con i tavoli e gli sgabelli allineati lungo la via",
+    "facciata72": "La facciata in pietra del numero 72, con la bifora e i due fusti accanto alla porta",
+    "caliciSulRipiano": "Calici allineati sul ripiano di legno lungo la parete della sala",
+    "tavoloCondiviso": "Quattro ospiti a tavola mentre brindano davanti a un tagliere condiviso"
+  },
+  "composizione": {
+    "titolo": "Composizione",
+    "intro": "Pagina di prova dello Step 02. Mostra i cinque archetipi in sequenza, con le fotografie reali del cliente e il grading calibrato su di esse.",
+    "hero": {
+      "titolo": "Sopra la tavola,<br></br>sotto la <em>storia</em>",
+      "sommario": "A Montepulciano si mangia sopra la storia e si beve quello che nasce sotto i tuoi piedi.",
+      "dato": "Via di Gracciano nel Corso · 101 · 72"
+    },
+    "marquee": {
+      "voci": "Il Brillo|Famiglia Ercolani|Via di Gracciano nel Corso|Montepulciano|Numero 101|Numero 72|Tunnel medievali"
+    },
+    "famiglia": {
+      "numero": "01",
+      "etichetta": "La famiglia",
+      "titolo": "Cresciuti <em>insieme</em> tra queste colline",
+      "p1": "Siamo un team di giovani amici, cresciuti insieme tra le colline toscane, e il nostro amore per questa terra è la nostra bussola.",
+      "p2": "La Vineria è il nostro modo di condividere la bellezza e l'autenticità di questi luoghi. Niente fronzoli: un'accoglienza sincera e un'atmosfera familiare.",
+      "dato": "Famiglia Ercolani · Montepulciano (SI)",
+      "didascalia": "Archivio di famiglia"
+    },
+    "respiro": {
+      "testo": "Niente fronzoli,<br></br>solo <em>autenticità</em>."
+    },
+    "cantina": {
+      "numero": "02",
+      "etichetta": "La cantina",
+      "titolo": "La cantina non si fotografa.<br></br><em>Si scende.</em>",
+      "sottotesto": "Sotto la sala del 101 il tufo è fresco e poroso, e i tunnel medievali si visitano. È il posto dove il vino di famiglia riposa: la scala è stretta, il percorso è breve, e vale la discesa.",
+      "dato": "Tunnel medievali · Visitabili · Ingresso dal 101"
+    },
+    "vino": {
+      "numero": "03",
+      "etichetta": "Il vino",
+      "titolo": "L'etichetta di casa si chiama <em>Il Brillo</em>",
+      "p1": "È il vino che la famiglia produce e che trovi aperto in tutte e due le sale.",
+      "p2": "Il resto della carta viene dai piccoli produttori della zona: ti guidiamo nella scelta e nell'abbinamento, e ti raccontiamo la storia di ogni bottiglia.",
+      "dato": "Il Brillo · Produzione propria"
+    },
+    "cucina": {
+      "numero": "04",
+      "etichetta": "La cucina",
+      "titolo": "Materie prime scelte una per una",
+      "testo": "Selezioniamo con cura le materie prime, privilegiando i piccoli produttori locali. I taglieri si compongono al bancone, davanti a te.",
+      "d1": "Pecorino di Pienza e Val d'Orcia",
+      "d2": "Pasta fatta a mano",
+      "d3": "Al bancone"
+    },
+    "locali": {
+      "numero": "05",
+      "etichetta": "I locali",
+      "titolo": "Due porte sulla stessa via",
+      "sommario": "Due sale a pochi passi l'una dall'altra, su Via di Gracciano nel Corso."
+    },
+    "risalita": {
+      "testo": "Si beve quello che nasce sotto i tuoi <em>piedi</em>."
+    },
+    "prenota": {
+      "etichetta": "Prenotazione",
+      "titolo": "Chiamaci",
+      "testo": "Per un tavolo in una delle due sale, o per concordare l'orario della visita in cantina."
+    }
   }
 }

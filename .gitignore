@@ -42,3 +42,6 @@ next-env.d.ts
 
 # artefatti di verifica
 *.tmp.html
+
+# artefatti di verifica
+/artifacts/

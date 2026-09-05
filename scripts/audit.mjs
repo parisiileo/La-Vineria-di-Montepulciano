@@ -7,6 +7,9 @@
 //   3. contrasto di ogni coppia dichiarata nel contratto della palette
 //   4. assenza di colori, durate ed easing letterali fuori da globals.css
 //   5. assenza degli anti-pattern vietati
+//   6. parità del duotone d'archivio con i token cromatici
+//   7. parità della scala d'ingresso di RevealImage fra CSS e TS
+//   8. non più di due sorgenti di luce ambientale per pagina
 //
 // Uscita diversa da zero = lo step non è chiudibile.
 
@@ -135,6 +138,46 @@ for (const file of files) {
   });
 }
 if (!literals) pass(`${files.length} file sorgente puliti`);
+
+/* ---------------------------------------- 6. duotone in parità coi token */
+head("5. Duotone d'archivio in parità con i token cromatici");
+const duotoneSrc = readFileSync(join(ROOT, "components/media/DuotoneDefs.tsx"), "utf8");
+const canale = (hex, i) => Number((parseInt(hex.slice(1 + i * 2, 3 + i * 2), 16) / 255).toFixed(4));
+const ATTESI = ["R", "G", "B"].map((c, i) => ({
+  canale: c,
+  ombra: canale(cssColors["tuff-deep"], i),
+  luce: canale(cssColors["brass"], i),
+}));
+let duotoneOk = 0;
+for (const { canale: c, ombra, luce } of ATTESI) {
+  const re = new RegExp(`feFunc${c} type="table" tableValues="([\\d.]+) ([\\d.]+)"`);
+  const m = re.exec(duotoneSrc);
+  if (!m) { fail(`feFunc${c} non trovato in DuotoneDefs.tsx`); continue; }
+  const [, o, l] = m.map(Number);
+  if (Math.abs(o - ombra) > 0.0002) fail(`duotone ${c} ombra: ${o} ≠ ${ombra} (--tuff-deep)`);
+  else if (Math.abs(l - luce) > 0.0002) fail(`duotone ${c} luce: ${l} ≠ ${luce} (--brass)`);
+  else duotoneOk++;
+}
+if (duotoneOk === 3) pass("3 canali mappati su --tuff-deep → --brass");
+
+/* ----------------------------- 7. scala d'ingresso di RevealImage in parità */
+head("6. Scala d'ingresso di RevealImage globals.css ↔ lib/motion.ts");
+const cssScala = Number(/--foto-scala-ingresso:\s*([\d.]+)/.exec(CSS)?.[1]);
+const tsScala = Number(/scalaIngressoFoto = ([\d.]+)/.exec(motionSrc)?.[1]);
+if (!cssScala || !tsScala) fail("scala d'ingresso non trovata in uno dei due file");
+else if (cssScala !== tsScala) fail(`scala d'ingresso: CSS ${cssScala} ≠ TS ${tsScala}`);
+else pass(`scala d'ingresso ${cssScala} allineata`);
+
+/* --------------------------------- 8. non più di due glow ambientali/pagina */
+head("7. Sorgenti di luce ambientale per pagina");
+const MAX_GLOW = 2;
+const pagine = files.filter((f) => /app[\\/].*page\.tsx$/.test(f));
+for (const file of pagine) {
+  const rel = file.slice(ROOT.length + 1).replace(/\\/g, "/");
+  const n = (readFileSync(file, "utf8").match(/<AmbientGlow/g) ?? []).length;
+  if (n > MAX_GLOW) fail(`${rel}: ${n} glow ambientali, massimo ${MAX_GLOW} — la pagina diventa lattiginosa`);
+}
+pass(`${pagine.length} pagine entro il limite di ${MAX_GLOW}`);
 
 head(failures ? `AUDIT FALLITO — ${failures} problemi` : "AUDIT SUPERATO");
 process.exit(failures ? 1 : 0);

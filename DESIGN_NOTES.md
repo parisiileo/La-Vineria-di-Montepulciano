@@ -429,3 +429,359 @@ zero prezzi**: arrivano dal cliente allo Step 4.
   visiva va fatta in un browser reale.
 - **Nessuna fotografia.** Il campione di `Parallax` usa una gradazione di tufo.
   Le foto vanno recuperate da `lavineriadimontepulciano.it` allo Step 4.
+
+---
+---
+
+# Step 02 · Immagine e composizione editoriale
+
+Questo step sostituisce quella che in un altro progetto sarebbe la scena 3D.
+Senza WebGL la profondità si costruisce con tre strumenti classici — la scala,
+la stratificazione, il ritmo — e con una regola sola: **ogni composizione ha un
+solo protagonista**. Se guardando una sezione non sai dove posare l'occhio per
+primo, la composizione è sbagliata, e il §10.6 racconta le due volte in cui è
+successo.
+
+---
+
+## 10. Composizione
+
+### 10.0 Il fatto che ha deciso lo step
+
+Prima di comporre qualsiasi cosa è stata recuperata **l'intera libreria
+fotografica del cliente** dal WordPress di `lavineriadimontepulciano.it`: 255
+elementi in `wp-json/wp/v2/media`, di cui 51 fotografie vere (il resto sono
+loghi, icone e materiale demo del tema del 2018). Il debito aperto al §9 dello
+Step 01 — «Nessuna fotografia, da recuperare allo Step 4» — è saldato qui.
+
+Da quello spoglio è emerso il fatto che ha riscritto la partitura:
+
+> **Le due fotografie dichiarate «critiche» dalla direzione artistica non
+> esistono.** Non ci sono immagini dei tunnel della cantina. Non c'è il pozzo
+> medievale sotto il pavimento di vetro. Non nella home: in tutta la libreria.
+> La ricerca per parola chiave su titoli, didascalie e testi alternativi
+> (`cantina|pozzo|tunnel|cellar|grotta|sotterran`) restituisce zero risultati.
+
+Le alternative erano tre. Una stock photo toscana: esclusa, si riconosce a un
+chilometro e su un'attività familiare vera distrugge in un colpo la
+credibilità che tutto il resto del sito costruisce. Un'altra fotografia
+spacciata per la cantina: peggio, è una bugia. Oppure **togliere la
+fotografia**, che è la strada presa.
+
+Cosa esiste invece, ed è stato usato: interni serali con la parete di
+bottiglie, le due facciate (una fotografia dedicata per civico), la squadra
+vera davanti alla porta, i taglieri, la pasta fatta a mano, il calice inciso
+in verticale, e — il ritrovamento più prezioso — una **fotografia d'archivio
+in bianco e nero della famiglia Ercolani su un carro carico di ceste da
+vendemmia**.
+
+Elenco di ciò che manca, tipizzato in `lib/data/foto.ts` (`FOTO_MANCANTI`),
+perché una mancanza dichiarata in codice non si dimentica come una nota in un
+documento.
+
+### 10.1 Il ritmo: perché quella sequenza di densità
+
+L'ordine degli archetipi è una partitura, e la regola di verifica è che **non
+esistano due sezioni consecutive della stessa densità**.
+
+| # | sezione | archetipo | densità |
+|---|---------|-----------|---------|
+| — | hero | **A** piena immagine | 5 |
+| — | marquee | frattura | 2 |
+| 01 | la famiglia | **B** editoriale + inserto d'archivio | 3 |
+| — | respiro | **D** tipografica, registro *respiro* | 1 |
+| 02 | la cantina | **D** tipografica, registro *monumento* | 5 |
+| 03 | il vino | **B** editoriale, lato opposto | 3 |
+| 04 | la cucina | **E** griglia asimmetrica | 4 |
+| 05 | i locali | **C** dittico con occlusione | 3 |
+| — | risalita | **D** tipografica, registro *respiro* | 1 |
+| — | prenotazione | funzionale | 2 |
+| — | footer | tipografica | 1 |
+
+`5 · 2 · 3 · 1 · 5 · 3 · 4 · 3 · 1 · 2 · 1` — nessuna coppia consecutiva
+uguale.
+
+Le due sezioni a densità 1 sono **la discesa e la risalita**: sono il verticale
+del concetto tradotto in ritmo invece che in movimento di camera, e sono i due
+momenti in cui il sito rallenta. Il rallentamento è ciò che rende memorabile
+quello che viene dopo — nel caso della prima, la cantina.
+
+**Perché la cantina è un archetipo D e non un A.** La partitura originale
+prevedeva lì una fotografia piena a densità massima. Quella fotografia non
+esiste (§10.0). Sostituirla con un D in registro *respiro*, come suggerirebbe
+la regola di ripiego, avrebbe però prodotto due sezioni consecutive a densità
+minima — la discesa seguita da un'altra discesa — e un buco esattamente nel
+punto più profondo della pagina.
+
+Da qui il **secondo registro dell'archetipo D**: `monumento`. Stessa famiglia,
+densità opposta — full-bleed su tufo profondo, corpo `--t-hero`, filetto
+d'ottone, sorgente di luce in vino, dato in mono. Non è un ripiego travestito:
+è l'unico modo in cui una sezione senza fotografia può reggere il peso che la
+partitura le assegna. E il testo dice esattamente quello che sta succedendo —
+«La cantina non si fotografa. Si scende.» — trasformando il vincolo di
+produzione nell'argomento della sezione.
+
+Quando il cliente fornirà gli scatti dei tunnel, la sezione torna un archetipo
+A senza toccare nient'altro: cambia il componente, non il ritmo, perché A e D
+in registro *monumento* hanno la stessa densità.
+
+### 10.2 Il grading: come sono stati scelti i numeri
+
+I valori dello specifica erano `contrast(1.08) saturate(0.92) brightness(0.95)`,
+con l'istruzione di calibrarli sulle foto reali. Sono stati calibrati
+**misurando**, non guardando: le 14 fotografie scelte sono state disegnate su
+canvas in Chromium headless applicando ogni catena candidata come `ctx.filter`,
+e per ciascuna si sono calcolati i percentili di L\* (CIELAB, D65) e la croma
+media C\*.
+
+Il corpus grezzo, prima di qualsiasi intervento:
+
+| metrica | valore |
+|---|---|
+| L\* p02 / p05 | 2.5 / 4.8 |
+| L\* mediana | 50.1 |
+| L\* p95 / p99 | 85.3 / 92.0 |
+| croma media C\* | 19.3 |
+
+Il fondo tufo `#1A1512` vale **L\* 6.6**. Da qui i tre obiettivi, dichiarati
+prima di scegliere: saturazione giù di circa il 10–14 % (le foto di cibo sono
+sature come un menù da fast food), luminanza mediana verso i 44 (le foto devono
+*appartenere* al fondo, non galleggiarci sopra), e nessuna alta luce bruciata.
+
+Il risultato inatteso della misura è che **il filtro da solo non basta, e il
+problema non è quello che sembrava**. Applicando la catena dello specifica il
+fondo ombre scende a L\* p02 = 1.2, cioè **sotto** il livello della parete: la
+fotografia non si posa sul tufo, ci apre un buco. E i fondi ombre delle
+quattordici foto restano fra loro incoerenti (da 0.3 a 11.7 di p02), perché
+sono scatti di sessioni diverse.
+
+Da qui il terzo strato, che nella specifica non c'era:
+
+| strato | cosa fa |
+|---|---|
+| **grade** | `contrast(1.10) saturate(0.90) brightness(0.94)` sull'`<img>` |
+| **lift** | tufo in `mix-blend-mode: lighten` al 70 % — porta il fondo ombre di *ogni* foto sullo stesso livello |
+| **velo** | tufo in `normal` al 6 % — incolla la temperatura al fondo |
+
+Confronto delle candidate misurate (medie sul corpus):
+
+| catena | p02 | p50 | p99 | C\* | ΔC |
+|---|---|---|---|---|---|
+| grezza | 2.5 | 50.1 | 92.0 | 19.3 | — |
+| specifica + velo 6 % | 1.2 | 44.6 | 85.7 | 17.3 | −10.1 % |
+| 1.10/0.90/0.94 + velo 6 % + **lift 70 %** | **4.9** | **44.1** | **85.5** | **16.7** | **−13.2 %** |
+| 1.10/0.90/0.94 + velo 6 % + lift 80 % | 5.6 | 44.1 | 85.5 | 16.8 | −13.0 % |
+| 1.12/0.88/0.92 + velo 6 % + lift 75 % | 5.2 | 43.1 | 84.4 | 16.3 | −15.5 % |
+
+La riga scelta è la terza. Il p02 medio passa da 2.5 a 4.9 — sotto il tufo, ma
+di poco: quel margine residuo è ciò che impedisce alla fotografia di sembrare
+incollata piatta sulla parete. Il dato più importante però è per-foto: dopo il
+lift **quasi tutte le immagini hanno lo stesso fondo ombre, intorno a 4.5**.
+Tre fotografi diversi, un solo nero. È il lift, più del filtro, a fare del
+corpus un corpo unico — ed è l'unica cosa in questo step che non si sarebbe mai
+trovata a occhio.
+
+I cinque numeri sono token in `globals.css` (`--foto-contrasto`,
+`--foto-saturazione`, `--foto-luminosita`, `--foto-lift`, `--foto-velo`).
+
+### 10.3 I crop: quali e perché
+
+`aspect-ratio` è una **prop obbligatoria** di `Figure`. Nessuna immagine è usata
+a proporzione nativa «perché è così che è», e ogni `object-position` è scelto
+sul soggetto — con un override sotto i 768 px dove il ritaglio si stringe.
+
+| immagine | rapporto | perché |
+|---|---|---|
+| sala col bancone → hero | 21/9 | la fessura cinematica; l'ambiente è profondo e il taglio orizzontale lo allunga |
+| la squadra in via | **3/2** | *l'eccezione motivata*: è un ritratto di gruppo, e il 4/5 taglia le persone ai due bordi. Il nativo qui è una scelta, non inerzia |
+| archivio Ercolani (inserto) | 3/2 | è un documento: si mostra come è stato scattato |
+| calice inciso | 4/5 | verticale, intimo — è l'unico scatto nativo verticale del corpus |
+| tagliere (dominante griglia) | 3/2 | il rapporto più largo della griglia: è la cella che comanda |
+| pecorini | 4/5 | verticale in una griglia orizzontale: irregolarità voluta |
+| pasta | 1/1 | cella di griglia, la più piccola |
+| mani al bancone | 16/9 | fascia bassa, chiude la griglia |
+| facciata 101 | 16/9 | è una via: il rapporto della strada |
+| facciata 72 | 4/5 | anta piccola del dittico; il verticale ne accentua la subordinazione |
+
+Due `object-position` sono stati corretti dopo averli guardati, non prima:
+il **calice** stava al 34 % verticale e l'inquadratura conteneva soprattutto
+cielo — portato al 66 %, che è dove sta il calice; la **facciata 72** era al
+62 % orizzontale, cioè su muro cieco — portata al 78 %, dove ci sono la porta e
+l'insegna.
+
+Nota tecnica utile per lo Step 4: su una sorgente 3/2 ritagliata in 16/9 il
+ritaglio è **solo verticale**, e la componente orizzontale di `object-position`
+non ha alcun effetto. Vale per entrambe le facciate.
+
+### 10.4 Duotone: adottato, come registro d'archivio
+
+Il duotone è adottato, e la regola di appartenenza è **una sola**:
+
+> Una fotografia che non documenta il presente non può stare a colori accanto a
+> una che lo fa.
+
+Non «le immagini secondarie», non «le facciate e i bicchieri»: quei criteri
+sono estetici, e un criterio estetico applicato a metà è esattamente
+l'incidente da evitare. Il criterio adottato è invece verificabile guardando lo
+scatto: documenta oggi, sì o no.
+
+Oggi l'archivio contiene **una sola fotografia**, quella della famiglia sul
+carro. Un sistema di uno non è un sistema debole se la regola è chiara: è un
+sistema con un solo membro, e chiunque aggiunga materiale d'archivio sa già
+come va trattato senza doverlo chiedere.
+
+Implementazione: `registro: "archivio"` nel registro fotografico attiva
+`filter: url(#duotone-archivio)`, un `feColorMatrix` di luminanza percettiva
+seguito da un `feComponentTransfer` che mappa le ombre su `--tuff-deep` e le
+luci su `--brass`. I sei `tableValues` **non sono colori scelti lì**: sono le
+componenti sRGB dei due token, e la loro parità è verificata da
+`scripts/audit.mjs` (controllo 5). Se qualcuno cambia l'ottone nel design
+system e non aggiorna il filtro, l'audit fallisce.
+
+### 10.5 Stratificazione e leggibilità
+
+Le quattro tecniche, in ordine di impatto:
+
+**Occlusione a tre livelli** (dittico dei locali). Sotto: un filetto d'ottone
+con la via in mono, che parte *dentro* la fotografia e riemerge sul tufo alla
+sua destra. In mezzo: la fotografia. Sopra: il civico `101` a `--t-hero` in
+ottone, che esce dal bordo basso e continua sul fondo. Tre piani in un colpo
+d'occhio, zero WebGL.
+
+Tre correzioni sono state necessarie e sono istruttive.
+*Prima*: il numero era ancorato alla colonna — che contiene anche il paragrafo
+sotto — e finiva in fondo al testo senza toccare niente. Ora i tre livelli
+vivono in un contenitore attorno alla sola immagine.
+*Seconda*: le cifre di Cormorant sono minuscole (oldstyle) di default e il loro
+inchiostro sta molto più in basso della scatola di riga, il che faceva
+sbagliare il segno a ogni offset calcolato sulle metriche. Sono state portate a
+`lining-nums` — un civico è una targa, non una parola.
+*Terza*: il filetto collideva con l'anta piccola, che gli passava sopra. È
+stato alzato sopra il suo bordo.
+
+Resta un **limite noto e non risolto in CSS**: nella fotografia che il cliente
+possiede oggi l'angolo in basso a sinistra del 101 è selciato chiaro, e
+l'ottone lì sopra perde contrasto (misurato 1.37:1 sul pixel peggiore).
+Spostare il numero a un terzo della base lo rende più leggibile ma gli toglie
+l'ancoraggio all'angolo, che è la ragione per cui sta lì: provato, guardato,
+scartato. La correzione vera è uno scatto con l'angolo basso in ombra, ed è una
+richiesta per il servizio fotografico. Il numero è `aria-hidden` e il civico è
+comunque scritto in chiaro sotto: è un difetto di composizione, non di
+accessibilità.
+
+**Parallasse differenziale.** L'immagine a intensità 1, il blocco tipografico a
+0.4. Il differenziale è ciò che il cervello legge come distanza. È servito un
+componente nuovo, `ParallaxShift`: il `Parallax` dello Step 01 posiziona il
+contenuto in assoluto dentro una scatola più alta — giusto per una fotografia
+in un contenitore dimensionato, ma su un blocco di testo ne farebbe collassare
+l'altezza a zero.
+
+**Bordi fuori griglia.** Tre sezioni rompono il `max-width: 1440px`: l'hero, il
+marquee e la cantina in registro monumento.
+
+**Gradienti ambientali.** Due per pagina, non tre: uno in vino dietro la
+cantina, uno in ottone dietro la risalita. Il limite non è una buona
+intenzione, è il controllo 7 di `scripts/audit.mjs`, che conta i
+`<AmbientGlow>` per pagina e fallisce a partire dal terzo.
+
+**Leggibilità del testo sulle fotografie.** `scripts/leggibilita.mjs` nasconde
+il testo, fotografa esattamente il suo riquadro con sotto la fotografia e i
+suoi strati, e calcola il contrasto WCAG fra il colore composto del testo e il
+**pixel peggiore** del riquadro (95° percentile di luminanza). Il gradiente di
+leggibilità è stato irrobustito finché la prova non è passata: il titolo
+dell'hero è salito da **3.00:1 a 5.89:1**, il dato in mono da **4.49:1 a
+5.70:1**. Serve anche come rete per lo Step 4: le fotografie che il cliente
+manderà potrebbero essere più chiare di queste, e la prova si rilancia in due
+secondi.
+
+### 10.6 Esito della verifica §7
+
+**1 · Screenshot di ogni sezione a 1440 px, in fila. Il ritmo è visibile?**
+Sì. `artifacts/step-02/strip-normale.png` mostra le undici sezioni alla stessa
+larghezza e con l'altezza vera: l'alternanza fra blocchi alti e densi (hero,
+cantina, cucina, locali) e bande sottili e vuote (marquee, respiro, risalita,
+footer) si legge senza sforzo. Nessuna coppia consecutiva della stessa densità
+(tabella §10.1).
+
+**2 · Sfocando, emerge un solo protagonista per sezione?**
+Non subito: **la griglia della cucina ne aveva due.** Con la dominante a 7
+colonne su 12 e la cella alta a 4, il tagliere e il piatto di pecorini
+pesavano uguale — il secondo è anche più chiaro, e sfocato vinceva. Corretto
+portando il rapporto a **8 contro 3**: è la scala a fare la gerarchia, non il
+rapporto né la posizione. Riverificato sfocato: un solo protagonista. Tutte le
+altre sezioni passavano già.
+
+**3 · In scala di grigi, la composizione regge senza il colore?**
+Sì. Struttura, gerarchia e i tre livelli di occlusione restano leggibili senza
+una goccia di bordeaux: la composizione poggia su scala e posizione, non sul
+colore. L'unica perdita è quella già dichiarata al §10.5 — il civico che
+attraversa il selciato chiaro sparisce quasi del tutto in grigio, che è il
+sintomo dello stesso difetto misurato a colori.
+
+**4 · Coprendo le immagini, la pagina è ancora leggibile e composta?**
+Sì. `artifacts/step-02/strip-senza-immagini.png`: ogni sezione conserva il
+proprio ancoraggio tipografico e la sequenza si legge ancora come una sequenza.
+Le aree fotografiche diventano vuoti — è il costo onesto di un impianto
+fotografico — ma nessuna sezione perde il titolo, il numero o il dato. La
+cantina, che immagini non ne ha, è identica: era il punto.
+
+**Verifiche aggiuntive, non richieste dal §7 ma dovute allo Step 01**
+- **Scorrimento orizzontale**: `scrollWidth` = `clientWidth` a 1440, 768 e
+  390 px. Un difetto reale è stato trovato e corretto qui: la sorgente di luce
+  della risalita sbordava di 141 px dal box della sezione. La correzione sta
+  nel componente — `TypeSection` monta ora il glow dentro uno strato che
+  ritaglia — e non nel punto di chiamata, così chi monterà il prossimo glow non
+  deve ricordarselo.
+- **Movimento revocato** e **JavaScript disattivo**: testo, layout, grading e
+  gradiente restano intatti (`artifacts/step-02/senza-js.png`). Il contratto di
+  movimento del §5 regge anche sui componenti nuovi.
+- **Mobile a 390 px**: l'inserto d'archivio non viene più nascosto. Sotto i
+  768 px l'occlusione decade — due immagini sovrapposte su schermo stretto sono
+  solo due immagini sovrapposte — ma l'inserto resta, in flusso sotto la prima.
+  Nasconderlo avrebbe tolto al visitatore mobile l'unico documento d'archivio
+  del sito per salvare un effetto.
+
+### 10.7 Errori commessi e corretti, per memoria
+
+- **Misure in `ch` sul contenitore invece che sull'elemento.** `max-w-[22ch]`
+  su un wrapper vale il corpo del `body`, non quello del display: un ventesimo
+  della misura voluta. Ogni titolo andava a capo dopo due parole. Le misure
+  stanno ora sull'elemento che porta il corpo.
+- **`<br />` in un messaggio next-intl.** `t.rich` vuole una coppia di tag:
+  `<br></br>`. Con l'autochiusura la stringa finiva a schermo.
+- **La sonda di contrasto sbagliava di suo.** Tailwind esprime le opacità in
+  `oklab()`, e leggerne le componenti come canali RGB dà numeri plausibili e
+  completamente sbagliati: un testo perfettamente leggibile risultava a 1.32:1.
+  Il colore viene ora risolto dal browser su canvas e l'alfa composta sullo
+  sfondo campionato. I numeri del titolo e del dato erano invece corretti, e
+  hanno guidato una correzione vera.
+
+### 10.8 Dati trovati durante lo spoglio, da portare allo Step 4
+
+Non sono stati applicati — cambiare `lib/data/locali.ts` è fuori dal perimetro
+di questo step — ma sono verificabili sul sito del cliente e chiudono due punti
+aperti al §8:
+
+- **La sede di Cortona esiste**: Piazza Luca Signorelli 28, 52044 Cortona (AR),
+  tel. +39 0575 1890158. `SEDE_CORTONA_CONFERMATA` è oggi `false`.
+- **Il numero 72 ha un telefono proprio**: +39 0578 850195. Oggi il progetto
+  espone un solo recapito per entrambe le sedi.
+- Email `vineriatoscana@gmail.com`, ragione sociale **La Vineria Ercolani SRL**,
+  P.IVA 01551730524.
+
+Restano non confermati, e quindi ancora `null`: profondità ed estensione dei
+tunnel, gratuità del tour, anno di fondazione, orari.
+
+### 10.9 Cosa chiedere al cliente per il servizio fotografico
+
+In ordine di impatto sul sito:
+
+1. **I tunnel della cantina.** È il momento visivo mancante. Finché non
+   arrivano, la sezione più profonda della pagina è tipografica.
+2. **Il pozzo sotto il pavimento di vetro**, al 72. Stessa ragione.
+3. **Un ritratto verticale di una o due persone della casa**, non di tutta la
+   squadra: le facce vendono più dei piatti, e un 4/5 su un gruppo di quindici
+   persone non esiste.
+4. **La facciata del 101 con l'angolo in basso a sinistra in ombra**, per il
+   civico che esce dal bordo (§10.5).
+

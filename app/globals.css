@@ -124,6 +124,27 @@
      Metodo e numeri completi in DESIGN_NOTES §3. */
   --grain-opacity: 0.14;
 
+  /* --------------------------------------------------------- FOTOGRAFIA
+     Valori misurati sulle 14 fotografie reali del cliente, non scelti a
+     occhio. Metodo, tabella e alternative scartate in DESIGN_NOTES §10.2.
+     Il corpus grezzo ha L* mediana 50.1, croma media C* 19.3 e un fondo
+     ombre eterogeneo (L* p02 fra 0.3 e 11.7): tre fotografi diversi.
+
+     grade  contrasto/saturazione/luminosita applicati come filter sull'img
+     lift   strato tufo in `lighten`: porta il fondo ombre di OGNI foto sullo
+            stesso livello (L* p02 -> 4.9 medio). E' cio che rende un corpus
+            eterogeneo un corpo unico, piu del filtro stesso.
+     velo   strato tufo in `normal`: incolla la temperatura al fondo. */
+  --foto-contrasto:    1.10;
+  --foto-saturazione:  0.90;
+  --foto-luminosita:   0.94;
+  --foto-lift:         0.70;
+  --foto-velo:         0.06;
+
+  /* Ampiezza della maschera di ingresso di RevealImage: l'immagine interna
+     parte piu grande e si posa. Oltre 1.10 si legge come uno zoom. */
+  --foto-scala-ingresso: 1.08;
+
   /* Ordine di impilamento, dichiarato in un solo posto. */
   --z-overlay: 50;                    /* dialoghi, pannelli, menu */
   --z-grain:   100;                   /* la grana sta sopra tutto */
@@ -313,6 +334,70 @@
 
   /* Scatto orizzontale di errore: ±3px, una volta sola. */
   .shake { animation: shake-x var(--dur-base) var(--ease-inout) 1; }
+
+  /* ------------------------------------------------------------ FOTOGRAFIA
+     Le tre righe che trasformano fotografie eterogenee in un corpo unico.
+     Stanno qui e non in un componente perche sono valori, non struttura. */
+
+  /* Il grading vero e proprio, sull'elemento <img>. */
+  .foto-grade {
+    filter:
+      contrast(var(--foto-contrasto))
+      saturate(var(--foto-saturazione))
+      brightness(var(--foto-luminosita));
+  }
+
+  /* Registro d'archivio: duotone tufo-profondo -> ottone, poi il grading.
+     La regola di appartenenza e una sola ed e in DESIGN_NOTES §10.4. */
+  .foto-archivio {
+    filter:
+      url(#duotone-archivio)
+      contrast(var(--foto-contrasto))
+      brightness(var(--foto-luminosita));
+  }
+
+  /* Pavimento delle ombre: nessun nero della foto scende sotto il tufo. */
+  .foto-lift {
+    background-color: var(--color-tuff);
+    mix-blend-mode: lighten;
+    opacity: var(--foto-lift);
+  }
+
+  /* Velo di temperatura: la foto appartiene alla parete, non ci galleggia. */
+  .foto-velo {
+    background-color: var(--color-tuff);
+    opacity: var(--foto-velo);
+  }
+
+  /* Gradiente di leggibilita per il testo sovrapposto in basso. Non e un
+     velo estetico: e cio che tiene il crema sopra 4.5:1 su qualsiasi foto,
+     comprese quelle che il cliente mandera' e che nessuno ha ancora visto.
+     Le tappe sono state alzate finche' scripts/leggibilita.mjs non e passato
+     sulla fotografia piu chiara del corpus: vedi DESIGN_NOTES §10.5. */
+  .foto-leggibilita {
+    background-image: linear-gradient(
+      to top,
+      var(--color-tuff-deep) 0%,
+      color-mix(in oklab, var(--color-tuff-deep) 94%, transparent) 26%,
+      color-mix(in oklab, var(--color-tuff-deep) 72%, transparent) 44%,
+      color-mix(in oklab, var(--color-tuff-deep) 34%, transparent) 64%,
+      transparent 86%
+    );
+  }
+
+  /* Sorgente di luce fuori campo. Massimo due per pagina: alla terza la
+     pagina diventa lattiginosa. Il conteggio e verificato in audit.mjs. */
+  .glow-ambientale {
+    position: absolute;
+    pointer-events: none;
+    border-radius: var(--radius-pill);
+    filter: blur(80px);
+  }
+
+  /* Le due sole sorgenti ammesse. L'opacita e bassa e la sfocatura enorme:
+     un glow che si distingue come forma ha smesso di essere luce. */
+  .glow-ottone { background-color: var(--color-brass); opacity: 0.10; }
+  .glow-vino   { background-color: var(--color-wine);  opacity: 0.16; }
 }
 
 @keyframes shake-x {
@@ -320,6 +405,13 @@
   20% { transform: translate3d(-3px, 0, 0); }
   45% { transform: translate3d(3px, 0, 0); }
   70% { transform: translate3d(-2px, 0, 0); }
+}
+
+/* Frattura orizzontale. La traslazione e -50% perche il contenuto e
+   duplicato due volte: il ciclo e invisibile. */
+@keyframes marquee-x {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
 
 /* Arco d'ottone che ruota: sostituisce lo spinner generico. */

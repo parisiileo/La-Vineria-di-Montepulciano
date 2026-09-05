@@ -150,5 +150,83 @@
     "esterno": "Opens in a new tab",
     "corrente": "Current page",
     "chiudiDialogo": "Close this dialog"
+  },
+  "foto": {
+    "salaBancone": "The Vineria counter, cured meats hanging above the wooden top under lit lamps",
+    "salaPareteBottiglie": "Inside room with laid tables and a wall of bottles at the back",
+    "pareteBottiglie": "Shelving of bottles covering an entire wall of the room",
+    "squadraInVia": "The Vineria team outside the door, on Via di Gracciano nel Corso",
+    "archivioErcolani": "Archive photograph of the Ercolani family on a cart loaded with harvest baskets",
+    "caliceInciso": "A glass engraved with the Vineria name, filled with red wine out in the street",
+    "taglieroAffettati": "Board of cured meats and crostini on a wooden table",
+    "pastaFattaAMano": "A plate of hand-made pasta with tomato and basil",
+    "maniAlBancone": "The hands of one of the team building a board behind the counter",
+    "pecoriniEMarmellate": "A selection of Pienza and Val d'Orcia pecorino with house-made preserves",
+    "facciata101": "The front of number 101, stools and tables lined up along the street",
+    "facciata72": "The stone front of number 72, with its mullioned window and two casks by the door",
+    "caliciSulRipiano": "Wine glasses lined up on the wooden shelf along the wall",
+    "tavoloCondiviso": "Four guests at a table raising their glasses over a shared board"
+  },
+  "composizione": {
+    "titolo": "Composition",
+    "intro": "Step 02 proof page. It shows the five archetypes in sequence, with the client's real photographs and the grading calibrated on them.",
+    "hero": {
+      "titolo": "Above the table,<br></br>below the <em>history</em>",
+      "sommario": "In Montepulciano you eat above history, and you drink what is born beneath your feet.",
+      "dato": "Via di Gracciano nel Corso · 101 · 72"
+    },
+    "marquee": {
+      "voci": "Il Brillo|Ercolani family|Via di Gracciano nel Corso|Montepulciano|Number 101|Number 72|Medieval tunnels"
+    },
+    "famiglia": {
+      "numero": "01",
+      "etichetta": "The family",
+      "titolo": "We grew up <em>together</em> on these hills",
+      "p1": "We are a team of young friends who grew up together in the Tuscan hills, and our love for this land is our compass.",
+      "p2": "La Vineria is how we share the beauty and the honesty of these places. No frills: a sincere welcome and a family atmosphere.",
+      "dato": "Ercolani family · Montepulciano (SI)",
+      "didascalia": "Family archive"
+    },
+    "respiro": {
+      "testo": "No frills,<br></br>only <em>honesty</em>."
+    },
+    "cantina": {
+      "numero": "02",
+      "etichetta": "The cellar",
+      "titolo": "The cellar cannot be photographed.<br></br><em>You go down to it.</em>",
+      "sottotesto": "Below the room at 101 the tufa is cool and porous, and the medieval tunnels can be visited. It is where the family wine rests: the stair is narrow, the way is short, and it is worth the descent.",
+      "dato": "Medieval tunnels · Open to visits · Entrance at 101"
+    },
+    "vino": {
+      "numero": "03",
+      "etichetta": "The wine",
+      "titolo": "The house label is called <em>Il Brillo</em>",
+      "p1": "It is the wine the family makes, and it is open in both rooms.",
+      "p2": "The rest of the list comes from small growers nearby: we guide you through the choice and the pairing, and we tell you the story of every bottle.",
+      "dato": "Il Brillo · Our own production"
+    },
+    "cucina": {
+      "numero": "04",
+      "etichetta": "The kitchen",
+      "titolo": "Ingredients chosen one by one",
+      "testo": "We choose our ingredients carefully, favouring small local producers. The boards are built at the counter, in front of you.",
+      "d1": "Pienza and Val d'Orcia pecorino",
+      "d2": "Hand-made pasta",
+      "d3": "At the counter"
+    },
+    "locali": {
+      "numero": "05",
+      "etichetta": "The rooms",
+      "titolo": "Two doors on the same street",
+      "sommario": "Two rooms a few steps apart, on Via di Gracciano nel Corso."
+    },
+    "risalita": {
+      "testo": "You drink what is born beneath your <em>feet</em>."
+    },
+    "prenota": {
+      "etichetta": "Booking",
+      "titolo": "Call us",
+      "testo": "For a table in either room, or to agree a time for the cellar visit."
+    }
   }
 }
