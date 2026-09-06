@@ -21,9 +21,12 @@ import { Figure, type Rapporto } from "@/components/media/Figure";
 import { RevealImage } from "@/components/media/RevealImage";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionNumber } from "@/components/sections/SectionNumber";
+import { SplitDigits } from "@/components/motion/SplitDigits";
 import { cn } from "@/lib/utils";
 
 export interface AnteDittico {
+  /** Etichetta del cursore custom sulla fotografia. */
+  cursore?: string;
   /** Il numero che sborda. In mono nei dati, in display quando è protagonista. */
   civico: string;
   /** Via, in mono: è il filetto che passa sotto la fotografia. */
@@ -107,6 +110,7 @@ export function DiptychSection({
                 foto={primaria.foto}
                 alt={primaria.alt}
                 rapporto={primaria.rapporto}
+                cursore={primaria.cursore}
                 sizes="(max-width: 768px) 100vw, 58vw"
               />
             </RevealImage>
@@ -130,12 +134,11 @@ export function DiptychSection({
                 in ombra, ed è una richiesta per il servizio fotografico, non
                 una toppa da CSS. Il numero è `aria-hidden`: il civico è
                 comunque scritto in chiaro sotto. */}
-            <span
-              aria-hidden="true"
+            <SplitDigits
+              numero={primaria.civico}
+              decorativo
               className="pointer-events-none absolute -bottom-[0.18em] left-0 z-20 -translate-x-[0.07em] font-display text-hero leading-[0.7] text-brass [font-variant-numeric:lining-nums]"
-            >
-              {primaria.civico}
-            </span>
+            />
           </div>
 
           <div className="mt-20 max-w-[46ch]">
@@ -154,12 +157,16 @@ export function DiptychSection({
               foto={secondaria.foto}
               alt={secondaria.alt}
               rapporto={secondaria.rapporto}
+              cursore={secondaria.cursore}
               sizes="(max-width: 768px) 100vw, 30vw"
             />
           </RevealImage>
 
           <Reveal direction="up" className="mt-8">
-            <p className="font-mono text-mono uppercase text-brass">{secondaria.civico}</p>
+            <SplitDigits
+              numero={secondaria.civico}
+              className="font-mono text-mono uppercase text-brass"
+            />
             <h3 className="mt-3 text-h3">{secondaria.titolo}</h3>
             <p className="mt-4 text-body text-stone">{secondaria.testo}</p>
             {secondaria.tratti ? <Tratti voci={secondaria.tratti} /> : null}

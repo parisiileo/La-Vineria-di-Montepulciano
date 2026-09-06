@@ -7,6 +7,7 @@
 import { motion, type Variants } from "motion/react";
 import { duration, ease } from "@/lib/motion";
 import { useReducedMotion } from "./useReducedMotion";
+import { useMotionScale } from "./useMotionScale";
 import { cn } from "@/lib/utils";
 
 const TAGS = {
@@ -42,22 +43,22 @@ const normalize = (word: string) =>
  * `whileInView` applicato alla parola non scatterebbe mai — il titolo
  * resterebbe tagliato per sempre. Il contenitore invece non è ritagliato.
  */
-const CONTAINER: Variants = {
+const CONTAINER = (scala: number): Variants => ({
   hidden: {},
-  shown: { transition: { staggerChildren: WORD_STAGGER } },
-};
+  shown: { transition: { staggerChildren: WORD_STAGGER * scala } },
+});
 
-const WORD: Variants = {
+const WORD = (scala: number): Variants => ({
   hidden: { y: "110%" },
   shown: (isAccent: boolean) => ({
     y: "0%",
     transition: {
       duration: duration.slow,
       ease: ease.out,
-      delay: isAccent ? ACCENT_DELAY : 0,
+      delay: isAccent ? ACCENT_DELAY * scala : 0,
     },
   }),
-};
+});
 
 export function SplitText({
   text,
@@ -67,6 +68,9 @@ export function SplitText({
   accentWords = [],
 }: SplitTextProps) {
   const reduced = useReducedMotion();
+  const scala = useMotionScale();
+  const contenitore = CONTAINER(scala);
+  const parola = WORD(scala);
   const Tag = TAGS[as];
   const words = text.split(" ").filter(Boolean);
   const accents = new Set(accentWords.map(normalize));
@@ -91,11 +95,11 @@ export function SplitText({
 
       <motion.span
         aria-hidden="true"
-        variants={CONTAINER}
+        variants={contenitore}
         initial="hidden"
         whileInView="shown"
         viewport={{ once: true, margin: "-10% 0px" }}
-        transition={{ delayChildren: delay }}
+        transition={{ delayChildren: delay * scala }}
       >
         {words.map((word, i) => {
           const isAccent = accents.has(normalize(word));
@@ -111,7 +115,7 @@ export function SplitText({
                 <motion.span
                   data-motion-guard=""
                   className={cn("inline-block", isAccent && "italic text-brass")}
-                  variants={WORD}
+                  variants={parola}
                   custom={isAccent}
                 >
                   {word}

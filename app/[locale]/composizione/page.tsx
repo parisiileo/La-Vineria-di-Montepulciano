@@ -33,8 +33,8 @@ import { DiptychSection } from "@/components/sections/DiptychSection";
 import { EditorialSection } from "@/components/sections/EditorialSection";
 import { FullBleedSection } from "@/components/sections/FullBleedSection";
 import { Marquee } from "@/components/sections/Marquee";
+import { Descent } from "@/components/sections/Descent";
 import { TypeSection } from "@/components/sections/TypeSection";
-import { LangSwitch } from "@/components/ui/LangSwitch";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -63,17 +63,15 @@ function Body() {
     <main id="contenuto" className="shell">
       <DuotoneDefs />
 
-      {/* Intestazione della pagina di lavoro, fuori dalla partitura. */}
-      <div className="flex items-center justify-between gap-6 py-6">
-        <p className="font-mono text-mono uppercase text-stone-dim">{t("titolo")}</p>
-        <LangSwitch />
-      </div>
-
       {/* ---------------------------------------------------------- A · hero */}
       <FullBleedSection
-        titolo={t.rich("hero.titolo", { ...em, ...br })}
+        numero=""
+        etichetta={t("hero.occhiello")}
+        titoloTesto={t("hero.titoloPiano")}
+        accenti={[t("hero.accento")]}
         sommario={t("hero.sommario")}
         dato={t("hero.dato")}
+        indicatore={t("hero.indicatore")}
         foto={FOTO.salaBancone}
         alt={tf("salaBancone")}
         rapporto="21/9"
@@ -110,19 +108,18 @@ function Body() {
         }}
       />
 
-      {/* --------------------------------------------- D · respiro, la discesa */}
-      <TypeSection registro="respiro" testo={t.rich("respiro.testo", { ...em, ...br })} />
-
-      {/* ------------------------------------ D · monumento, il punto profondo */}
-      <TypeSection
+      {/* ----------------------------- D respiro → D monumento, in una discesa
+          Le due sezioni della partitura sono diventate un solo movimento: il
+          respiro non finisce e poi comincia la cantina, il respiro viene
+          mangiato dall'alto MENTRE la cantina sale da sotto. È la discesa. */}
+      <Descent
         id="cantina"
-        registro="monumento"
+        respiro={t.rich("respiro.testo", { ...em, ...br })}
         numero={t("cantina.numero")}
         etichetta={t("cantina.etichetta")}
-        testo={t.rich("cantina.titolo", { ...em, ...br })}
+        titolo={t.rich("cantina.titolo", { ...em, ...br })}
         sottotesto={t("cantina.sottotesto")}
         dato={t("cantina.dato")}
-        glow={<AmbientGlow sorgente="vino" className="-left-[10%] top-[10%] h-[46vh] w-[70vw]" />}
       />
 
       {/* ---------------------------------------------------------- B · vino */}
@@ -191,6 +188,7 @@ function Body() {
           foto: FOTO.facciata101,
           alt: tf("facciata101"),
           rapporto: "16/9",
+          cursore: tc("guarda"),
         }}
         secondaria={{
           civico: settantaDue.civico,

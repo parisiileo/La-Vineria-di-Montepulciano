@@ -1,13 +1,18 @@
 "use client";
 
 // Dialogo su Radix: focus trap, Esc e aria-modal arrivano dalla libreria.
-// Lo scroll lock è delegato a un callback, perché dallo Step 3 sarà Lenis a
-// possedere lo scroll e non il body.
+//
+// Debito dello Step 01 saldato qui: lo scroll lock era quello di Radix, che
+// agisce sul body. Dallo Step 03 lo scroll appartiene a Lenis, e fermarlo dal
+// body significherebbe fermarne uno e lasciar correre l'altro — oltre a
+// pagare un reflow dell'intera pagina nel frame esatto dell'apertura.
 
+import { useEffect } from "react";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion } from "motion/react";
 import { duration, ease } from "@/lib/motion";
 import { useReducedMotion } from "@/components/motion/useReducedMotion";
+import { bloccaScroll, sbloccaScroll } from "@/lib/scroll/lenis";
 import { cn } from "@/lib/utils";
 
 interface DialogProps {
@@ -30,6 +35,13 @@ export function Dialog({
   footer,
 }: DialogProps) {
   const reduced = useReducedMotion();
+
+  useEffect(() => {
+    if (open) bloccaScroll();
+    else sbloccaScroll();
+    return sbloccaScroll;
+  }, [open]);
+
   const motionProps = reduced
     ? {}
     : {

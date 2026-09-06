@@ -147,6 +147,9 @@
 
   /* Ordine di impilamento, dichiarato in un solo posto. */
   --z-overlay: 50;                    /* dialoghi, pannelli, menu */
+  --z-nav:     60;                    /* la barra sta sopra la tenda del menu:
+                                         altrimenti il menu coprirebbe il
+                                         proprio pulsante di chiusura */
   --z-grain:   100;                   /* la grana sta sopra tutto */
 
   /* Sporgenza delle discendenti: serve a SplitText, che ritaglia ogni parola
@@ -247,6 +250,12 @@
   margin-inline: calc(var(--gutter) * -1);
   width: calc(100% + var(--gutter) * 2);
   max-width: none;
+}
+
+/* Le ancore della navigazione si fermano sotto la barra fissa, non dietro.
+   Vale anche senza JavaScript, dove il salto lo fa il browser e non Lenis. */
+main > section[id] {
+  scroll-margin-top: 6rem;
 }
 
 /* Ritmo verticale di sezione. */
@@ -373,15 +382,24 @@
      velo estetico: e cio che tiene il crema sopra 4.5:1 su qualsiasi foto,
      comprese quelle che il cliente mandera' e che nessuno ha ancora visto.
      Le tappe sono state alzate finche' scripts/leggibilita.mjs non e passato
-     sulla fotografia piu chiara del corpus: vedi DESIGN_NOTES §10.5. */
+     sulla fotografia piu chiara del corpus: vedi DESIGN_NOTES §10.5.
+     Allo Step 03 sono state ritoccate una terza volta, e la storia merita di
+     essere raccontata perche' e' un caso di misura sbagliata. Da quando il
+     titolo entra parola per parola, la parola in ottone risultava a 2.77:1: la
+     sonda misurava il testo contro se stesso, perche' la regola che nasconde
+     i glifi non copriva tutti i tag. Con la misura corretta le tappe dello
+     Step 02 davano 3.17:1 — passa, ma con un margine sottile proprio sulla
+     parola che porta il significato. Queste tappe intermedie la portano a
+     3.98:1 senza spegnere la fotografia: le tappe massime provate prima
+     (96/84/46) davano 4.77:1 al prezzo di una meta' inferiore quasi nera. */
   .foto-leggibilita {
     background-image: linear-gradient(
       to top,
       var(--color-tuff-deep) 0%,
-      color-mix(in oklab, var(--color-tuff-deep) 94%, transparent) 26%,
-      color-mix(in oklab, var(--color-tuff-deep) 72%, transparent) 44%,
-      color-mix(in oklab, var(--color-tuff-deep) 34%, transparent) 64%,
-      transparent 86%
+      color-mix(in oklab, var(--color-tuff-deep) 95%, transparent) 29%,
+      color-mix(in oklab, var(--color-tuff-deep) 78%, transparent) 46%,
+      color-mix(in oklab, var(--color-tuff-deep) 40%, transparent) 65%,
+      transparent 87%
     );
   }
 
@@ -398,6 +416,55 @@
      un glow che si distingue come forma ha smesso di essere luce. */
   .glow-ottone { background-color: var(--color-brass); opacity: 0.10; }
   .glow-vino   { background-color: var(--color-wine);  opacity: 0.16; }
+
+  /* ---------------------------------------------------------- LA DISCESA
+     Il pin e la sovrapposizione dei due blocchi esistono SOLO quando il
+     movimento e' ammesso. Con `data-motion` assente — JS spento, idratazione
+     fallita, reduced-motion — la sezione torna un blocco normale, alto quanto
+     il suo contenuto, con i due testi uno sotto l'altro. Senza questa
+     condizione i due paragrafi resterebbero sovrapposti: sarebbe contenuto
+     che dipende dal movimento, che e' esattamente cio' che il contratto
+     dello Step 01 vieta. */
+  .discesa-palco { position: relative; }
+
+  /* Contorno d'ottone del marquee. `-webkit-text-stroke` non ha ancora un
+     equivalente standard con lo stesso supporto: dove manca, il testo resta
+     trasparente e invisibile, quindi il colore di ricaduta e' dichiarato
+     prima e sovrascritto solo dove lo stroke esiste davvero. */
+  .marquee-contorno {
+    color: color-mix(in oklab, var(--color-brass) 22%, transparent);
+  }
+  @supports (-webkit-text-stroke: 1px black) {
+    .marquee-contorno {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--color-brass);
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  html[data-motion="on"] .discesa-corsa { height: var(--corsa); }
+  html[data-motion="on"] .discesa-palco {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+  }
+  html[data-motion="on"] .discesa-scena { padding-block: 0; }
+  /* Il monumento occupa tutto il palco e si centra da se': ancorandolo alla
+     sua posizione statica — cioe' subito sotto il respiro — finirebbe nella
+     meta' bassa dello schermo e la coda uscirebbe dal fondo. */
+  html[data-motion="on"] [data-discesa="monumento"] {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 0;
+    padding-inline: var(--gutter);
+  }
+}
+
+@layer components {
 }
 
 @keyframes shake-x {

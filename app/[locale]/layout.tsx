@@ -9,11 +9,26 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { fontVariables } from "@/app/fonts";
 import { Grain } from "@/components/Grain";
+import { SmoothScroll } from "@/components/chrome/SmoothScroll";
+import { Cursor } from "@/components/chrome/Cursor";
+import { PageTransition } from "@/components/chrome/PageTransition";
+import { Navbar, type VoceNav } from "@/components/chrome/Navbar";
 import { MotionBootScript } from "@/components/MotionRuntime";
 import { MotionReady } from "@/components/MotionReady";
 import { HREFLANG, SITE_URL, alternatesFor } from "@/lib/seo";
 import { THEME_COLOR } from "@/lib/utils";
 import "@/app/globals.css";
+
+/** Le voci di navigazione. Sono ancore interne: la pagina è una sola, e la
+ *  navigazione è un indice della partitura, non un menu di sezioni separate. */
+const VOCI: readonly VoceNav[] = [
+  { href: "#famiglia", chiave: "famiglia" },
+  { href: "#cantina", chiave: "cantina" },
+  { href: "#vino", chiave: "vino" },
+  { href: "#cucina", chiave: "cucina" },
+  { href: "#locali", chiave: "locali" },
+  { href: "#prenota", chiave: "prenota" },
+];
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -73,7 +88,14 @@ export default async function LocaleLayout(props: {
 
         <NextIntlClientProvider>
           <MotionReady />
+          <SmoothScroll />
+          {/* La barra è figlia diretta del body e non di `main`: dentro `main`
+              vivono i parallassi, e un antenato con `transform` disattiva in
+              silenzio il `backdrop-filter` del velo. */}
+          <Navbar voci={VOCI} />
           {props.children}
+          <Cursor />
+          <PageTransition />
         </NextIntlClientProvider>
 
         <Grain />

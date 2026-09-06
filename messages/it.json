@@ -21,7 +21,10 @@
     "cantina": "La cantina",
     "carta": "La carta",
     "vino": "Il nostro vino",
-    "contatti": "Contatti"
+    "contatti": "Contatti",
+    "famiglia": "La famiglia",
+    "cucina": "La cucina",
+    "prenota": "Prenota"
   },
   "common": {
     "telefono": "Telefono",
@@ -37,7 +40,8 @@
     "caricamento": "Caricamento in corso",
     "obbligatorio": "Campo obbligatorio",
     "torna": "Torna su",
-    "oraiNonDisponibili": "Orari in aggiornamento: chiamaci per conferma."
+    "oraiNonDisponibili": "Orari in aggiornamento: chiamaci per conferma.",
+    "guarda": "Guarda"
   },
   "locali": {
     "titolo": "Due porte sulla stessa via",
@@ -173,7 +177,11 @@
     "hero": {
       "titolo": "Sopra la tavola,<br></br>sotto la <em>storia</em>",
       "sommario": "A Montepulciano si mangia sopra la storia e si beve quello che nasce sotto i tuoi piedi.",
-      "dato": "Via di Gracciano nel Corso · 101 · 72"
+      "dato": "Via di Gracciano nel Corso · 101 · 72",
+      "occhiello": "Montepulciano · dal cuore del Corso",
+      "titoloPiano": "Sopra la tavola, sotto la storia",
+      "accento": "storia",
+      "indicatore": "Scendi"
     },
     "marquee": {
       "voci": "Il Brillo|Famiglia Ercolani|Via di Gracciano nel Corso|Montepulciano|Numero 101|Numero 72|Tunnel medievali"

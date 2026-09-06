@@ -785,3 +785,295 @@ In ordine di impatto sul sito:
 4. **La facciata del 101 con l'angolo in basso a sinistra in ombra**, per il
    civico che esce dal bordo (§10.5).
 
+---
+---
+
+# Step 03 · Movimento e fluidità
+
+Senza 3D il movimento non può essere spettacolare, quindi deve essere
+impeccabile. È un vincolo favorevole: cinque animazioni perfette si leggono
+come più cura di venti approssimative, e la fluidità è un problema di coerenza
+e di frame rate, non di quantità.
+
+---
+
+## 11. Movimento
+
+### 11.0 Uno scostamento dichiarato
+
+La §3.2 della specifica prevede che, durante la discesa, «la fotografia dei
+tunnel entri dal basso con `RevealImage`, scalando da 1.15 a 1». Quella
+fotografia non esiste: lo Step 02 ha accertato che non è nella libreria del
+cliente (§10.0).
+
+La meccanica della discesa è rimasta identica — quattro interpolazioni sullo
+stesso progress — e cambia solo cosa arriva in fondo: il monumento tipografico
+della cantina, che sale da sotto scalando **da 1.15 a 1** esattamente come
+avrebbe fatto la fotografia. Il giorno in cui gli scatti arrivano, il quarto
+blocco diventa una `<Figure>` e la coreografia non si tocca.
+
+### 11.1 Lo scroll: i tre numeri e il loop unico
+
+`lerp 0.085`, `wheelMultiplier 0.9`, **spento su touch**.
+
+Il terzo non è un'ottimizzazione, è una scelta di merito: lo scroll nativo di
+iOS è migliore di qualsiasi emulazione, e il rubber-band è ciò che rende
+credibile il gesto. Lenis su mobile è la causa numero uno di scroll che «sembra
+rotto», e qui non gira: `lib/scroll/lenis.ts` esce subito se
+`(pointer: coarse)`. Verificato su iPhone 13 emulato — nessuna classe di Lenis
+sulla radice.
+
+Un solo loop: `gsap.ticker` guida `lenis.raf`, `lenis.on("scroll")` chiama
+`ScrollTrigger.update`, `lagSmoothing(0)` impedisce a GSAP di comprimere il
+tempo dopo un frame lungo. Senza quest'ultima riga lo scroll smooth e le
+timeline legate allo scroll divergono dopo ogni intoppo, e il sintomo — una
+sezione che «rimane indietro» — sembra un problema di performance e non lo è.
+
+**Il conteggio dei loop è esposto** (`contaLoop()`) invece che assunto.
+
+### 11.2 La discesa: perché `sticky` e non `pin: true`
+
+È il pezzo più rischioso dello step, e l'ho dichiarato prima di scriverlo: non
+per l'effetto — sono quattro interpolazioni sullo stesso progress — ma perché
+è l'unico punto in cui tre sistemi che misurano il documento devono restare
+d'accordo: Lenis che riscrive la posizione di scroll, ScrollTrigger che
+memorizza le distanze, Framer che osserva le intersezioni.
+
+Il pin è quindi `position: sticky`, e ScrollTrigger si limita allo `scrub: 1`.
+
+Il pin di ScrollTrigger costruisce un pin-spacer e riscrive il layout a partire
+da distanze **memorizzate**: sono esattamente le misure che diventano obsolete
+quando i font finiscono di caricare, quando arriva un'immagine o quando cambia
+la lingua, ed è il colpevole abituale del punto 2 del test di fluidità. Con
+`sticky` la posizione la calcola il browser a ogni frame e non c'è nessun
+numero da invalidare. Il `refresh()` resta agganciato a `document.fonts.ready`,
+a `load`, al `ResizeObserver` sul body e al cambio di percorso — ma serve solo
+allo `scrub`, non a tenere in piedi il pin.
+
+Il ritardo è `scrub: 1` e non `true`: un secondo di smoothing è ciò che rende
+il movimento burroso invece che scattoso, e assorbe il jitter della rotella
+senza staccarsi dal gesto.
+
+**Su mobile nessun pin.** Una sezione che trattiene lo scroll per tre schermate
+su uno schermo da sei pollici si legge come una pagina bloccata, non come una
+discesa. Resta il racconto — il fondo che si raffredda, il glow che cresce —
+legato allo scroll naturale: cambia il mezzo, non la cosa.
+
+**Il pin è condizionato al contratto di movimento**, non a un breakpoint. Le
+regole che impilano i due blocchi vivono sotto `html[data-motion="on"]` in
+`globals.css`: senza movimento la sezione torna un blocco normale con i due
+testi uno sotto l'altro. Impilare due paragrafi che solo un'animazione separa è
+contenuto che dipende dal movimento, ed è quello che il contratto dello Step 01
+vieta.
+
+### 11.3 Il difetto più grave trovato in questo step
+
+**`RevealImage` non poteva funzionare, e funzionava per caso.**
+
+Il componente si nascondeva con `clip-path: inset(100% 0 0 0)` sullo stesso
+nodo che veniva osservato da `whileInView`. Chromium calcola l'intersezione di
+un elemento **dopo** avergli applicato il proprio `clip-path`: un elemento che
+si ritaglia a zero risulta grande zero, e `isIntersecting` è sempre `false`.
+L'elemento si nascondeva da solo e non poteva mai essere visto entrare.
+
+Misurato, stesso elemento e stesso osservatore:
+
+| | `isIntersecting` | altezza dell'intersezione |
+|---|---|---|
+| con `clip-path` | `false` | 0 |
+| senza `clip-path` | `true` | 684 |
+
+In pratica nove immagini su dieci entravano lo stesso, vincendo una corsa fra
+l'applicazione della maschera e il primo giro dell'osservatore. L'hero, la cui
+maschera è applicata all'idratazione, quella corsa la perdeva sempre: la
+fotografia più importante del sito restava invisibile.
+
+La correzione è strutturale: **il nodo osservato non porta mai la maschera**.
+Tre nodi — uno osservato che propaga le varianti, uno per la maschera, uno per
+la scala. È lo stesso motivo per cui `SplitText` osserva il contenitore e non
+le parole, ed era già scritto nei commenti dello Step 01: la lezione c'era, non
+l'avevo applicata al componente nuovo.
+
+**Perché lo Step 02 non l'aveva visto.** Tutta la verifica fotografica girava
+con `reducedMotion: "reduce"`, dove `RevealImage` restituisce un `div` nudo.
+Verificare solo a movimento revocato nasconde per costruzione ogni difetto di
+movimento. Da qui in avanti le catture di composizione restano a movimento
+revocato — è la composizione che si giudica — ma esiste una suite separata che
+gira col movimento acceso.
+
+### 11.4 Gli altri difetti trovati guardando
+
+**Il menu era largo quanto la barra.** Il pannello `fixed inset-0` era montato
+dentro la barra di navigazione, che porta `translate` per nascondersi allo
+scroll. Un valore diverso da `none` su `transform`, `translate`, `rotate` o
+`scale` rende quell'elemento il **blocco contenitore** dei discendenti
+`position: fixed`: il menu copriva ottanta pixel in cima, col resto che
+debordava sopra la pagina. È lo stesso meccanismo che la specifica cita per il
+`backdrop-filter`, in un'altra veste. Il pannello vive ora in un portale sul
+`body`.
+
+**Il menu copriva il proprio pulsante di chiusura.** Risolto con un token
+nuovo, `--z-nav: 60`, e non con un numero al volo: in questo sistema l'ordine
+di impilamento è dichiarato in un solo posto.
+
+**Il glow della discesa diventava un banco di nebbia.** `gsap.to(el, {opacity: 1})`
+scriveva `opacity: 1` inline e cancellava lo `0.10` del token. Due nodi: fuori
+l'opacità che GSAP anima, dentro quella della classe.
+
+**Il velo della barra pagava una sfocatura invisibile.** Il `backdrop-filter`
+restava montato anche a `opacity: 0`. Ora la classe viene aggiunta solo quando
+il velo è visibile — è anche il modo di restare sotto il limite di due filtri
+attivi insieme quando la tenda è aperta.
+
+**La barra spariva dentro la fotografia.** Al primo schermo la barra è
+trasparente per scelta, ma l'hero ha un soffitto illuminato e le voci in
+`stone` ci si perdevano dentro: misurate a **4.11:1**, sotto la soglia AA, e la
+lingua non attiva a 3.52:1. Aggiunta una velatura permanente — un gradiente
+alto 160px, non un fondo — con i valori scelti misurando finché la voce più
+debole non è passata: ora la barra sta fra **7.6 e 12.6:1** e la lingua non
+attiva a 5.16:1. Protegge anche le fotografie che il cliente manderà.
+
+### 11.4bis La sonda di contrasto sbagliava tre volte
+
+`scripts/leggibilita.mjs` è stato scritto allo Step 02 e in questo step ha
+prodotto **tre falsi allarmi consecutivi**, tutti sullo stesso testo. Vale la
+pena elencarli, perché sono tre modi diversi di misurare male la stessa cosa:
+
+1. **Misurava contenitori invece di testo.** Da quando il titolo dell'hero
+   entra parola per parola, ogni parola ha due nodi che la incartano: il loro
+   riquadro è più alto del glifo e il loro colore è quello ereditato. La parola
+   in ottone risultava a 2.77:1. Ora si misura solo un elemento che contiene
+   un nodo di testo non vuoto fra i figli diretti — l'unica definizione di
+   «elemento che dipinge testo» che non lasci ambiguità.
+2. **Misurava il testo contro se stesso.** La regola che nasconde i glifi
+   prima della cattura elencava dei tag (`h1, h2, h3, p, span, a`) e ne
+   dimenticava altri: il glifo restava nel ritaglio e finiva nel campione di
+   sfondo. Ora nasconde `body, body *`.
+3. **Leggeva i riquadri mentre la barra era fuori campo.** La barra si nasconde
+   scorrendo in giù, e la sonda leggeva le posizioni subito dopo la scorsa di
+   caricamento: tutti i testi della barra risultavano a coordinate negative,
+   venivano riportati a zero e misurati contro un pezzo di pagina sbagliato.
+
+Il costo di questi errori non è stato solo tempo: **il primo mi ha portato a
+scurire la fotografia dell'hero per un difetto che non esisteva.** Le tappe del
+gradiente di leggibilità erano state alzate a 96/84/46, che rendeva quasi nera
+la metà inferiore dell'immagine. Con la misura corretta sono tornate a valori
+intermedi (95/78/40), che portano la parola in ottone a 3.98:1 — sopra soglia
+con margine, e con la fotografia ancora viva. Una sonda che sbaglia in modo
+conservativo fa danni silenziosi, perché il suo errore assomiglia a prudenza.
+
+La sonda ora copre anche ciò che sta **fuori da `main`**, cercando la
+sovrapposizione geometrica con una qualsiasi fotografia invece
+dell'appartenenza alla stessa sezione: la barra non è dentro nessuna
+`<section>`, ed era esattamente il testo che rischiava di più.
+
+### 11.5 Profilazione
+
+`npm run profilo`, con Chromium reale:
+
+| controllo | esito |
+|---|---|
+| ascoltatori bloccanti su wheel/touch | **3**, tutti di Lenis — è il prezzo dello smooth scroll |
+| ascoltatori non passivi su `scroll` | 3, ma su `scroll` il flag è ininfluente: l'evento non è annullabile |
+| `will-change` statici | **nessuno** |
+| `backdrop-filter` attivi insieme | riposo 0, barra 1, menu 1 — mai 2 |
+| `getBoundingClientRect` in ~2 s di scroll | **2** — nessuno misura dentro il ciclo |
+
+`npm run fps`, rotella vera dispatchata via CDP (quindi passando per Lenis) per
+dodici secondi:
+
+| CPU | fps medi | 95° percentile | frame > 33 ms |
+|---|---|---|---|
+| 4× rallentata | 60.0 | 59.9 | **0.0 %** |
+| 6× rallentata | 59.5 | 59.9 | 0.3 % |
+
+Il numero che conta non è la media, che una manciata di frame buoni gonfia, ma
+la coda: a 4× non c'è un solo frame saltato in milleventi.
+
+Il conteggio dei layer compositi resta l'unica voce del §4 non automatizzata:
+va guardata nel pannello Layers di un browser vero.
+
+### 11.6 Esito del test di fluidità §5
+
+Eseguito da `npm run fluidita`, non a occhio. Il metodo: si registra
+un'impronta dello stato animato — trasformazioni, opacità, maschere, geometria,
+posizione di scroll — e la si confronta dopo aver maltrattato la pagina.
+
+| # | prova | esito |
+|---|---|---|
+| 1 | discesa a velocità normale | **ok** — frame peggiore 17 ms, 0 % oltre 33 ms |
+| 2 | giù veloce, poi ritorno in cima di colpo | **ok** — stato identico |
+| 3 | dieci giri: il decimo come il primo | **ok** — impronta stabile |
+| 4 | ridimensionamento durante lo scroll | **ok** — tutto riallineato |
+| 5 | cambio lingua a metà pagina e ritorno | **ok** — stato ricostruito uguale |
+| 5b | immagini scavalcate da un salto | **ok** — 9 scavalcate, 9 recuperate risalendo |
+| 6 | `prefers-reduced-motion` di sistema | **ok** — nessun testo nascosto, nessun pin, permesso revocato, nessuno scorrimento orizzontale |
+
+Il punto 2 è quello che rompe la maggior parte dei siti guidati dallo scroll,
+ed è anche quello che un occhio umano giudica peggio: uno scarto di venti pixel
+su una sezione pinnata si vede solo se si sa già dove guardare.
+
+**Due prove sono fallite prima di passare, e in entrambi i casi il difetto era
+nel test.** La prova 4 confrontava un'impronta presa con la rotella con una
+presa a colpo secco: due posizioni di scroll diverse. La posizione fa ora parte
+dell'impronta, così l'errore non può ripetersi in silenzio. La prova 5
+confrontava le maschere delle fotografie fra due visite con storie diverse:
+un'immagine scavalcata con un salto **non deve** essere entrata, e le prove che
+riguardano le misure usano ora il sottoinsieme invariante. Il recupero delle
+immagini scavalcate ha una prova sua, la 5b, che prima non esisteva.
+
+### 11.7 Mobile
+
+`npm run mobile`, su iPhone 13 emulato: niente Lenis, niente pin (la discesa è
+alta 834 px, il suo contenuto, invece di tre schermate), niente cursore
+custom, nessuno scorrimento orizzontale, e l'inserto d'archivio presente.
+
+**I ritardi sono dimezzati, le durate no.** `useMotionScale` restituisce 0.5
+sotto i 768 px e scala ritardi e sfasamenti in `Reveal`, `SplitText` e nella
+cronologia dell'hero. Le durate restano quelle: è la loro coerenza a dare
+l'impressione di cura, mentre è la lunghezza delle sequenze a diventare un
+problema su uno schermo che si scorre veloce.
+
+### 11.8 Trade-off presi, e cosa ho semplificato
+
+**Il marquee avanza per frame invece che con `@keyframes`.** La modulazione da
+velocità di scroll richiede di cambiare passo a metà corsa, cosa che
+un'animazione CSS non consente. Il costo è un `requestAnimationFrame` sempre
+vivo: mitigato fermando il loop quando la banda esce dal viewport, con un
+`IntersectionObserver`. La velocità è in **pixel al secondo**, non «un giro in
+N secondi», altrimenti la banda correrebbe su desktop e striscerebbe su mobile.
+
+**Il contorno del marquee ha un colore di ricaduta.** `-webkit-text-stroke` non
+ha ancora un equivalente standard: dove manca, `color: transparent` renderebbe
+il testo invisibile. Il ripiego — ottone al 22 % — è dichiarato prima e
+sovrascritto solo dentro `@supports`.
+
+**Il cursore custom non tocca il focus da tastiera.** Resta l'anello d'ottone
+del design system, che è più visibile dell'outline nativo che sostituisce.
+
+**La transizione di pagina non attende l'uscita prima di navigare.** Bloccare
+la navigazione per aspettare un'animazione è il modo più rapido per far sembrare
+lento un sito che è veloce: la tenda copre, la navigazione parte, la tenda si
+ritira.
+
+**Lo scroll lock è ovunque `lenis.stop()`**, mai `overflow: hidden` sul body.
+Il debito lasciato aperto dallo Step 01 (§9) sul dialogo è saldato qui: il
+dialogo su Radix usa ora lo stesso blocco del menu.
+
+**Le ancore di navigazione passano da `lenis.scrollTo`.** Un `href="#..."`
+nativo salta di colpo e scavalca lo scroll smooth, lasciando ScrollTrigger in
+un punto dove non è mai passato. Senza JavaScript resta il salto del browser, e
+`scroll-margin-top: 6rem` sulle sezioni evita che il titolo finisca sotto la
+barra.
+
+### 11.9 Debiti aperti verso lo Step 04
+
+- **Il peso è cresciuto**: 252 kB di First Load JS sulla pagina di prova, contro
+  i 194 dello Step 02. Sono GSAP con ScrollTrigger più Lenis. Da rivedere allo
+  Step 05 con il peso reale della home.
+- **Il conteggio dei layer compositi** non è automatizzato.
+- **La cronologia dell'hero è vincolata all'LCP**: il titolo entra a 0.30 s con
+  `SplitText`, e il testo alternativo resta nell'albero di accessibilità. Se
+  Lighthouse peggiora, si riduce la sequenza — non si contratta.
+- **`Magnetic` dello Step 01 non è ancora usato**: aspetta le CTA reali.
+

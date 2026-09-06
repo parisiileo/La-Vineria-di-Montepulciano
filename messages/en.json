@@ -21,7 +21,10 @@
     "cantina": "The cellar",
     "carta": "The list",
     "vino": "Our wine",
-    "contatti": "Find us"
+    "contatti": "Find us",
+    "famiglia": "The family",
+    "cucina": "The kitchen",
+    "prenota": "Book"
   },
   "common": {
     "telefono": "Telephone",
@@ -37,7 +40,8 @@
     "caricamento": "Loading",
     "obbligatorio": "This field is required",
     "torna": "Back to top",
-    "oraiNonDisponibili": "Opening hours are being updated — please call to confirm."
+    "oraiNonDisponibili": "Opening hours are being updated — please call to confirm.",
+    "guarda": "Look"
   },
   "locali": {
     "titolo": "Two doors on the same street",
@@ -173,7 +177,11 @@
     "hero": {
       "titolo": "Above the table,<br></br>below the <em>history</em>",
       "sommario": "In Montepulciano you eat above history, and you drink what is born beneath your feet.",
-      "dato": "Via di Gracciano nel Corso · 101 · 72"
+      "dato": "Via di Gracciano nel Corso · 101 · 72",
+      "occhiello": "Montepulciano · from the heart of the Corso",
+      "titoloPiano": "Above the table, below the history",
+      "accento": "history",
+      "indicatore": "Go down"
     },
     "marquee": {
       "voci": "Il Brillo|Ercolani family|Via di Gracciano nel Corso|Montepulciano|Number 101|Number 72|Medieval tunnels"

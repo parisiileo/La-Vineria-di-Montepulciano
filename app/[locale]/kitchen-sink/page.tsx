@@ -48,7 +48,7 @@ function Body() {
   ];
 
   return (
-    <main id="contenuto" className="shell section-y">
+    <main id="contenuto" className="shell pb-(--section-py) pt-28">
       <header className="mb-24">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-6">
           <span className="font-sans text-label uppercase text-stone-dim">{t("titolo")}</span>

@@ -7,6 +7,7 @@
 import { motion, type Variants } from "motion/react";
 import { duration, ease, stagger as staggerTokens, viewportOnce } from "@/lib/motion";
 import { useReducedMotion } from "./useReducedMotion";
+import { useMotionScale } from "./useMotionScale";
 import { cn } from "@/lib/utils";
 
 const TAGS = {
@@ -49,8 +50,10 @@ export function Reveal({
   staggerChildren,
 }: RevealProps) {
   const reduced = useReducedMotion();
+  const scala = useMotionScale();
   const Tag = TAGS[as];
-  const step = staggerChildren ? staggerTokens[staggerChildren] : undefined;
+  const step = staggerChildren ? staggerTokens[staggerChildren] * scala : undefined;
+  const ritardo = delay * scala;
 
   if (reduced) {
     const Plain = as;
@@ -67,8 +70,8 @@ export function Reveal({
       transition: {
         duration: duration.base,
         ease: ease.out,
-        delay,
-        ...(step ? { staggerChildren: step, delayChildren: delay } : {}),
+        delay: ritardo,
+        ...(step ? { staggerChildren: step, delayChildren: ritardo } : {}),
       },
     },
   };

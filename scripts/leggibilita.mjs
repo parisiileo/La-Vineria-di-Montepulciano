@@ -24,34 +24,72 @@ await page.evaluate(async () => {
   window.scrollTo(0, 0);
 });
 await page.waitForLoadState("networkidle");
+// La barra si nasconde scorrendo in giù e riappare risalendo: senza questa
+// attesa i riquadri vengono letti mentre è ancora traslata fuori campo, e
+// tutti i suoi testi risultano a coordinate negative.
+await page.waitForTimeout(1500);
 
 // I riquadri dei testi che stanno sopra una fotografia.
 const bersagli = await page.evaluate(() => {
   const out = [];
-  for (const el of document.querySelectorAll("h1, h2, h3, p, span, a")) {
-    if (!el.textContent?.trim() || el.children.length > 2) continue;
-    const suFoto = el.closest("section")?.querySelector(".foto-lift");
-    if (!suFoto) continue;
-    const rf = suFoto.getBoundingClientRect();
+  // Si misura ogni elemento che DIPINGE testo, cioè che contiene almeno un
+  // nodo di testo non vuoto tra i figli diretti. È l'unica definizione che
+  // non lascia ambiguità: i contenitori hanno un riquadro più alto del glifo
+  // e un colore ereditato, e misurarli significa campionare la fotografia
+  // dove il testo non c'è. SplitText ne produce due per ogni parola, ed è
+  // così che una parola perfettamente leggibile risultava a 2.77:1.
+  for (const el of document.querySelectorAll("body *")) {
+    const dipinge = [...el.childNodes].some(
+      (n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim(),
+    );
+    if (!dipinge) continue;
     const r = el.getBoundingClientRect();
     if (r.width < 8 || r.height < 8) continue;
-    // solo se il testo si sovrappone davvero alla fotografia
-    if (r.right < rf.left || r.left > rf.right || r.bottom < rf.top || r.top > rf.bottom) continue;
+    // Sovrapposizione geometrica con una qualsiasi fotografia, non
+    // appartenenza alla stessa sezione: la barra di navigazione sta sopra la
+    // fotografia dell'hero e non è dentro nessuna <section>. Cercando per
+    // sezione, il testo che rischia di più era proprio quello escluso.
+    const suFoto = [...document.querySelectorAll(".foto-lift")].some((f) => {
+      const rf = f.getBoundingClientRect();
+      return !(r.right < rf.left || r.left > rf.right || r.bottom < rf.top || r.top > rf.bottom);
+    });
+    if (!suFoto) continue;
     const cs = getComputedStyle(el);
+    if (cs.visibility === "hidden" || Number(cs.opacity) === 0) continue;
+    // Un elemento `fixed` ha coordinate relative al viewport: sommarci lo
+    // scroll dà un riquadro che non esiste da nessuna parte, e il ritaglio
+    // finisce fuori dalla pagina o su un pezzo di fotografia sbagliato.
+    // Questi vengono catturati sul viewport invece che sulla pagina intera.
+    let fisso = false;
+    for (let n = el; n; n = n.parentElement) {
+      if (getComputedStyle(n).position === "fixed") { fisso = true; break; }
+    }
     out.push({
+      fisso,
       decorativo: !!el.closest("[aria-hidden='true']") || el.getAttribute("aria-hidden") === "true",
+      tag: el.tagName.toLowerCase(),
       testo: el.textContent.trim().slice(0, 42),
       colore: cs.color,
       px: parseFloat(cs.fontSize),
       peso: cs.fontWeight,
-      box: { x: r.left + window.scrollX, y: r.top + window.scrollY, w: r.width, h: r.height },
+      box: fisso
+        ? { x: r.left, y: r.top, w: r.width, h: r.height }
+        : { x: r.left + window.scrollX, y: r.top + window.scrollY, w: r.width, h: r.height },
     });
   }
   return out;
 });
 
+const pagina = await page.evaluate(() => ({
+  larghezza: document.documentElement.scrollWidth,
+  altezza: document.body.scrollHeight,
+}));
+
 // Nasconde il testo lasciando fotografia e strati.
-await page.addStyleTag({ content: "main :is(h1,h2,h3,p,span,a){color:transparent!important}" });
+// Si nasconde OGNI testo dipinto, non un elenco di tag: un solo tag
+// dimenticato lascia il proprio glifo nel ritaglio e la sonda finisce per
+// misurare il testo contro se stesso.
+await page.addStyleTag({ content: "body, body *{color:transparent!important;-webkit-text-stroke-color:transparent!important}" });
 
 const lin = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
 const lum = (r, g, b) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
@@ -62,9 +100,17 @@ console.log("contrasto  soglia  corpo  testo");
 for (const t of bersagli) {
   // `fullPage` è necessario: senza, il ritaglio è limitato al viewport e i
   // testi sotto la piega fanno fallire la cattura invece della verifica.
+  // Il riquadro va comunque riportato dentro la pagina: un elemento `fixed`
+  // ha coordinate relative al viewport, e alcuni sconfinano a sinistra.
+  const limite = t.fisso ? { larghezza: 1440, altezza: 900 } : pagina;
+  const x = Math.max(0, t.box.x);
+  const y = Math.max(0, t.box.y);
+  const w = Math.max(8, Math.min(t.box.w, limite.larghezza - x));
+  const h = Math.max(8, Math.min(t.box.h, limite.altezza - y));
+  if (x >= limite.larghezza || y >= limite.altezza) continue;
   const shot = await page.screenshot({
-    fullPage: true,
-    clip: { x: t.box.x, y: t.box.y, width: Math.max(8, t.box.w), height: Math.max(8, t.box.h) },
+    fullPage: !t.fisso,
+    clip: { x, y, width: w, height: h },
   });
   const px = await page.evaluate(async (b64) => {
     const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = "data:image/png;base64," + b64; });
@@ -101,7 +147,10 @@ for (const t of bersagli) {
   const esito = t.decorativo ? "dec " : c >= soglia ? "ok  " : "FAIL";
   if (c < soglia && !t.decorativo) falliti++;
   peggiore = Math.min(peggiore, c / soglia);
-  console.log(`${esito} ${c.toFixed(2).padStart(6)}  ${soglia.toFixed(1)}  ${String(Math.round(t.px)).padStart(4)}px  ${t.testo}`);
+  const posa = `[${Math.round(t.box.x)},${Math.round(t.box.y)} ${Math.round(t.box.w)}×${Math.round(t.box.h)}]`;
+  console.log(
+    `${esito} ${c.toFixed(2).padStart(6)}  ${soglia.toFixed(1)}  ${String(Math.round(t.px)).padStart(4)}px  ${t.testo} ${esito === "FAIL" ? "<" + t.tag + "> " + posa + " colore " + t.colore : ""}`,
+  );
 }
 console.log(falliti ? `\n${falliti} testi sotto soglia` : `\nTutti i testi sopra soglia (${bersagli.length} verificati)`);
 await browser.close();

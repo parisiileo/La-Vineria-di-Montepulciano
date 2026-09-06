@@ -18,7 +18,7 @@ function Body() {
   const tl = useTranslations("locali");
 
   return (
-    <main id="contenuto" className="shell flex min-h-dvh flex-col justify-between py-12">
+    <main id="contenuto" className="shell flex min-h-dvh flex-col justify-between pb-12 pt-28">
       <div className="flex items-center justify-between gap-6">
         <span className="font-sans text-label uppercase text-stone-dim">{t("famiglia")}</span>
         <LangSwitch />

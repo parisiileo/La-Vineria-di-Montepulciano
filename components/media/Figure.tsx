@@ -47,6 +47,12 @@ export interface FigureProps {
   className?: string;
   /** Didascalia visibile. Assente per default: quasi sempre è rumore. */
   didascalia?: React.ReactNode;
+  /**
+   * Etichetta mostrata dentro l'anello del cursore custom. Solo dove la
+   * fotografia è davvero il soggetto: un'etichetta su ogni immagine si
+   * trasforma in rumore che segue il mouse.
+   */
+  cursore?: string;
 }
 
 export function Figure({
@@ -59,11 +65,12 @@ export function Figure({
   riempi = false,
   className,
   didascalia,
+  cursore,
 }: FigureProps) {
   const archivio = foto.registro === "archivio";
 
   return (
-    <figure className={cn("relative m-0", className)}>
+    <figure className={cn("relative m-0", className)} data-cursore={cursore}>
       {/* `isolate` chiude il contesto di fusione: lo strato in `lighten` deve
           incontrare la fotografia, mai la parete che ci sta dietro. */}
       <div
