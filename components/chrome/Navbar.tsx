@@ -51,7 +51,15 @@ function Cornetta() {
   );
 }
 
-export function Navbar({ voci }: { voci: readonly VoceNav[] }) {
+export function Navbar({
+  voci,
+  barra,
+}: {
+  /** L'indice completo: va nella tenda. */
+  voci: readonly VoceNav[];
+  /** Le poche voci visibili accanto al wordmark. */
+  barra: readonly VoceNav[];
+}) {
   const t = useTranslations("nav");
   const tb = useTranslations("brand");
   const tc = useTranslations("common");
@@ -123,7 +131,7 @@ export function Navbar({ voci }: { voci: readonly VoceNav[] }) {
         </Ancora>
 
         <nav aria-label={t("menuLabel")} className="hidden items-center gap-8 lg:flex">
-          {voci.map((voce) => (
+          {barra.map((voce) => (
             <Ancora
               key={voce.href}
               href={voce.href}

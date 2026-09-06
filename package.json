@@ -19,7 +19,8 @@
     "pannelli": "node scripts/pannelli.mjs",
     "contrasto": "node scripts/leggibilita.mjs http://localhost:3111/it",
     "campi": "node scripts/campi.mjs",
-    "sezioni": "node scripts/sezioni.mjs"
+    "sezioni": "node scripts/sezioni.mjs",
+    "pagine": "node scripts/pagine.mjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.11",

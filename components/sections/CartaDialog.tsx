@@ -23,17 +23,16 @@
 //     una carta una carta, e sono già al posto giusto per quando i numeri
 //     arriveranno.
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion, type PanInfo } from "motion/react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
-import { CARTA, CATEGORIE, TAG_CONFERMATI, formatPrezzo, type Categoria } from "@/lib/data/menu";
 import { duration, ease } from "@/lib/motion";
 import { bloccaScroll, sbloccaScroll } from "@/lib/scroll/lenis";
 import { segnalaOverlay } from "@/lib/ui/overlay";
 import { useReducedMotion } from "@/components/motion/useReducedMotion";
-import { Checkbox } from "@/components/ui/Checkbox";
+import { ListaCarta } from "@/components/sections/ListaCarta";
 import { cn } from "@/lib/utils";
 
 /** Oltre questo trascinamento, o questa velocità, il foglio si chiude. */
@@ -64,11 +63,8 @@ function Chiudi({ label }: { label: string }) {
 export function CartaDialog({ open, onOpenChange }: CartaDialogProps) {
   const t = useTranslations("carta");
   const ta = useTranslations("a11y");
-  const locale = useLocale();
   const reduced = useReducedMotion();
   const [foglio, setFoglio] = useState(false);
-  const [categoria, setCategoria] = useState<Categoria | "tutte">("tutte");
-  const [soloVegetariano, setSoloVegetariano] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -90,21 +86,6 @@ export function CartaDialog({ open, onOpenChange }: CartaDialogProps) {
     segnalaOverlay(true);
     return () => segnalaOverlay(false);
   }, [open]);
-
-  const voci = useMemo(
-    () =>
-      CARTA.filter(
-        (voce) =>
-          (categoria === "tutte" || voce.categoria === categoria) &&
-          (!soloVegetariano || voce.tag.includes("vegetariano")),
-      ),
-    [categoria, soloVegetariano],
-  );
-
-  const perCategoria = CATEGORIE.map((c) => ({
-    categoria: c,
-    voci: voci.filter((v) => v.categoria === c),
-  })).filter((gruppo) => gruppo.voci.length > 0);
 
   function fineTrascinamento(_: unknown, info: PanInfo) {
     if (info.offset.y > CHIUSURA_PX || info.velocity.y > CHIUSURA_VELOCITA) onOpenChange(false);
@@ -180,126 +161,11 @@ export function CartaDialog({ open, onOpenChange }: CartaDialogProps) {
                   <Chiudi label={ta("chiudiDialogo")} />
                 </header>
 
-                {/* Filtri: una riga sola, che scorre. Su mobile impilarli
-                    significa far scorrere mezzo schermo prima del cibo. */}
-                <div className="shrink-0 border-y border-border">
-                  {/* Riga che scorre sotto 768px, riga che va a capo sopra: su desktop
-                      lo scorrimento nasconderebbe l'ultimo filtro dietro il bordo
-                      senza che niente lo annunci. */}
-                  <div className="flex items-center gap-3 overflow-x-auto px-6 py-3 md:flex-wrap md:overflow-x-visible md:px-8">
-                    <span className="sr-only">{t("filtriEtichetta")}</span>
-                    {(["tutte", ...CATEGORIE] as const).map((c) => {
-                      const attivo = categoria === c;
-                      return (
-                        <button
-                          key={c}
-                          type="button"
-                          aria-pressed={attivo}
-                          onClick={() => setCategoria(c)}
-                          className={cn(
-                            "press shrink-0 rounded-pill border px-4 py-2 font-sans text-label uppercase",
-                            attivo
-                              ? "border-brass bg-brass/12 text-brass"
-                              : "border-border text-stone-dim hover:border-border-hover hover:text-cream",
-                          )}
-                        >
-                          {c === "tutte" ? t("filtroTutti") : t(`categorie.${c}`)}
-                        </button>
-                      );
-                    })}
-                    {/* Il filetto separa i due gruppi di filtri finché stanno sulla
-                        stessa riga. Quando la riga va a capo non separa più
-                        niente: resta appeso in fondo alla prima riga. */}
-                    <span aria-hidden="true" className="h-6 w-px shrink-0 bg-border md:hidden" />
-                    <div className="shrink-0">
-                      <Checkbox
-                        label={t("filtroVegetariano")}
-                        checked={soloVegetariano}
-                        onCheckedChange={setSoloVegetariano}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-6 md:px-8">
-                  {perCategoria.length === 0 ? (
-                    <p className="text-body text-stone-dim">{t("vuoto")}</p>
-                  ) : null}
-
-                  {perCategoria.map((gruppo) => (
-                    <section key={gruppo.categoria} className="mb-10 last:mb-0">
-                      <h3 className="font-mono text-mono uppercase text-brass">
-                        {t(`categorie.${gruppo.categoria}`)}
-                      </h3>
-                      <ul className="mt-4 space-y-6">
-                        {gruppo.voci.map((voce) => (
-                          <li
-                            key={voce.id}
-                            className={cn(
-                              voce.signature && "border-s-2 border-brass ps-4",
-                            )}
-                          >
-                            {/* Punti di guida: il nome e il prezzo stanno
-                                agli estremi e la fila di punti li lega. È il
-                                dettaglio che distingue una carta da un
-                                elenco puntato. */}
-                            {/* `items-end` e non `items-baseline`: quando il
-                                nome va a capo — e su 390px va a capo spesso —
-                                la linea di punti e il prezzo devono allinearsi
-                                all'ULTIMA riga del nome. Sulla prima, sembrano
-                                il prezzo di mezzo piatto. */}
-                            <p className="flex items-end gap-2">
-                              <span className="font-display text-h3 leading-tight text-cream">
-                                {t(`piatti.${voce.id}.nome`)}
-                              </span>
-                              <span
-                                aria-hidden="true"
-                                className="relative bottom-1.5 min-w-6 flex-1 border-b border-dotted border-border-control"
-                              />
-                              <span className="shrink-0 font-mono text-mono text-stone-dim">
-                                {voce.prezzo === null
-                                  ? t("prezzoAssente")
-                                  : formatPrezzo(voce.prezzo, locale)}
-                              </span>
-                            </p>
-
-                            <p className="measure mt-2 text-body text-stone">
-                              {t(`piatti.${voce.id}.descrizione`)}
-                            </p>
-
-                            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
-                              {voce.signature ? (
-                                <span className="font-mono text-mono uppercase text-brass">
-                                  {t("signature")}
-                                </span>
-                              ) : null}
-                              {voce.tag.includes("vegetariano") ? (
-                                <span className="font-mono text-mono uppercase text-stone-dim">
-                                  {t("filtroVegetariano")}
-                                </span>
-                              ) : null}
-                              <span className="border-s-2 border-wine ps-3 font-mono text-mono text-stone-dim">
-                                {t("abbinamento")} · {voce.abbinamento}
-                              </span>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  ))}
-
-                  {/* Non è una nota legale di rito: i tag di questa carta non
-                      sono ancora confermati dal cliente, e chi filtra per
-                      motivi medici deve saperlo prima di ordinare. */}
-                  <p
-                    className={cn(
-                      "mt-8 border-t border-border pt-4 font-sans text-mono",
-                      TAG_CONFERMATI ? "text-stone-dim" : "text-stone",
-                    )}
-                  >
-                    {t("allergeni")}
-                  </p>
-                </div>
+                <ListaCarta
+                  classeFiltri="border-y border-border px-6 py-3 md:px-8"
+                  classeVoci="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-6 md:px-8"
+                  className="flex min-h-0 flex-1 flex-col"
+                />
               </motion.div>
             </RadixDialog.Content>
           </RadixDialog.Portal>

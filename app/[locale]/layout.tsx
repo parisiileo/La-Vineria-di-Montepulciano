@@ -6,14 +6,14 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import { routing } from "@/i18n/routing";
+import { routing, type Locale } from "@/i18n/routing";
 import { fontVariables } from "@/app/fonts";
 import { Grain } from "@/components/Grain";
 import { SmoothScroll } from "@/components/chrome/SmoothScroll";
 import { Cursor } from "@/components/chrome/Cursor";
 import { PageTransition } from "@/components/chrome/PageTransition";
 import { Navbar } from "@/components/chrome/Navbar";
-import { VOCI_NAV } from "@/lib/data/navigazione";
+import { VOCI_BARRA, VOCI_NAV } from "@/lib/data/navigazione";
 import { MotionBootScript } from "@/components/MotionRuntime";
 import { MotionReady } from "@/components/MotionReady";
 import { HREFLANG, SITE_URL, alternatesFor } from "@/lib/seo";
@@ -42,7 +42,7 @@ export async function generateMetadata(props: {
     metadataBase: new URL(SITE_URL),
     title: { default: t("title"), template: t("titleTemplate") },
     description: t("description"),
-    alternates: alternatesFor("/"),
+    alternates: alternatesFor("/", locale as Locale),
     openGraph: {
       type: "website",
       siteName: t("title"),
@@ -82,7 +82,7 @@ export default async function LocaleLayout(props: {
           {/* La barra è figlia diretta del body e non di `main`: dentro `main`
               vivono i parallassi, e un antenato con `transform` disattiva in
               silenzio il `backdrop-filter` del velo. */}
-          <Navbar voci={VOCI_NAV} />
+          <Navbar voci={VOCI_NAV} barra={VOCI_BARRA} />
           {props.children}
           <Cursor />
           <PageTransition />

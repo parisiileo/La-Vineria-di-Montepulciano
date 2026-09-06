@@ -2,24 +2,35 @@
 // qui esistono già per non disseminare stringhe SEO nei layout.
 
 import type { Metadata } from "next";
-import { LOCALI, TELEFONO, type Locale as Sede } from "@/lib/data/locali";
-import { routing, type Locale } from "@/i18n/routing";
+import { LOCALI, type Locale as Sede } from "@/lib/data/locali";
+import { getPathname } from "@/i18n/navigation";
+import { routing, type Locale, type Percorso } from "@/i18n/routing";
 
 export const SITE_URL = "https://www.lavineriadimontepulciano.it";
 
 /** Mappa le locale interne ai tag BCP-47 usati da hreflang e da `<html lang>`. */
 export const HREFLANG: Record<Locale, string> = { it: "it-IT", en: "en-GB" };
 
-/** Alternate `hreflang` complete per una data rotta, `x-default` incluso. */
-export function alternatesFor(path: string): Metadata["alternates"] {
-  const clean = path.startsWith("/") ? path : `/${path}`;
+/**
+ * Alternate `hreflang` complete per una data rotta, `x-default` incluso.
+ *
+ * L'URL di ogni lingua lo costruisce `getPathname`, non una concatenazione:
+ * dallo Step 07 i percorsi sono tradotti, e `/en` + `/cantina` darebbe
+ * `/en/cantina` — che esiste solo come redirect verso `/en/the-cellar`.
+ * Un hreflang che punta a un redirect è un hreflang che Google ignora.
+ */
+export function alternatesFor(href: Percorso, locale: Locale): Metadata["alternates"] {
+  const url = (l: Locale) => `${SITE_URL}${getPathname({ href, locale: l })}`;
   return {
-    canonical: `${SITE_URL}/${routing.defaultLocale}${clean === "/" ? "" : clean}`,
+    // Canonica su SE STESSA, non sulla versione italiana. Una canonical che
+    // punta all'altra lingua dice a Google che quella pagina è un duplicato
+    // e non va indicizzata: è il modo più rapido di cancellare metà sito
+    // dalla ricerca. Le due versioni si dichiarano parenti con `hreflang`,
+    // che è la relazione giusta fra traduzioni.
+    canonical: url(locale),
     languages: {
-      ...Object.fromEntries(
-        routing.locales.map((l) => [HREFLANG[l], `${SITE_URL}/${l}${clean === "/" ? "" : clean}`]),
-      ),
-      "x-default": `${SITE_URL}/${routing.defaultLocale}${clean === "/" ? "" : clean}`,
+      ...Object.fromEntries(routing.locales.map((l) => [HREFLANG[l], url(l)])),
+      "x-default": url(routing.defaultLocale),
     },
   };
 }
@@ -35,7 +46,10 @@ export function restaurantJsonLd(sede: Sede, nome: string) {
     "@context": "https://schema.org",
     "@type": "Restaurant",
     name: nome,
-    telephone: TELEFONO,
+    // Il telefono della SEDE, non quello principale: il 72 ha un numero suo,
+    // e uno schema che li dà entrambi come 850153 fa squillare la sala
+    // sbagliata a chi chiama dal risultato di ricerca.
+    telephone: sede.telefono,
     servesCuisine: "Italian",
     address: {
       "@type": "PostalAddress",

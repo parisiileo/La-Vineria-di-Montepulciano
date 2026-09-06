@@ -253,7 +253,8 @@
       "titolo": "Sotto il corso",
       "sottotesto": "Gallerie scavate nel tufo, fresche tutto l'anno, dove il vino riposa come si faceva prima che esistessero le cantine moderne. Le nostre sono visitabili: si scende, si cammina, si assaggia. L'ingresso è al 101.",
       "cta": "Prenota una degustazione",
-      "dato": "Tunnel medievali visitabili, ingresso dal 101"
+      "dato": "Tunnel medievali visitabili, ingresso dal 101",
+      "ctaPagina": "Come funziona la visita"
     },
     "vino": {
       "titolo": "Il vino è <em>nostro</em>",
@@ -383,6 +384,39 @@
         "nome": "Panna cotta al Vin Santo",
         "descrizione": "Panna cotta con una riduzione di Vin Santo. Il modo più corto per finire in Toscana."
       }
+    }
+  },
+  "pagine": {
+    "cantina": {
+      "titoloMeta": "Visita in cantina a Montepulciano — tunnel medievali nel tufo",
+      "descrizioneMeta": "Le gallerie sotto Via di Gracciano nel Corso si visitano: si scende dal 101, si cammina nel tufo, si assaggia. Chiamateci per concordare l'orario.",
+      "occhiello": "Ingresso dal 101",
+      "titolo": "Sotto il corso si cammina",
+      "sommario": "Le gallerie sotto la sala sono scavate nel tufo e sono medievali. Ci si scende, e la temperatura cambia prima ancora dell'ultimo gradino.",
+      "cosaTitolo": "Che cos'è",
+      "cosaP1": "Montepulciano è costruita sopra il tufo, e sotto il corso corrono gallerie che i pulcinelli hanno scavato per tenerci il vino. Le nostre partono dalla sala del 101.",
+      "cosaP2": "Sono fresche tutto l'anno e non hanno bisogno di niente per esserlo: è la pietra che fa il lavoro. È il motivo per cui il vino ci riposa ancora oggi.",
+      "visitaTitolo": "Come funziona",
+      "visitaP1": "Si scende per una scala stretta, si cammina, si assaggia. Dura meno di quanto pensiate.",
+      "visitaP2": "L'ingresso è dal 101. Chiamateci per concordare l'orario: non c'è un turno fisso, ci mettiamo d'accordo.",
+      "dettaglio": "La fotografia qui sopra è la sala da cui si scende, non le gallerie: quelle non le abbiamo ancora fotografate come meritano.",
+      "cta": "Prenota una degustazione",
+      "chiama": "Oppure chiamateci"
+    },
+    "carta": {
+      "titoloMeta": "La carta — La Vineria di Montepulciano",
+      "descrizioneMeta": "Pici all'aglione, taglieri di pecorini della Val d'Orcia, cinghiale in umido e il Cantuccimisù che ci siamo inventati noi. La carta cambia con la stagione.",
+      "titolo": "Quello che si mangia qui",
+      "sommario": "Una selezione. La carta intera cambia con la stagione e ve la portiamo al tavolo.",
+      "cta": "Prenota un tavolo"
+    },
+    "locali": {
+      "titoloMeta": "I due locali su Via di Gracciano nel Corso — La Vineria",
+      "descrizioneMeta": "Due sale a pochi passi l'una dall'altra: il 101, da cui si scende in cantina, e il 72, dove sotto il pavimento di vetro c'è un pozzo medievale.",
+      "titolo": "Due porte sullo stesso corso",
+      "sommario": "A pochi passi l'una dall'altra, e non sono la stessa sala due volte.",
+      "comeArrivare": "Come arrivare",
+      "cta": "Prenota un tavolo"
     }
   }
 }

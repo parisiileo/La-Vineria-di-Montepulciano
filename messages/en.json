@@ -19,7 +19,7 @@
     "home": "Home",
     "locali": "The rooms",
     "cantina": "The cellar",
-    "carta": "The list",
+    "carta": "The menu",
     "vino": "Our wine",
     "contatti": "Find us",
     "famiglia": "The family",
@@ -253,7 +253,8 @@
       "titolo": "Under the corso",
       "sottotesto": "Tunnels dug into the tufa, cool all year round, where the wine rests the way it did before modern cellars existed. Ours can be visited: you go down, you walk, you taste. The entrance is at 101.",
       "cta": "Book a tasting",
-      "dato": "Medieval tunnels open to visits, entrance at 101"
+      "dato": "Medieval tunnels open to visits, entrance at 101",
+      "ctaPagina": "How the visit works"
     },
     "vino": {
       "titolo": "The wine is <em>ours</em>",
@@ -383,6 +384,39 @@
         "nome": "Panna cotta with Vin Santo",
         "descrizione": "Panna cotta with a Vin Santo reduction. The shortest way to finish in Tuscany."
       }
+    }
+  },
+  "pagine": {
+    "cantina": {
+      "titoloMeta": "Cellar visit in Montepulciano — medieval tunnels in the tufa",
+      "descrizioneMeta": "The tunnels under Via di Gracciano nel Corso can be visited: you go down at 101, you walk in the tufa, you taste. Call us to arrange a time.",
+      "occhiello": "Entrance at 101",
+      "titolo": "Under the corso, on foot",
+      "sommario": "The tunnels below the room are dug into the tufa and they are medieval. You go down, and the temperature changes before the last step.",
+      "cosaTitolo": "What it is",
+      "cosaP1": "Montepulciano is built on tufa, and under the corso run tunnels the townspeople dug to keep their wine in. Ours start from the room at 101.",
+      "cosaP2": "They are cool all year and need nothing to be: the stone does the work. It is why the wine still rests down there.",
+      "visitaTitolo": "How it works",
+      "visitaP1": "You go down a narrow stair, you walk, you taste. It takes less time than you think.",
+      "visitaP2": "The entrance is at 101. Call us to arrange a time: there is no fixed slot, we work it out together.",
+      "dettaglio": "The photograph above is the room the stair goes down from, not the tunnels: we have not yet photographed those the way they deserve.",
+      "cta": "Book a tasting",
+      "chiama": "Or call us"
+    },
+    "carta": {
+      "titoloMeta": "The menu — La Vineria di Montepulciano",
+      "descrizioneMeta": "Pici with aglione, boards of Val d'Orcia pecorino, wild boar stew and the Cantuccimisù we invented. The menu changes with the season.",
+      "titolo": "What you eat here",
+      "sommario": "A selection. The full menu changes with the season, and we bring it to your table.",
+      "cta": "Book a table"
+    },
+    "locali": {
+      "titoloMeta": "The two rooms on Via di Gracciano nel Corso — La Vineria",
+      "descrizioneMeta": "Two rooms a few steps apart: 101, where the stair goes down to the cellar, and 72, where a medieval well sits under the glass floor.",
+      "titolo": "Two doors on the same corso",
+      "sommario": "A few steps apart, and not the same room twice.",
+      "comeArrivare": "Getting there",
+      "cta": "Book a table"
     }
   }
 }

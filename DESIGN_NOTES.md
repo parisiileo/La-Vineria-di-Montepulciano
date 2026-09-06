@@ -1605,3 +1605,85 @@ La mappa era comunque troppo chiara davvero: luminanza mediana 0.049 contro
 0.013 del pannello che la contiene, quasi quattro volte. Con `brightness(0.72)`
 scende a 0.030 — ancora leggermente più chiara del fondo, che è giusto, perché
 una mappa che sparisce nella pagina non è più una mappa.
+
+## 15. Da una pagina a quattro
+
+La barra portava sei link, più un bottone «Prenota» che ripeteva il sesto, più
+l'hamburger che conteneva già lo stesso indice per intero: **tre modi di dire
+la stessa cosa a dieci centimetri di distanza**. Restano due link, e portano a
+due destinazioni che la home non contiene.
+
+### 15.1 Perché tre pagine e non cinque
+
+Il criterio non è editoriale, è di intento di ricerca. «Visita cantina
+Montepulciano», «menu», «dove siamo» sono tre domande diverse, e una pagina
+sola può rispondere bene a una. Le sezioni rimaste in home — la famiglia, il
+vino — non hanno una domanda propria: chi le cerca sta già cercando il
+ristorante, e trova la home. Una pagina «Il vino» conterrebbe i due paragrafi
+che già stanno in home più nessuna fotografia nuova, e quattro URL sottili si
+fanno concorrenza fra loro sulle stesse parole invece di aggiungere copertura.
+
+| pagina | ragione |
+|---|---|
+| `/cantina` | prodotto a margine più alto, intento di ricerca proprio, oggi promosso da una sola CTA |
+| `/carta` | «menu» è la domanda numero uno di chi sceglie dal telefono, e viveva dentro un pannello senza URL |
+| `/locali` | ricerca locale: due indirizzi, due telefoni, due schede Google |
+
+La home resta la partitura. Non è diventata un indice di anticipazioni: le
+sezioni sono intatte, e la cantina ora ha **due** azioni — prenotare, per chi
+è già convinto, e la pagina, per chi vuole sapere come funziona la visita.
+
+### 15.2 I percorsi sono tradotti
+
+`/it/cantina` ↔ `/en/the-cellar`, `/carta` ↔ `/menu`, `/locali` ↔ `/the-rooms`.
+Chi cerca «cellar tour Montepulciano» e riceve un risultato che punta a
+`/en/cantina` legge una parola che non conosce nella riga più visibile della
+SERP. La chiave interna resta italiana ovunque nel codice — è il nome della
+cosa — e la traduzione avviene solo all'uscita, in `i18n/routing.ts`.
+
+### 15.3 Due difetti trovati facendolo
+
+**Il matcher del middleware era disattivato da un escape.** In
+`middleware.ts` stava scritto `"/((?!api|_next|_vercel|.*\.*).*)"` con un solo
+backslash: dentro una stringa TypeScript `\.` non è un punto letterale, è una
+sequenza di escape non valida che il motore riduce a `.`, cioè «un carattere
+qualsiasi». Il matcher diventava «escludi ogni percorso lungo due caratteri o
+più» — **il middleware girava solo sulla radice**.
+
+Per mesi non si è visto niente, perché le pagine con `generateStaticParams` si
+risolvono da sole senza passare dal middleware. Si è visto al primo percorso
+che ha *bisogno* di una riscrittura: `/en/the-cellar` rispondeva 404 mentre
+`/en/cantina` rispondeva 200. È il tipo di difetto che non produce nessun
+errore finché non gli si chiede il lavoro per cui esiste.
+
+**La canonica puntava all'altra lingua.** `alternatesFor` costruiva la
+canonical sempre con `defaultLocale`: ogni pagina inglese dichiarava se stessa
+duplicato della corrispondente italiana. È il modo più rapido di cancellare
+metà sito dall'indice. Ora ogni pagina è canonica su se stessa e le due
+versioni si dichiarano parenti con `hreflang`, che è la relazione giusta fra
+traduzioni. Gli URL li costruisce `getPathname`, non una concatenazione: `/en`
++ `/cantina` darebbe un indirizzo che esiste solo come redirect, e un hreflang
+che punta a un redirect è un hreflang che Google ignora.
+
+### 15.4 Decisioni minori, motivate
+
+- **La carta vive in due posti ma in un file solo.** `ListaCarta` è usata dal
+  pannello e dalla pagina: sono due lavori diversi — lo sguardo veloce in
+  contesto e la destinazione che si condivide — ma è la stessa carta, e
+  tenerla in due file significa che un giorno un prezzo cambierà in uno solo.
+  Il pannello non è nel DOM quando è chiuso, quindi non genera contenuto
+  duplicato fra `/` e `/carta`.
+- **Due colonne sulla pagina della carta**, con `break-inside-avoid` sulle
+  sezioni: una carta in cui «Primi» sta in fondo a una colonna e i primi
+  cominciano nell'altra non è impaginata, è traboccata.
+- **La fotografia della pagina cantina è la sala, non la facciata.** La
+  facciata è un dehors in pieno giorno, la fotografia più chiara del corpus:
+  su una pagina che parla di gallerie fresche e buie era il soggetto sbagliato
+  nel tono sbagliato. La didascalia dice comunque che quelle non sono le
+  gallerie — mostrare una porta lasciando credere che sia un tunnel è la
+  stessa bugia di una stock photo, solo più economica.
+- **Il telefono nello schema è quello della sede.** Il 72 ha un numero suo, e
+  un `Restaurant` che li dà entrambi come 850153 fa squillare la sala
+  sbagliata a chi chiama dal risultato di ricerca.
+- **`sitemap.ts` e `robots.ts`**, con le pagine di lavoro escluse da entrambi:
+  una sitemap che elenca pagine `noindex` è un segnale contrastante.

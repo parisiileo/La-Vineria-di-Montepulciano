@@ -26,7 +26,7 @@ import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
 
-import { routing } from "@/i18n/routing";
+import { routing, type Locale } from "@/i18n/routing";
 import { FOTO } from "@/lib/data/foto";
 import { LOCALI, VALUTAZIONE_DA_VERIFICARE } from "@/lib/data/locali";
 import { alternatesFor } from "@/lib/seo";
@@ -54,7 +54,7 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const { locale } = await props.params;
   const t = await getTranslations({ locale, namespace: "metadata" });
-  return { description: t("description"), alternates: alternatesFor("/") };
+  return { description: t("description"), alternates: alternatesFor("/", locale as Locale) };
 }
 
 function Body() {
