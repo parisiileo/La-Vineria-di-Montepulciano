@@ -1077,3 +1077,256 @@ barra.
   Lighthouse peggiora, si riduce la sequenza — non si contratta.
 - **`Magnetic` dello Step 01 non è ancora usato**: aspetta le CTA reali.
 
+
+---
+
+## 12. Contenuti, dati e interfacce di servizio (Step 04)
+
+Lo Step 04 chiude il sito: la partitura degli archetipi diventa la pagina
+vera, con il copy definitivo, la carta, la prenotazione e il footer.
+
+### 12.1 Un conflitto nel copy, e perché non l'ho risolto da solo
+
+Il brief chiede, per la sezione della famiglia: «Da decenni sullo stesso
+corso… gli Ercolani stanno a Montepulciano da generazioni». Il sito attuale
+del cliente si descrive con parole opposte: «siamo un team di giovani amici,
+cresciuti insieme tra le colline toscane». `ANNO_FONDAZIONE` è `null`.
+
+Non è una sfumatura di tono: «da decenni» è una **affermazione verificabile su
+un'attività reale**, e le due fonti disponibili si contraddicono. La regola di
+progetto non ammette di sceglierne una perché suona meglio.
+
+In pagina c'è «Cresciuti su *questo* corso», che tiene la struttura e il
+calore del brief e poggia solo su fatti confermati — la scala che scende in
+cantina al 101, il pozzo medievale sotto il vetro al 72. La riga esatta del
+brief è in `DA-VERIFICARE.md` §1, pronta da incollare quando l'anno arriva.
+
+Stessa sorte per l'ordine delle aperture (prima la cantina, poi il 101, poi il
+72), che il brief dà per noto e che nessuno ha confermato.
+
+### 12.2 La cosa peggiore trovata: `cn()` cancellava i corpi tipografici
+
+**È il difetto più grave dello step, ed esisteva dallo Step 01.**
+
+`tailwind-merge` risolve i conflitti per gruppo di utilità, e non sa niente
+dei token dichiarati in `@theme`. Davanti a `text-hero text-brass` non vede
+una dimensione e un colore: vede due classi `text-*` dello stesso gruppo, e
+tiene solo l'ultima. **Il colore vince sempre**, perché il colore si scrive
+sempre dopo.
+
+```
+"font-display text-hero leading-[0.7] text-brass"
+  → "font-display leading-[0.7] text-brass"        ← text-hero sparito
+"font-mono text-mono uppercase text-brass"
+  → "font-mono uppercase text-brass"               ← text-mono sparito
+```
+
+Nessun errore, nessun avviso, nessuna riga rossa: il testo esce
+semplicemente al corpo del body. Il numero civico `101` del dittico, che deve
+essere alto 108px e sbordare dalla fotografia, era **una scritta di 17px**
+appoggiata all'angolo. I bottoni, che devono essere `text-label` a 12px con
+tracking largo, uscivano a 17px con tracking normale.
+
+Perché non si era mai visto: le classi scritte a mano nel JSX non passano da
+`cn()` e stavano bene; solo le composizioni — e i componenti che accettano un
+`className` — perdevano il corpo. E il risultato sbagliato è *plausibile*:
+un bottone a 17px non sembra rotto, sembra un bottone.
+
+Trovato guardando lo scatto della sezione dei locali e chiedendosi dove fosse
+finito il numero civico. **Dal codice quella riga è corretta.**
+
+La correzione è in `lib/utils.ts`: `extendTailwindMerge` con l'elenco dei
+corpi del progetto. La regressione è impedita dal **controllo 8 di
+`scripts/audit.mjs`**, che confronta i token `--text-*` di `globals.css` con
+`CORPI_TESTO`: un corpo nuovo aggiunto solo al CSS fa fallire l'audit.
+
+### 12.3 Le altre cose trovate guardando
+
+* **L'occhiello dell'hero non veniva disegnato affatto.** `FullBleedSection`
+  mostrava la testata solo con `numero && etichetta`, e l'hero non ha un
+  numero — non è una voce della partitura. Un ramo mancante, non un errore
+  di stile.
+* **Il pulsante del menu non disegnava una croce**, disegnava un accento
+  circonflesso con un puntino in mezzo. Due cause sovrapposte: senza
+  `transform-box: view-box` il browser calcola `transform-origin` sul riquadro
+  di ciascun tracciato invece che sul sistema di coordinate dell'SVG — e per
+  una linea orizzontale quel riquadro è alto zero, quindi le due aste ruotano
+  attorno a perni sbagliati e non si incrociano mai; e l'asta centrale,
+  schiacciata a `scaleX: 0` con `strokeLinecap="round"`, lasciava in mezzo il
+  proprio terminale tondo. Difetto dello Step 03, visibile solo a 4×.
+* **Il corsivo d'accento non prendeva l'ottone** nei due respiri e nel
+  monumento: la regola copriva `h1 em, h2 em, h3 em`, e quelli sono paragrafi
+  composti a corpo display. Ora la regola include `[data-display] em`.
+* **L'indicatore di scroll finiva sopra l'ultima riga dell'hero.** Con
+  l'occhiello, il sottotitolo, due CTA e la valutazione, la pila è più alta di
+  quella dello Step 02.
+* **La mappa era centrata 250 metri a sud-ovest della via**, con il paese
+  nell'angolo. Il riquadro era stato scelto a occhio; ora è costruito sulla
+  geometria che OpenStreetMap ha di Via di Gracciano nel Corso.
+* **Le etichette flottanti si sovrapponevano al contenuto dei campi** data,
+  ora e numero: quei campi disegnano sempre qualcosa — «mm/gg/aaaa», «--:--»,
+  il valore iniziale — e l'etichetta flottante presume un campo vuoto.
+
+### 12.4 Il modulo di prenotazione non finge
+
+Il modulo valida e invia a `/api/prenota`, che valida di nuovo con lo stesso
+schema e inoltra a `PRENOTAZIONI_WEBHOOK`. **Quella variabile non è
+configurata**: la rotta risponde 503, e l'interfaccia dice che la richiesta non
+è partita e rimanda al telefono.
+
+Non esiste un ramo che ringrazi senza aver spedito niente. Un «grazie, vi
+richiamiamo» che non arriva a nessuno è la bugia più costosa che un sito di
+ristorante possa raccontare: il tavolo non c'è, e l'ospite lo scopre sulla
+porta.
+
+L'orario è un campo libero e non un elenco di turni, per la stessa ragione per
+cui gli orari di apertura non sono in pagina: non sono confermati, e
+«19:30 / 20:00 / 21:30» dentro un menu a tendina sembra ancora più vero di una
+frase.
+
+### 12.5 Zod fuori dal browser: 91 kB
+
+La prima versione validava col `zodResolver` di `@hookform/resolvers`, e il
+First Load JS della home era **400 kB**. Zod nel bundle del client costava
+circa 60 kB per validare otto campi che il browser sa già validare, e il
+controllo che conta non è mai quello del client: è quello del server, che è
+l'unico che nessuno può aggirare.
+
+Lo schema Zod vive ora in `lib/data/prenotazione.server.ts` e lo importa solo
+la rotta. Le costanti — minimi, massimi, la regex del telefono — stanno in un
+file senza dipendenze che importano entrambi, quindi le due validazioni non
+possono divergere sui numeri.
+
+**400 kB → 309 kB.** Restano 55 kB sopra la pagina di prova dello Step 02, ed
+è il prezzo di Radix (dialogo, select, checkbox) più react-hook-form.
+
+### 12.6 La mappa: cosa fa e cosa si rifiuta di fare
+
+L'iframe di OpenStreetMap non esiste nel DOM finché la sezione non si
+avvicina, e viene montato **a tempo perso** (`requestIdleCallback`) e non nel
+frame in cui la sezione entra: è un documento intero con il suo JavaScript, e
+costruirlo durante lo scorrimento costava l'unico frame lungo della pagina.
+
+Non c'è tema scuro senza chiave d'accesso: l'inversione con rotazione di tinta
+è il modo standard di scurire una mappa raster, e uno strato in `color`
+riporta i colori da atlante verso il tufo.
+
+**Non c'è nessun segnaposto**, e non è una dimenticanza: le coordinate dei due
+ingressi non sono confermate, e uno spillo piantato a occhio su un vicolo di
+Montepulciano manda qualcuno alla porta sbagliata. I link «Indicazioni»
+cercano l'indirizzo per esteso — che è il dato che conosciamo davvero.
+
+Su puntatore grosso la mappa resta inerte finché non la si tocca: una mappa
+scorrevole dentro una pagina scorrevole intrappola il pollice.
+
+### 12.7 La barra fissa mobile
+
+È l'elemento con più effetto sulle conversioni della pagina, e il motivo è il
+contesto d'uso: chi apre questo sito da telefono è spesso in Via di Gracciano
+nel Corso, e vuole il numero o la strada.
+
+Tre comportamenti la rendono sopportabile: entra **solo dopo l'hero**, dove ci
+sono già due CTA; **sparisce quando un pannello modale è aperto**, perché una
+barra che galleggia sopra la carta è la prima cosa che il pollice trova e non
+è quella che si stava guardando; e il footer riceve un'imbottitura pari alla
+sua altezza più l'incavo del dispositivo.
+
+La soglia d'ingresso è l'uscita dell'hero osservata, non una quota in pixel:
+l'altezza dell'hero cambia con la barra di Safari.
+
+Il conteggio degli strati aperti (`lib/ui/overlay.ts`) è un **saldo e non un
+booleano**: due strati possono sovrapporsi, e chiudere il secondo non deve
+riportare in scena la barra mentre il primo è ancora lì.
+
+### 12.8 La carta: due componenti travestiti da uno
+
+Sotto 768px è un foglio che sale dal basso e si chiude con lo stesso gesto con
+cui è arrivato; sopra, una finestra centrata. Non è il `Dialog` condiviso
+perché sono davvero due cose diverse, e travestirle costa più codice
+condizionale di quanto ne risparmi.
+
+`overscroll-contain` sul corpo scorrevole: senza, arrivare in fondo alla lista
+trascina la pagina sotto, e chiudendo il foglio ci si ritrova altrove.
+
+I filtri sono **una riga che scorre** sotto 768px e **una riga che va a capo**
+sopra: su desktop lo scorrimento nascondeva l'ultimo filtro dietro il bordo
+senza che niente lo annunciasse.
+
+I punti di guida si allineano all'**ultima** riga del nome e non alla prima:
+su 390px i nomi vanno a capo spesso, e un prezzo allineato alla prima riga
+sembra il prezzo di mezzo piatto.
+
+I prezzi mancano davvero, quindi la riga lo dice invece di mostrare uno zero.
+
+### 12.9 Tag dietetici: l'unica parte di questo sito che può fare male
+
+`TAG_CONFERMATI = false`. Sono marcati `vegetariano` solo i piatti in cui la
+carne non compare in nessuna versione conosciuta della ricetta. **Nessun
+piatto è marcato senza glutine**: non lo sappiamo, e chi filtra per quel tag
+lo fa per necessità medica, non per preferenza.
+
+La nota in fondo alla carta — «Allergie e intolleranze: parlatene con noi al
+tavolo, prima di ordinare» — non è una formula di rito: finché i tag non sono
+confermati è l'unica versione onesta di un filtro dietetico.
+
+### 12.10 L'inglese dell'hero
+
+«Sopra la tavola, sotto la storia» tradotto parola per parola non funziona:
+«Above the table, below the history» è più lungo, più piatto e perde il
+chiasmo. In pagina c'è **«The table above, the history below»** — stessa
+figura, stessa lunghezza di riga, accento sulla stessa parola, e due righe a
+1440px esattamente come l'italiano.
+
+### 12.11 Esito delle verifiche
+
+| prova | esito |
+|---|---|
+| `npm run pagina` — 390 e 1440, it ed en | 6/6 |
+| `npm run contrasto` — WCAG sui testi su fotografia | 24/24 |
+| `npm run audit` — regole di progetto | 8/8 |
+| `npm run fluidita` — il test §5 dello Step 03 | 10/10 |
+| `npm run profilo` | 4/4 |
+| `npm run mobile` | 6/6 |
+| `npm run fps` — CPU 4× | 59.8 fps medi, 0.3% di frame saltati |
+
+L'hero ha richiesto un **secondo gradiente di leggibilità, orizzontale**:
+l'occhiello stava a 1.25:1 e la parola accentata «storia» a 2.37:1. Alzare
+ancora le tappe del gradiente verticale avrebbe spento la fotografia su tutta
+la larghezza, mentre il testo occupa solo la metà sinistra. Il gradiente
+laterale scurisce dove il testo c'è davvero e lascia intatto il lato destro —
+che in questa fotografia è la parete di bottiglie, cioè la parte che vale.
+Dopo: **4.64:1** e **4.27:1**.
+
+Il fps scende appena rispetto allo Step 03 — da 60.0/0.0% a 59.8/0.3% — e il
+colpevole è identificato: l'iframe della mappa. Prima di montarlo a tempo
+perso la prova 1 della fluidità falliva con un frame da 100ms e il 2.4% di
+frame saltati; ora il frame peggiore resta 100ms ma capita una volta sola
+(0.4%), perché non cade più dentro una sequenza di scorrimento. Un documento
+di terze parti costruito nella stessa pagina si paga comunque, e questo è il
+prezzo misurato.
+
+### 12.12 Difetti dei test corretti, di nuovo
+
+Le prove 4 e 5 della fluidità fallivano con un riferimento preso in fondo al
+documento invece che a metà discesa. La causa: **Lenis sincronizza la propria
+posizione con quella del documento solo quando non sta già animando**.
+`window.scrollTo` chiamato mentre Lenis è in corsa viene ignorato — Lenis
+prosegue verso il proprio bersaglio.
+
+Non si vedeva sulla pagina di prova dello Step 02 solo perché era più alta
+della corsa della prova 1, e Lenis faceva in tempo a fermarsi da solo. Ora
+ogni posizionamento a colpo secco è preceduto da un'attesa di quiete.
+
+È il terzo step di fila in cui una prova fallita era colpa del test. Vale la
+pena scriverlo: **una suite che non è mai in torto misura se stessa.**
+
+### 12.13 Debiti aperti
+
+* **First Load JS a 309 kB.** Radix Select da solo vale ~25 kB per un menu a
+  due voci: un `<select>` nativo stilizzato coprirebbe il caso.
+* **Il footer ha una colonna vuota** finché social e partita IVA sono `null`.
+* **JSON-LD**: `restaurantJsonLd` esiste dallo Step 01 e non è ancora montato
+  in pagina. Con orari e coordinate confermati diventa completo — è materia
+  dello Step 05.
+* **La cantina resta tipografica** finché non arrivano le due fotografie
+  critiche. Vedi `FOTOGRAFIE-DA-FARE.md`.

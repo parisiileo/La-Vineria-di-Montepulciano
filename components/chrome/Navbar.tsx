@@ -23,6 +23,10 @@ import { useTranslations } from "next-intl";
 import { Ancora } from "@/components/chrome/Ancora";
 import { LangSwitch } from "@/components/ui/LangSwitch";
 import { MenuCurtain } from "@/components/chrome/MenuCurtain";
+import { Magnetic } from "@/components/motion/Magnetic";
+import { LinkAzione } from "@/components/ui/LinkAzione";
+import { TELEFONO, TELEFONO_HREF } from "@/lib/data/locali";
+import type { VoceNav } from "@/lib/data/navigazione";
 import { cn } from "@/lib/utils";
 
 /** Oltre questa soglia la barra prende il fondo. Bassa di proposito: il
@@ -31,14 +35,26 @@ const SOGLIA_FONDO = 24;
 /** Sotto questa quota non si nasconde mai: in cima la barra serve sempre. */
 const SOGLIA_NASCONDI = 160;
 
-export interface VoceNav {
-  href: string;
-  chiave: string;
+/** Cornetta: su telefono la voce più usata della barra non è una voce di
+ *  menu, è il numero. */
+function Cornetta() {
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" className="size-5">
+      <path
+        d="M4.5 2.5h3l1.5 4-2 1.5a10 10 0 0 0 5 5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.7 1.5C8.4 16.3 3.7 11.6 3 4.2A1.5 1.5 0 0 1 4.5 2.5Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 export function Navbar({ voci }: { voci: readonly VoceNav[] }) {
   const t = useTranslations("nav");
   const tb = useTranslations("brand");
+  const tc = useTranslations("common");
   const [conFondo, setConFondo] = useState(false);
   const [nascosta, setNascosta] = useState(false);
   const [aperto, setAperto] = useState(false);
@@ -118,8 +134,26 @@ export function Navbar({ voci }: { voci: readonly VoceNav[] }) {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
+          {/* Su telefono la cornetta prende il posto del bottone di
+              prenotazione: è un tocco invece di uno scroll fino in fondo. */}
+          <a
+            href={TELEFONO_HREF}
+            aria-label={`${tc("chiama")} ${TELEFONO}`}
+            className="tap-safe press grid size-11 place-items-center rounded-sm text-cream lg:hidden"
+          >
+            <Cornetta />
+          </a>
+
           <LangSwitch />
+
+          {/* L'unico impiego del magnetismo in tutta la pagina. Un effetto
+              che attira il cursore vale finché è raro: applicato a ogni
+              bottone diventa un tic dell'interfaccia. */}
+          <Magnetic className="hidden lg:inline-block">
+            <LinkAzione href="#prenota">{t("prenota")}</LinkAzione>
+          </Magnetic>
+
           <MenuCurtain voci={voci} aperto={aperto} onCambio={setAperto} />
         </div>
       </div>

@@ -24,6 +24,17 @@ const SIZE: Record<ButtonSize, string> = {
   lg: "px-8 py-4",
 };
 
+/**
+ * Le stesse classi, per gli elementi che sono LINK e non bottoni.
+ * Un'azione che porta altrove è un link, anche quando sembra un bottone: un
+ * `<button>` che naviga toglie l'apertura in una scheda nuova, il menu
+ * contestuale e l'annuncio corretto agli screen reader. Le classi sono
+ * condivise, l'elemento no.
+ */
+export function classiAzione(variant: ButtonVariant = "primary", size: ButtonSize = "md"): string {
+  return cn(BASE, VARIANT[variant], variant === "link" ? "py-3" : SIZE[size]);
+}
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;

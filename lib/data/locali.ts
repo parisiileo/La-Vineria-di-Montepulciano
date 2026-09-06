@@ -22,12 +22,63 @@ export interface Locale {
   /** Tratti distintivi confermati dal cliente, come chiavi i18n. */
   trattiKeys: MessageKey[];
   /** `null` finché il cliente non conferma gli orari reali. */
-  orari: null;
+  orari: Orari | null;
   coordinate: { lat: number; lng: number } | null;
+  /**
+   * Telefono proprio della sede, se diverso da quello principale.
+   * Il 72 ne ha uno suo: mandare tutti sul 101 significa far squillare la
+   * sala sbagliata.
+   */
+  telefono: string;
+  telefonoHref: string;
 }
 
+/**
+ * Orari di apertura. `giorni` usa la numerazione di `Date.getDay()` in
+ * Europe/Rome — 0 domenica — e ogni fascia è una coppia di minuti dalla
+ * mezzanotte, così una chiusura dopo le 24 si esprime senza casi speciali.
+ */
+export interface Fascia {
+  giorni: readonly number[];
+  /** Minuti dalla mezzanotte. 1140 = 19:00. */
+  apre: number;
+  /** Minuti dalla mezzanotte, anche oltre 1440 per le chiusure a notte. */
+  chiude: number;
+}
+
+export type Orari = readonly Fascia[];
+
+/** Telefono principale: è quello della sala al 101, ed è quello che compare
+ *  nella barra fissa e nell'hero. */
 export const TELEFONO = "+39 0578 850153" as const;
 export const TELEFONO_HREF = "tel:+390578850153" as const;
+
+/**
+ * Prenotazione esterna. `null` finché il cliente non conferma il proprio
+ * profilo: un link a una scheda sbagliata manda le prenotazioni a un altro
+ * ristorante, ed è peggio di nessun link.
+ * TODO: verificare col cliente — URL del profilo TheFork.
+ */
+export const THEFORK_URL: string | null = null;
+
+/**
+ * Profili social. Vuoto finché non sono confermati gli account ufficiali:
+ * i cloni esistono, e linkarne uno è un danno reputazionale.
+ * TODO: verificare col cliente — Instagram, Facebook, TripAdvisor.
+ */
+export const SOCIAL: readonly { nome: string; url: string }[] = [];
+
+/** TODO: verificare col cliente — partita IVA e ragione sociale. */
+export const PARTITA_IVA: string | null = null;
+
+/**
+ * Valutazione media dichiarata nel brief dello Step 04.
+ * Non è stata verificata su nessuna fonte: resta qui, in un solo posto, per
+ * poter essere corretta o rimossa con una riga. Vedi DA-VERIFICARE.md.
+ * TODO: verificare col cliente — media e numero di recensioni, e su quale
+ * piattaforma sono contate.
+ */
+export const VALUTAZIONE_DA_VERIFICARE = true;
 
 /** Etichetta di produzione propria della famiglia Ercolani. */
 export const ETICHETTA_PROPRIA = "Il Brillo" as const;
@@ -48,6 +99,8 @@ export const LOCALI: readonly Locale[] = [
     orari: null,
     // TODO: verificare col cliente — coordinate esatte dell'ingresso
     coordinate: null,
+    telefono: TELEFONO,
+    telefonoHref: TELEFONO_HREF,
   },
   {
     id: "gracciano-72",
@@ -64,6 +117,9 @@ export const LOCALI: readonly Locale[] = [
     orari: null,
     // TODO: verificare col cliente — coordinate esatte dell'ingresso
     coordinate: null,
+    // Numero proprio del 72, trovato sul sito del cliente allo Step 02.
+    telefono: "+39 0578 850195",
+    telefonoHref: "tel:+390578850195",
   },
 ] as const;
 
@@ -97,3 +153,63 @@ export const ANNO_FONDAZIONE: number | null = null;
  * Cortona. Finché è `false` nessuna interfaccia la menziona.
  */
 export const SEDE_CORTONA_CONFERMATA = false;
+
+/**
+ * Query di indirizzo per le mappe. È costruita dai campi dell'indirizzo e non
+ * da coordinate: le coordinate non sono confermate, l'indirizzo sì, e una
+ * ricerca per indirizzo porta alla porta giusta senza inventare un punto.
+ */
+export function queryIndirizzo(sede: Locale): string {
+  return `${sede.via} ${sede.civico}, ${sede.cap} ${sede.citta} ${sede.provincia}, Italia`;
+}
+
+/** Google Maps e Apple Maps, entrambe per ricerca d'indirizzo. */
+export function linkMappe(sede: Locale) {
+  const q = encodeURIComponent(queryIndirizzo(sede));
+  return {
+    google: `https://www.google.com/maps/search/?api=1&query=${q}`,
+    apple: `https://maps.apple.com/?q=${q}`,
+  };
+}
+
+export type StatoApertura = "aperto" | "chiuso" | "sconosciuto";
+
+/**
+ * Stato di apertura al momento indicato, nel fuso di Montepulciano.
+ *
+ * Il fuso è imposto con `Intl` e non letto dall'orologio del visitatore:
+ * chi guarda il sito da Chicago deve leggere se la sala è aperta ADESSO a
+ * Montepulciano, non se lo sarebbe alla sua ora.
+ *
+ * Senza orari confermati restituisce `sconosciuto`, e l'interfaccia dice di
+ * chiamare. Non esiste un ramo che tiri a indovinare.
+ */
+export function statoApertura(orari: Orari | null, adesso: Date = new Date()): StatoApertura {
+  if (!orari || orari.length === 0) return "sconosciuto";
+
+  const parti = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Rome",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(adesso);
+  const trova = (tipo: string) => parti.find((p) => p.type === tipo)?.value ?? "";
+  const GIORNI = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const giorno = GIORNI.indexOf(trova("weekday"));
+  const minuti = Number(trova("hour")) * 60 + Number(trova("minute"));
+  if (giorno < 0) return "sconosciuto";
+
+  const ieri = (giorno + 6) % 7;
+  for (const fascia of orari) {
+    // Fascia del giorno corrente.
+    if (fascia.giorni.includes(giorno) && minuti >= fascia.apre && minuti < fascia.chiude) {
+      return "aperto";
+    }
+    // Coda di una fascia iniziata ieri e finita dopo la mezzanotte.
+    if (fascia.chiude > 1440 && fascia.giorni.includes(ieri) && minuti + 1440 < fascia.chiude) {
+      return "aperto";
+    }
+  }
+  return "chiuso";
+}

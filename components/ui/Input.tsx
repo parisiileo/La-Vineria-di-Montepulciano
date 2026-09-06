@@ -18,6 +18,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   { label, error, multiline = false, className, id, onFocus, onBlur, onChange, value, defaultValue, ...rest },
   ref,
 ) {
+  // I campi data, ora e numero disegnano SEMPRE qualcosa: il segnaposto del
+  // formato ("mm/gg/aaaa", "--:--") o un valore iniziale. L'etichetta
+  // flottante, che presume un campo visivamente vuoto, ci finisce sopra e le
+  // due scritte si sovrappongono. Su questi tipi l'etichetta parte già alta.
+  const sempreAlta = ["date", "time", "datetime-local", "month", "week", "number"].includes(
+    String(rest.type ?? ""),
+  );
   const autoId = useId();
   const fieldId = id ?? autoId;
   const errorId = `${fieldId}-error`;
@@ -26,7 +33,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const [filled, setFilled] = useState<boolean>(
     String(value ?? defaultValue ?? "").length > 0,
   );
-  const lifted = focused || filled;
+  const lifted = focused || filled || sempreAlta;
 
   const field = cn(
     // 16px minimo: sotto, iOS zooma al focus e rompe il layout.

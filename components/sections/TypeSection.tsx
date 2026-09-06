@@ -98,6 +98,7 @@ export function TypeSection({
                 corpo dell'elemento che lo porta, e sul contenitore varrebbe
                 il corpo del body — un ventesimo di quello del display. */}
             <p
+              data-display=""
               className={cn(
                 "font-display text-balance text-cream",
                 monumento ? "max-w-[15ch] text-hero" : "max-w-[17ch] text-h2",

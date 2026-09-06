@@ -36,6 +36,9 @@ export interface AsymmetricGridProps {
   dominante: CellaGriglia;
   /** Le tre subordinate, in quest'ordine: alta, quadrata, larga. */
   secondarie: readonly [CellaGriglia, CellaGriglia, CellaGriglia];
+  /** Azione della sezione, sotto il testo. Assente per default: una griglia
+   *  di fotografie non ha bisogno di un bottone per essere una sezione. */
+  azione?: React.ReactNode;
   className?: string;
 }
 
@@ -61,6 +64,7 @@ export function AsymmetricGrid({
   testo,
   dominante,
   secondarie,
+  azione,
   className,
 }: AsymmetricGridProps) {
   const [alta, quadrata, larga] = secondarie;
@@ -75,6 +79,7 @@ export function AsymmetricGrid({
         {testo ? (
           <Reveal direction="up" className="col-span-12 md:col-span-5 md:col-start-8">
             <p className="measure text-body text-stone">{testo}</p>
+            {azione ? <div className="mt-8">{azione}</div> : null}
           </Reveal>
         ) : null}
       </div>

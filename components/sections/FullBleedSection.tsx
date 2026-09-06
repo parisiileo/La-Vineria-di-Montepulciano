@@ -119,10 +119,20 @@ export function FullBleedSection({
           non il movimento, che il cervello legge come distanza. */}
       <div className="relative z-10 w-full">
         <ParallaxShift intensity={parallasse * 0.4}>
-          <div className="shell pb-(--section-py) pt-40">
-            {numero && etichetta ? (
+          {/* L'indicatore di scroll vive in fondo alla sezione: senza questo
+              respiro in più finisce sopra l'ultima riga del blocco di testo,
+              e due elementi diversi si leggono come uno solo mal composto. */}
+          <div className={cn("shell pt-40", indicatore ? "pb-32 sm:pb-40" : "pb-(--section-py)")}>
+            {/* L'hero non è una voce della partitura e quindi non ha un
+                numero, ma ha un occhiello: senza questo ramo l'etichetta
+                passata da sola non veniva disegnata affatto. */}
+            {etichetta ? (
               <Reveal direction="up" delay={t.occhiello}>
-                <SectionNumber numero={numero} titolo={etichetta} suFoto className="mb-6" />
+                {numero ? (
+                  <SectionNumber numero={numero} titolo={etichetta} suFoto className="mb-6" />
+                ) : (
+                  <p className="mb-6 w-fit font-mono text-mono uppercase text-brass">{etichetta}</p>
+                )}
               </Reveal>
             ) : null}
 
@@ -130,7 +140,10 @@ export function FullBleedSection({
                 contenitore, `ch` varrebbe il corpo del body. */}
             {titoloTesto ? (
               <SplitText
-                as="h2"
+                // Sull'hero il titolo è l'intestazione di primo livello
+                // della pagina: `h2` lo renderebbe un sotto-titolo di
+                // niente, e la pagina resterebbe senza h1.
+                as={hero ? "h1" : "h2"}
                 text={titoloTesto}
                 accentWords={accenti}
                 delay={t.titolo}
@@ -138,9 +151,11 @@ export function FullBleedSection({
               />
             ) : (
               <Reveal direction="up" delay={t.titolo}>
-                <h2 className={cn(hero ? "max-w-[15ch] text-hero" : "max-w-[17ch] text-h2")}>
-                  {titolo}
-                </h2>
+                {hero ? (
+                  <h1 className="max-w-[15ch] text-hero">{titolo}</h1>
+                ) : (
+                  <h2 className="max-w-[17ch] text-h2">{titolo}</h2>
+                )}
               </Reveal>
             )}
 

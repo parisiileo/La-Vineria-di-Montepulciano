@@ -41,7 +41,10 @@
     "obbligatorio": "Campo obbligatorio",
     "torna": "Torna su",
     "oraiNonDisponibili": "Orari in aggiornamento: chiamaci per conferma.",
-    "guarda": "Guarda"
+    "guarda": "Guarda",
+    "guardaLaCarta": "Guarda la carta",
+    "vediSuMappa": "Apri nelle mappe",
+    "nuovaScheda": "Si apre in una nuova scheda"
   },
   "locali": {
     "titolo": "Due porte sulla stessa via",
@@ -235,6 +238,180 @@
       "etichetta": "Prenotazione",
       "titolo": "Chiamaci",
       "testo": "Per un tavolo in una delle due sale, o per concordare l'orario della visita in cantina."
+    }
+  },
+  "home": {
+    "hero": {
+      "occhiello": "Montepulciano · dal cuore del Corso",
+      "titolo": "Sopra la tavola, sotto la storia",
+      "accento": "storia",
+      "sommario": "Due locali su Via di Gracciano nel Corso, una cantina scavata nel tufo e il vino che facciamo noi. La famiglia Ercolani vi aspetta a tavola.",
+      "sommarioStretto": "Due locali sul Corso, una cantina scavata nel tufo e il vino che facciamo noi.",
+      "ctaPrimaria": "Prenota un tavolo",
+      "ctaSecondaria": "Scendi in cantina",
+      "valutazione": "4,5 su 5 — oltre 5.500 recensioni",
+      "indicatore": "Scendi",
+      "dato": "Via di Gracciano nel Corso · 101 · 72"
+    },
+    "marquee": {
+      "voci": "Il Brillo|Famiglia Ercolani|Via di Gracciano nel Corso|Montepulciano|Numero 101|Numero 72|Tunnel medievali"
+    },
+    "famiglia": {
+      "numero": "01",
+      "etichetta": "La famiglia",
+      "titolo": "Cresciuti su <em>questo</em> corso",
+      "p1": "Siamo cresciuti insieme tra queste colline, e facciamo i tre mestieri che servono: coltivare, vinificare, apparecchiare.",
+      "p2": "Al 101 c'è la sala, e la scala che scende in cantina. Al 72, sotto il pavimento di vetro, si vede il pozzo medievale: c'era prima di noi e ci sarà dopo.",
+      "p3": "Il resto è quello che portiamo in tavola ogni giorno.",
+      "dato": "Famiglia Ercolani · Montepulciano (SI)",
+      "didascalia": "Archivio di famiglia"
+    },
+    "discesa": {
+      "testo": "Sotto Montepulciano corre una città che <em>non si vede</em>"
+    },
+    "cantina": {
+      "numero": "02",
+      "etichetta": "La cantina",
+      "titolo": "Sotto il corso",
+      "sottotesto": "Gallerie scavate nel tufo, fresche tutto l'anno, dove il vino riposa come si faceva prima che esistessero le cantine moderne. Le nostre sono visitabili: si scende, si cammina, si assaggia. Dura meno di quanto pensiate, ed è la cosa che i nostri ospiti si ricordano più a lungo.",
+      "dato": "Tunnel medievali · Visitabili · Ingresso dal 101",
+      "cta": "Prenota una degustazione"
+    },
+    "vino": {
+      "numero": "03",
+      "etichetta": "Il vino",
+      "titolo": "Il vino è <em>nostro</em>",
+      "p1": "Il Nobile di Montepulciano lo trovate ovunque, in paese. Da noi trovate anche quello che facciamo noi — compreso Il Brillo, l'etichetta che porta il nome giusto per come si beve.",
+      "p2": "Ve lo raccontiamo al tavolo. È la parte del lavoro che ci piace di più.",
+      "etichettaCasa": "Etichetta di casa",
+      "dato": "Il Brillo · Produzione propria"
+    },
+    "cucina": {
+      "numero": "04",
+      "etichetta": "La cucina",
+      "titolo": "Quello che si mangia qui",
+      "testo": "Pici all'aglione tirati come si deve. Il tagliere, che è il modo migliore per cominciare. Il cinghiale in umido quando è stagione. E il Cantuccimisù, che ci siamo inventati noi e ormai ci chiedono prima ancora di sedersi.",
+      "cta": "Guarda la carta",
+      "d1": "Pecorino di Pienza e Val d'Orcia",
+      "d2": "Pasta fatta a mano",
+      "d3": "Al bancone"
+    },
+    "locali": {
+      "numero": "05",
+      "etichetta": "I locali",
+      "titolo": "Due porte sullo stesso corso",
+      "sommario": "Due sale a pochi passi l'una dall'altra, su Via di Gracciano nel Corso."
+    },
+    "risalita": {
+      "testo": "Un tavolo, un tagliere, un bicchiere. Il resto viene <em>da sé</em>."
+    },
+    "prenota": {
+      "etichetta": "Prenotazione",
+      "titolo": "Vi aspettiamo",
+      "testo": "Per un tavolo in una delle due sale, o per concordare l'orario della visita in cantina. Al telefono rispondiamo noi.",
+      "chiamaEtichetta": "Chiamaci",
+      "oppure": "Oppure",
+      "theFork": "Prenota su TheFork",
+      "formTitolo": "Scrivici i tuoi dati",
+      "informazioniTitolo": "Dove siamo",
+      "indicazioni": "Indicazioni",
+      "mappaAttiva": "Tocca per attivare la mappa",
+      "mappaEtichetta": "Mappa di Via di Gracciano nel Corso, Montepulciano",
+      "inviato": "Grazie. Vi richiamiamo per confermare.",
+      "inviaAltra": "Invia un'altra richiesta",
+      "nonInviato": "Non siamo riusciti a inviare la richiesta. Chiamateci: al telefono rispondiamo noi.",
+      "riprova": "Riprova"
+    },
+    "form": {
+      "nome": "Nome e cognome",
+      "telefono": "Telefono",
+      "data": "Data",
+      "orario": "Orario",
+      "ospiti": "Ospiti",
+      "sede": "Sala",
+      "sedePlaceholder": "Scegli una sala",
+      "note": "Note (allergie, seggiolone, occasioni)",
+      "privacy": "Ho letto l'informativa privacy",
+      "invia": "Invia la richiesta",
+      "inviando": "Invio in corso",
+      "erroreNome": "Serve almeno il nome",
+      "erroreTelefono": "Serve un numero per richiamarvi",
+      "erroreData": "Scegli una data",
+      "erroreOrario": "Scegli un orario",
+      "erroreOspiti": "Da 1 a 20 ospiti; per gruppi più grandi chiamateci",
+      "erroreSede": "Scegli in quale sala",
+      "errorePrivacy": "Serve il consenso per potervi ricontattare",
+      "nota": "La richiesta non è una prenotazione confermata: vi richiamiamo noi."
+    },
+    "stato": {
+      "apertoOra": "Aperto ora",
+      "chiusoOra": "Chiuso ora",
+      "nonDisponibile": "Orari in aggiornamento",
+      "chiamaPerConferma": "Chiamaci per conferma"
+    },
+    "footer": {
+      "wordmark": "La Vineria",
+      "seguici": "Seguici",
+      "legale": "P.IVA",
+      "credits": "Via di Gracciano nel Corso, Montepulciano (SI)",
+      "tornaSu": "Torna in cima"
+    },
+    "barra": {
+      "chiama": "Chiama",
+      "indicazioni": "Indicazioni"
+    }
+  },
+  "carta": {
+    "titolo": "La carta",
+    "sottotitolo": "Una selezione. La carta completa cambia con la stagione e ve la portiamo al tavolo.",
+    "filtriEtichetta": "Filtra",
+    "filtroTutti": "Tutto",
+    "filtroVegetariano": "Vegetariano",
+    "filtroSenzaCarne": "Senza carne",
+    "abbinamento": "In abbinamento",
+    "prezzoAssente": "Prezzo al tavolo",
+    "signature": "Il nostro",
+    "allergeni": "Allergie e intolleranze: parlatene con noi al tavolo, prima di ordinare.",
+    "vuoto": "Nessun piatto con questo filtro.",
+    "categorie": {
+      "antipasti": "Per cominciare",
+      "primi": "Primi",
+      "secondi": "Secondi",
+      "dolci": "Dolci"
+    },
+    "piatti": {
+      "taglierePerDue": {
+        "nome": "Tagliere per due",
+        "descrizione": "Salumi e pecorini scelti fra i piccoli produttori della zona. Si compone al bancone, davanti a voi."
+      },
+      "focacciaPatate": {
+        "nome": "Focaccia con patate arrosto, sbriciolona e pecorino",
+        "descrizione": "Focaccia calda, patate arrosto, sbriciolona toscana e pecorino che si scioglie sopra."
+      },
+      "piciAglione": {
+        "nome": "Pici all'aglione",
+        "descrizione": "Tirati a mano, uno per uno. Sugo di aglione della Valdichiana e pomodoro, niente altro."
+      },
+      "tagliatelleTartufo": {
+        "nome": "Tagliatelle funghi e tartufo nero marzuolo",
+        "descrizione": "Pasta fatta in casa, funghi e tartufo marzuolo quando la stagione lo permette."
+      },
+      "ribollita": {
+        "nome": "Ribollita",
+        "descrizione": "Pane, cavolo nero e fagioli. Cotta il giorno prima, come vuole il nome."
+      },
+      "cinghialeUmido": {
+        "nome": "Cinghiale in umido",
+        "descrizione": "Cottura lunga, vino rosso e alloro. In carta quando è stagione."
+      },
+      "cantuccimisu": {
+        "nome": "Cantuccimisù",
+        "descrizione": "Il tiramisù fatto con i cantucci al posto dei savoiardi. Ce lo siamo inventato noi, e ormai ce lo chiedono prima di sedersi."
+      },
+      "pannaCottaVinSanto": {
+        "nome": "Panna cotta al Vin Santo",
+        "descrizione": "Panna cotta con una riduzione di Vin Santo. Il modo più corto per finire in Toscana."
+      }
     }
   }
 }

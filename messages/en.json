@@ -41,7 +41,10 @@
     "obbligatorio": "This field is required",
     "torna": "Back to top",
     "oraiNonDisponibili": "Opening hours are being updated — please call to confirm.",
-    "guarda": "Look"
+    "guarda": "Look",
+    "guardaLaCarta": "See the menu",
+    "vediSuMappa": "Open in maps",
+    "nuovaScheda": "Opens in a new tab"
   },
   "locali": {
     "titolo": "Two doors on the same street",
@@ -235,6 +238,180 @@
       "etichetta": "Booking",
       "titolo": "Call us",
       "testo": "For a table in either room, or to agree a time for the cellar visit."
+    }
+  },
+  "home": {
+    "hero": {
+      "occhiello": "Montepulciano · on the main corso",
+      "titolo": "The table above, the history below",
+      "accento": "history",
+      "sommario": "Two rooms on Via di Gracciano nel Corso, a cellar dug into the tufa, and the wine we make ourselves. The Ercolani family keeps a table for you.",
+      "sommarioStretto": "Two rooms on the corso, a cellar dug into the tufa, and the wine we make ourselves.",
+      "ctaPrimaria": "Book a table",
+      "ctaSecondaria": "Go down to the cellar",
+      "valutazione": "4.5 out of 5 — over 5,500 reviews",
+      "indicatore": "Go down",
+      "dato": "Via di Gracciano nel Corso · 101 · 72"
+    },
+    "marquee": {
+      "voci": "Il Brillo|Ercolani family|Via di Gracciano nel Corso|Montepulciano|Number 101|Number 72|Medieval tunnels"
+    },
+    "famiglia": {
+      "numero": "01",
+      "etichetta": "The family",
+      "titolo": "We grew up on <em>this</em> corso",
+      "p1": "We grew up together among these hills, and we do the three jobs the place asks for: growing, making the wine, laying the table.",
+      "p2": "At 101 there is the room, and the stair that goes down to the cellar. At 72, under the glass floor, you can see the medieval well: it was here before us and it will be here after.",
+      "p3": "The rest is what we carry to the table every day.",
+      "dato": "Ercolani family · Montepulciano (SI)",
+      "didascalia": "Family archive"
+    },
+    "discesa": {
+      "testo": "Beneath Montepulciano runs a town <em>nobody sees</em>"
+    },
+    "cantina": {
+      "numero": "02",
+      "etichetta": "The cellar",
+      "titolo": "Under the corso",
+      "sottotesto": "Tunnels dug into the tufa, cool all year round, where the wine rests the way it did before modern cellars existed. Ours can be visited: you go down, you walk, you taste. It takes less time than you think, and it is the part our guests remember longest.",
+      "dato": "Medieval tunnels · Open to visits · Entrance at 101",
+      "cta": "Book a tasting"
+    },
+    "vino": {
+      "numero": "03",
+      "etichetta": "The wine",
+      "titolo": "The wine is <em>ours</em>",
+      "p1": "You will find Nobile di Montepulciano everywhere in town. Here you will also find what we make ourselves — Il Brillo among them, a label named for the way it is drunk.",
+      "p2": "We will tell you about it at your table. It is the part of the job we like best.",
+      "etichettaCasa": "House label",
+      "dato": "Il Brillo · Made by us"
+    },
+    "cucina": {
+      "numero": "04",
+      "etichetta": "The kitchen",
+      "titolo": "What you eat here",
+      "testo": "Pici with aglione, rolled properly. The board, which is the best way to begin. Wild boar stew when the season allows. And the Cantuccimisù, which we invented and which people now ask for before they sit down.",
+      "cta": "See the menu",
+      "d1": "Pecorino from Pienza and the Val d'Orcia",
+      "d2": "Hand-rolled pasta",
+      "d3": "At the counter"
+    },
+    "locali": {
+      "numero": "05",
+      "etichetta": "The rooms",
+      "titolo": "Two doors on the same corso",
+      "sommario": "Two rooms a few steps apart, on Via di Gracciano nel Corso."
+    },
+    "risalita": {
+      "testo": "A table, a board, a glass. The rest <em>takes care of itself</em>."
+    },
+    "prenota": {
+      "etichetta": "Booking",
+      "titolo": "We are keeping a table",
+      "testo": "For a table in either room, or to arrange a time for the cellar visit. When you call, you get one of us.",
+      "chiamaEtichetta": "Call us",
+      "oppure": "Or",
+      "theFork": "Book on TheFork",
+      "formTitolo": "Leave us your details",
+      "informazioniTitolo": "Where we are",
+      "indicazioni": "Directions",
+      "mappaAttiva": "Tap to activate the map",
+      "mappaEtichetta": "Map of Via di Gracciano nel Corso, Montepulciano",
+      "inviato": "Thank you. We will call you back to confirm.",
+      "inviaAltra": "Send another request",
+      "nonInviato": "We could not send your request. Please call us: you will get one of us.",
+      "riprova": "Try again"
+    },
+    "form": {
+      "nome": "Full name",
+      "telefono": "Phone",
+      "data": "Date",
+      "orario": "Time",
+      "ospiti": "Guests",
+      "sede": "Room",
+      "sedePlaceholder": "Choose a room",
+      "note": "Notes (allergies, high chair, occasions)",
+      "privacy": "I have read the privacy notice",
+      "invia": "Send the request",
+      "inviando": "Sending",
+      "erroreNome": "We need at least a name",
+      "erroreTelefono": "We need a number to call you back",
+      "erroreData": "Pick a date",
+      "erroreOrario": "Pick a time",
+      "erroreOspiti": "From 1 to 20 guests; for larger parties, please call",
+      "erroreSede": "Choose which room",
+      "errorePrivacy": "We need your consent in order to reply",
+      "nota": "A request is not a confirmed booking: we will call you back."
+    },
+    "stato": {
+      "apertoOra": "Open now",
+      "chiusoOra": "Closed now",
+      "nonDisponibile": "Opening hours being updated",
+      "chiamaPerConferma": "Call us to confirm"
+    },
+    "footer": {
+      "wordmark": "La Vineria",
+      "seguici": "Follow us",
+      "legale": "VAT no.",
+      "credits": "Via di Gracciano nel Corso, Montepulciano (SI)",
+      "tornaSu": "Back to top"
+    },
+    "barra": {
+      "chiama": "Call",
+      "indicazioni": "Directions"
+    }
+  },
+  "carta": {
+    "titolo": "The menu",
+    "sottotitolo": "A selection. The full menu changes with the season, and we bring it to your table.",
+    "filtriEtichetta": "Filter",
+    "filtroTutti": "Everything",
+    "filtroVegetariano": "Vegetarian",
+    "filtroSenzaCarne": "No meat",
+    "abbinamento": "Paired with",
+    "prezzoAssente": "Price at the table",
+    "signature": "Ours",
+    "allergeni": "Allergies and intolerances: talk to us at the table, before you order.",
+    "vuoto": "Nothing on the menu matches this filter.",
+    "categorie": {
+      "antipasti": "To begin",
+      "primi": "First courses",
+      "secondi": "Main courses",
+      "dolci": "Desserts"
+    },
+    "piatti": {
+      "taglierePerDue": {
+        "nome": "Board for two",
+        "descrizione": "Cured meats and pecorino chosen from small producers nearby. Put together at the counter, in front of you."
+      },
+      "focacciaPatate": {
+        "nome": "Focaccia with roast potatoes, sbriciolona and pecorino",
+        "descrizione": "Warm focaccia, roast potatoes, Tuscan sbriciolona salami and pecorino melting over the top."
+      },
+      "piciAglione": {
+        "nome": "Pici all'aglione",
+        "descrizione": "Rolled by hand, one at a time. Aglione garlic from the Valdichiana and tomato, nothing else."
+      },
+      "tagliatelleTartufo": {
+        "nome": "Tagliatelle with mushrooms and marzuolo black truffle",
+        "descrizione": "Pasta made in house, mushrooms and marzuolo truffle when the season allows."
+      },
+      "ribollita": {
+        "nome": "Ribollita",
+        "descrizione": "Bread, cavolo nero and beans. Cooked the day before, as the name demands."
+      },
+      "cinghialeUmido": {
+        "nome": "Wild boar stew",
+        "descrizione": "Long cooking, red wine and bay. On the menu when it is in season."
+      },
+      "cantuccimisu": {
+        "nome": "Cantuccimisù",
+        "descrizione": "Tiramisù made with cantucci instead of savoiardi. We invented it, and people now ask for it before they sit down."
+      },
+      "pannaCottaVinSanto": {
+        "nome": "Panna cotta with Vin Santo",
+        "descrizione": "Panna cotta with a Vin Santo reduction. The shortest way to finish in Tuscany."
+      }
     }
   }
 }

@@ -61,6 +61,9 @@ export interface DescentProps {
   titolo: React.ReactNode;
   sottotesto: React.ReactNode;
   dato: React.ReactNode;
+  /** Azione della sezione. Entra con la coda, non prima: comparire mentre il
+   *  titolo sta ancora salendo la trasformerebbe nel soggetto. */
+  azione?: React.ReactNode;
   className?: string;
 }
 
@@ -72,6 +75,7 @@ export function Descent({
   titolo,
   sottotesto,
   dato,
+  azione,
   className,
 }: DescentProps) {
   const corsa = useRef<HTMLDivElement>(null);
@@ -228,7 +232,9 @@ export function Descent({
             }
           >
             <span aria-hidden="true" className="mb-10 block h-px w-16 bg-brass" />
-            <p className="max-w-[17ch] text-balance font-display text-h2 text-cream">{respiro}</p>
+            <p data-display="" className="max-w-[17ch] text-balance font-display text-h2 text-cream">
+              {respiro}
+            </p>
           </div>
 
           {/* 4 — il monumento. Su desktop è sovrapposto al respiro nello
@@ -240,10 +246,13 @@ export function Descent({
             className="mt-24"
           >
             <SectionNumber numero={numero} titolo={etichetta} className="mb-10" />
-            <p className="max-w-[15ch] text-balance font-display text-hero text-cream">{titolo}</p>
+            <p data-display="" className="max-w-[15ch] text-balance font-display text-hero text-cream">
+              {titolo}
+            </p>
             <div data-discesa="coda" data-motion-guard="">
               <p className="measure mt-10 text-lead text-stone">{sottotesto}</p>
               <p className="mt-10 font-mono text-mono uppercase text-brass">{dato}</p>
+              {azione ? <div className="mt-10">{azione}</div> : null}
             </div>
           </div>
         </div>

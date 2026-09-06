@@ -64,10 +64,39 @@ const IMPRONTA = (conMaschere = true) => {
   });
 };
 
+/**
+ * Attende che lo scroll sia fermo.
+ *
+ * Serve PRIMA di ogni posizionamento a colpo secco, e il motivo è il modo in
+ * cui Lenis riconcilia uno scroll che non arriva da lui: sincronizza la
+ * propria posizione con quella del documento solo quando non sta già
+ * animando. Chiamare `window.scrollTo` mentre Lenis è ancora in corsa
+ * significa essere ignorati — Lenis prosegue verso il proprio bersaglio, e
+ * l'impronta di riferimento viene presa a una quota che nessuno ha chiesto.
+ *
+ * Era il difetto della prova 4 e della 5: entrambe confrontavano la pagina
+ * con un riferimento preso in fondo al documento invece che a metà discesa.
+ * Non si vedeva sulla pagina di prova dello Step 02 solo perché era più alta
+ * della corsa della prova 1, e Lenis faceva in tempo a fermarsi da solo.
+ */
+async function attendiQuiete(page, limiteMs = 4000) {
+  const inizio = Date.now();
+  let ultima = -1;
+  let fermo = 0;
+  while (Date.now() - inizio < limiteMs) {
+    const y = await page.evaluate(() => Math.round(window.scrollY));
+    fermo = y === ultima ? fermo + 1 : 0;
+    if (fermo >= 3) return;
+    ultima = y;
+    await page.waitForTimeout(80);
+  }
+}
+
 /** Porta lo scroll a `y` con la rotella (quindi passando per Lenis) o di
  *  colpo, e lascia allo scrub il tempo di raggiungere la posizione. */
 async function vaiA(page, cdp, y, colpo = false) {
   if (colpo) {
+    await attendiQuiete(page);
     await page.evaluate((y) => window.scrollTo(0, y), y);
   } else {
     const attuale = await page.evaluate(() => window.scrollY);

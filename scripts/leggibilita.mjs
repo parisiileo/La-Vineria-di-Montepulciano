@@ -23,7 +23,10 @@ await page.evaluate(async () => {
   for (let y = 0; y < document.body.scrollHeight; y += 600) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); }
   window.scrollTo(0, 0);
 });
-await page.waitForLoadState("networkidle");
+// Non `networkidle`: dallo Step 04 la pagina incorpora una mappa, e le sue
+// tiles non smettono mai davvero di arrivare. Attendere l'inattività di rete
+// qui significa attendere per sempre.
+await page.waitForTimeout(1200);
 // La barra si nasconde scorrendo in giù e riappare risalendo: senza questa
 // attesa i riquadri vengono letti mentre è ancora traslata fuori campo, e
 // tutti i suoi testi risultano a coordinate negative.

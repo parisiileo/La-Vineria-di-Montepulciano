@@ -1,63 +1,258 @@
-// Segnaposto della home. Le sezioni reali arrivano nello Step 4: qui c'è solo
-// quanto serve a verificare font, fondo e grana su una pagina vera.
+// La home. È la pagina, al singolare: il sito è una sequenza sola, e la
+// navigazione è un indice della partitura, non un menu di pagine.
+//
+// L'ordine delle sezioni non è un elenco di contenuti, è un ritmo. La densità
+// dichiarata qui sotto è la stessa verificata allo Step 02, e la regola non
+// cambia: non esistono due sezioni consecutive della stessa densità.
+//
+//   hero          A  5   fotografia piena, densità massima
+//   marquee       —  2   frattura
+//   01 famiglia   B  3   editoriale + inserto d'archivio
+//   respiro       D  1   tipografica, registro respiro     ← la discesa
+//   02 cantina    D  5   tipografica, registro monumento   ← il punto profondo
+//   03 vino       B  3   editoriale, lato opposto
+//   04 cucina     E  4   griglia asimmetrica + la carta
+//   05 locali     C  3   dittico con occlusione a tre livelli
+//   risalita      D  1   tipografica, registro respiro     ← la risalita
+//   06 prenota    —  2   funzionale
+//   footer        —  1   tipografica
+//
+// La cantina è tipografica e non fotografica perché la fotografia dei tunnel
+// non esiste: la libreria del cliente è stata setacciata tutta allo Step 02.
+// La regola del brief è esplicita — meglio una sezione di sola tipografia ben
+// composta che una stock photo toscana — e questa la applica.
 
-import { setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
 
 import { routing } from "@/i18n/routing";
-import { LangSwitch } from "@/components/ui/LangSwitch";
-import { LOCALI, TELEFONO, TELEFONO_HREF } from "@/lib/data/locali";
+import { FOTO } from "@/lib/data/foto";
+import { LOCALI, VALUTAZIONE_DA_VERIFICARE } from "@/lib/data/locali";
+import { alternatesFor } from "@/lib/seo";
+import { DuotoneDefs } from "@/components/media/DuotoneDefs";
+import { AmbientGlow } from "@/components/sections/AmbientGlow";
+import { Cucina } from "@/components/sections/Cucina";
+import { Descent } from "@/components/sections/Descent";
+import { DiptychSection } from "@/components/sections/DiptychSection";
+import { EditorialSection } from "@/components/sections/EditorialSection";
+import { FullBleedSection } from "@/components/sections/FullBleedSection";
+import { Marquee } from "@/components/sections/Marquee";
+import { Prenotazione } from "@/components/sections/Prenotazione";
+import { TypeSection } from "@/components/sections/TypeSection";
+import { LinkAzione } from "@/components/ui/LinkAzione";
+import { SiteFooter } from "@/components/chrome/SiteFooter";
+import { StickyCallBar } from "@/components/chrome/StickyCallBar";
+import { VOCI_NAV } from "@/lib/data/navigazione";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await props.params;
+  const t = await getTranslations({ locale, namespace: "metadata" });
+  return { description: t("description"), alternates: alternatesFor("/") };
+}
+
+/** Stella disegnata: nessuna icona di libreria, nessun glifo di sistema. */
+function Stella() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5 shrink-0 text-brass">
+      <path
+        d="M8 1.5 10 6l4.5.4-3.4 3 1 4.4L8 11.5 3.9 13.8l1-4.4-3.4-3L6 6Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 function Body() {
-  const t = useTranslations("brand");
+  const t = useTranslations("home");
+  const tf = useTranslations("foto");
   const tc = useTranslations("common");
   const tl = useTranslations("locali");
+  const em = { em: (chunks: React.ReactNode) => <em>{chunks}</em> };
+
+  const [centoUno, settantaDue] = LOCALI;
 
   return (
-    <main id="contenuto" className="shell flex min-h-dvh flex-col justify-between pb-12 pt-28">
-      <div className="flex items-center justify-between gap-6">
-        <span className="font-sans text-label uppercase text-stone-dim">{t("famiglia")}</span>
-        <LangSwitch />
-      </div>
+    <>
+    <main id="contenuto" className="shell">
+      <DuotoneDefs />
 
-      <div>
-        <h1 className="text-hero">
-          {t("nome")} <em>{t("luogo")}</em>
-        </h1>
-        <p className="measure mt-8 text-lead text-stone">{t("concetto")}</p>
-      </div>
+      {/* ---------------------------------------------------------- A · hero */}
+      <FullBleedSection
+        id="hero"
+        etichetta={t("hero.occhiello")}
+        titoloTesto={t("hero.titolo")}
+        accenti={[t("hero.accento")]}
+        sommario={
+          <>
+            {/* Due varianti, non una troncata: con la barra di Safari aperta
+                il sommario lungo spinge la prima CTA sotto la piega, e la
+                risposta giusta è una frase più corta, non un bottone più
+                piccolo. */}
+            <span className="md:hidden">{t("hero.sommarioStretto")}</span>
+            <span className="hidden md:inline">{t("hero.sommario")}</span>
+          </>
+        }
+        azione={
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+            {/* Impilate e a piena larghezza sotto sm: due CTA affiancate su
+                390px diventano due bersagli stretti e nessuno dei due è
+                comodo. */}
+            <LinkAzione href="#prenota" size="lg" className="w-full sm:w-auto">
+              {t("hero.ctaPrimaria")}
+            </LinkAzione>
+            <LinkAzione href="#cantina" variant="ghost" size="lg" className="w-full sm:w-auto">
+              {t("hero.ctaSecondaria")}
+            </LinkAzione>
 
-      <footer className="grid gap-8 border-t border-border pt-8 sm:grid-cols-3">
-        {LOCALI.map((sede) => {
-          const key = sede.id === "gracciano-101" ? "gracciano101" : "gracciano72";
-          return (
-            <div key={sede.id}>
-              <p className="font-sans text-label uppercase text-stone-dim">{tl(`${key}.nome`)}</p>
-              <p className="mt-2 text-body text-stone">
-                {sede.via} <span className="font-mono text-brass">{sede.civico}</span>
+            {/* La valutazione non è confermata da nessuna fonte: sta dietro a
+                una costante sola, così si toglie o si corregge con una riga.
+                Vedi DA-VERIFICARE.md. */}
+            {VALUTAZIONE_DA_VERIFICARE ? (
+              <p className="flex items-center gap-2 font-mono text-mono text-cream/85">
+                <Stella />
+                {t("hero.valutazione")}
               </p>
-              <p className="text-body text-stone-dim">
-                {sede.cap} {sede.citta} ({sede.provincia})
-              </p>
-            </div>
-          );
-        })}
+            ) : null}
+          </div>
+        }
+        indicatore={t("hero.indicatore")}
+        foto={FOTO.salaBancone}
+        alt={tf("salaBancone")}
+        rapporto="21/9"
+        altezza="piena"
+        priority
+      />
 
-        <div>
-          <p className="font-sans text-label uppercase text-stone-dim">{tc("telefono")}</p>
-          <a
-            href={TELEFONO_HREF}
-            className="underline-grow relative mt-2 inline-block font-mono text-mono text-brass"
-          >
-            {TELEFONO}
-          </a>
-        </div>
-      </footer>
+      {/* -------------------------------------------------------- · frattura */}
+      <Marquee voci={t("marquee.voci").split("|")} />
+
+      {/* ------------------------------------------------------ B · famiglia */}
+      <EditorialSection
+        id="famiglia"
+        numero={t("famiglia.numero")}
+        etichetta={t("famiglia.etichetta")}
+        titolo={t.rich("famiglia.titolo", em)}
+        testo={
+          <>
+            <p>{t("famiglia.p1")}</p>
+            <p>{t("famiglia.p2")}</p>
+            <p>{t("famiglia.p3")}</p>
+          </>
+        }
+        dato={t("famiglia.dato")}
+        // 4/5 e non il 3/2 nativo: le facce vendono, e un ritratto verticale
+        // occupa l'occhio più a lungo di una veduta larga della stessa scena.
+        foto={FOTO.squadraInVia}
+        alt={tf("squadraInVia")}
+        rapporto="4/5"
+        lato="start"
+        sfasamento="testo"
+        colonneImmagine={5}
+        inserto={{
+          foto: FOTO.archivioErcolani,
+          alt: tf("archivioErcolani"),
+          rapporto: "3/2",
+          didascalia: t("famiglia.didascalia"),
+        }}
+      />
+
+      {/* ------------------------------ D respiro → D monumento, in un movimento
+          Il respiro non finisce per lasciare il posto alla cantina: viene
+          mangiato dall'alto MENTRE la cantina sale da sotto. È la discesa. */}
+      <Descent
+        id="cantina"
+        respiro={t.rich("discesa.testo", em)}
+        numero={t("cantina.numero")}
+        etichetta={t("cantina.etichetta")}
+        titolo={t("cantina.titolo")}
+        sottotesto={t("cantina.sottotesto")}
+        dato={t("cantina.dato")}
+        // Trattamento primario: la degustazione è il prodotto a margine più
+        // alto ed è quello meno promosso oggi.
+        azione={<LinkAzione href="#prenota" size="lg">{t("cantina.cta")}</LinkAzione>}
+      />
+
+      {/* ---------------------------------------------------------- B · vino */}
+      <EditorialSection
+        id="vino"
+        numero={t("vino.numero")}
+        etichetta={t("vino.etichetta")}
+        titolo={t.rich("vino.titolo", em)}
+        testo={
+          <>
+            <p>{t("vino.p1")}</p>
+            <p>{t("vino.p2")}</p>
+          </>
+        }
+        dato={t("vino.dato")}
+        foto={FOTO.caliceInciso}
+        alt={tf("caliceInciso")}
+        rapporto="4/5"
+        lato="end"
+        sfasamento="testo"
+        colonneImmagine={5}
+      />
+
+      {/* -------------------------------------------------------- E · cucina */}
+      <Cucina id="cucina" />
+
+      {/* -------------------------------------------------------- C · locali */}
+      <DiptychSection
+        id="locali"
+        numero={t("locali.numero")}
+        etichetta={t("locali.etichetta")}
+        titolo={t("locali.titolo")}
+        sommario={t("locali.sommario")}
+        primaria={{
+          civico: centoUno.civico,
+          via: centoUno.via,
+          titolo: tl("gracciano101.nome"),
+          testo: tl("gracciano101.sommario"),
+          tratti: [tl("gracciano101.tratti.cantina"), tl("gracciano101.tratti.tunnel")],
+          foto: FOTO.facciata101,
+          alt: tf("facciata101"),
+          rapporto: "16/9",
+          cursore: tc("guarda"),
+        }}
+        secondaria={{
+          civico: settantaDue.civico,
+          via: settantaDue.via,
+          titolo: tl("gracciano72.nome"),
+          testo: tl("gracciano72.sommario"),
+          tratti: [tl("gracciano72.tratti.pozzo"), tl("gracciano72.tratti.vetro")],
+          foto: FOTO.facciata72,
+          alt: tf("facciata72"),
+          rapporto: "4/5",
+        }}
+      />
+
+      {/* ------------------------------------------- D · respiro, la risalita */}
+      <TypeSection
+        registro="respiro"
+        testo={t.rich("risalita.testo", em)}
+        glow={<AmbientGlow sorgente="ottone" className="right-0 top-[6%] h-[38vh] w-[42vw]" />}
+      />
+
+      {/* ------------------------------------------------------ · funzionale */}
+      <Prenotazione id="prenota" />
     </main>
+
+    {/* Il footer sta FUORI da `main`: il contenuto principale del documento
+        finisce con la prenotazione, e il salto "vai al contenuto" non deve
+        includere i dati di chiusura. */}
+    <SiteFooter voci={VOCI_NAV} />
+
+    {/* La barra fissa vive solo qui: la sua sentinella è l'hero, e l'hero
+        esiste solo su questa pagina. */}
+    <StickyCallBar />
+    </>
   );
 }
 

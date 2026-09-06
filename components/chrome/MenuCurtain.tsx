@@ -39,6 +39,7 @@ import { motion } from "motion/react";
 import { Ancora } from "@/components/chrome/Ancora";
 import { duration, ease, stagger } from "@/lib/motion";
 import { bloccaScroll, sbloccaScroll } from "@/lib/scroll/lenis";
+import { segnalaOverlay } from "@/lib/ui/overlay";
 import { useReducedMotion } from "@/components/motion/useReducedMotion";
 import { cn } from "@/lib/utils";
 
@@ -48,8 +49,22 @@ interface MenuCurtainProps {
   onCambio: (aperto: boolean) => void;
 }
 
+/**
+ * L'hamburger che diventa una croce.
+ *
+ * `transformBox: "view-box"` non è un dettaglio: senza, il browser calcola
+ * `transform-origin` rispetto al riquadro di ciascun tracciato invece che al
+ * sistema di coordinate dell'SVG. Per una linea orizzontale quel riquadro è
+ * alto zero e largo 18, quindi "12px 7px" finisce da tutt'altra parte: le due
+ * aste ruotano attorno a due perni sbagliati e non si incrociano mai. Il
+ * risultato non è una croce, è un accento circonflesso — e nessun errore
+ * viene segnalato da nessuna parte. Trovato guardando lo scatto a 4×.
+ */
 function Hamburger({ aperto }: { aperto: boolean }) {
-  const comune = { transition: { duration: duration.micro * 1.5, ease: ease.inOut } } as const;
+  const comune = {
+    transition: { duration: duration.micro * 1.5, ease: ease.inOut },
+  } as const;
+  const perno = { transformBox: "view-box", transformOrigin: "12px 12px" } as const;
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className="size-6" fill="none">
       <motion.path
@@ -58,7 +73,7 @@ function Hamburger({ aperto }: { aperto: boolean }) {
         strokeWidth="1.5"
         strokeLinecap="round"
         animate={aperto ? { rotate: 45, y: 5 } : { rotate: 0, y: 0 }}
-        style={{ originX: "12px", originY: "7px" }}
+        style={perno}
         {...comune}
       />
       <motion.path
@@ -66,8 +81,11 @@ function Hamburger({ aperto }: { aperto: boolean }) {
         stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
+        // Anche l'opacità, non solo la scala: con `strokeLinecap="round"`
+        // un'asta schiacciata a scaleX 0 lascia in mezzo il proprio
+        // terminale tondo, cioè un puntino grosso quanto il tratto.
         animate={aperto ? { scaleX: 0, opacity: 0 } : { scaleX: 1, opacity: 1 }}
-        style={{ originX: "12px", originY: "12px" }}
+        style={perno}
         {...comune}
       />
       <motion.path
@@ -76,7 +94,7 @@ function Hamburger({ aperto }: { aperto: boolean }) {
         strokeWidth="1.5"
         strokeLinecap="round"
         animate={aperto ? { rotate: -45, y: -5 } : { rotate: 0, y: 0 }}
-        style={{ originX: "12px", originY: "17px" }}
+        style={perno}
         {...comune}
       />
     </svg>
@@ -108,6 +126,15 @@ export function MenuCurtain({ voci, aperto, onCambio }: MenuCurtainProps) {
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, []);
+
+  // Effetto separato, e dipendente dal SOLO `aperto`: il contatore degli
+  // strati è un saldo, e un effetto che si ri-esegue per un'altra
+  // dipendenza — la preferenza di movimento, per esempio — lo sbilancia.
+  useEffect(() => {
+    if (!aperto) return;
+    segnalaOverlay(true);
+    return () => segnalaOverlay(false);
+  }, [aperto]);
 
   useEffect(() => {
     if (aperto) {

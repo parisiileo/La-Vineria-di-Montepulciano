@@ -203,8 +203,12 @@
 
   p { text-wrap: pretty; }
 
-  /* Il corsivo del serif è riservato alle parole emotive e prende l'ottone. */
-  h1 em, h2 em, h3 em { font-style: italic; color: var(--color-brass); }
+  /* Il corsivo del serif è riservato alle parole emotive e prende l'ottone.
+     `[data-display]` estende la regola ai paragrafi composti a corpo display
+     — i due respiri, il monumento della cantina — che non sono intestazioni
+     ma sono tipografia grande: senza, la parola accentata restava crema e
+     l'accento non si vedeva proprio dove pesa di più. */
+  h1 em, h2 em, h3 em, [data-display] em { font-style: italic; color: var(--color-brass); }
 
   ::selection { background-color: var(--color-wine); color: var(--color-cream); }
 
@@ -383,6 +387,12 @@ main > section[id] {
      comprese quelle che il cliente mandera' e che nessuno ha ancora visto.
      Le tappe sono state alzate finche' scripts/leggibilita.mjs non e passato
      sulla fotografia piu chiara del corpus: vedi DESIGN_NOTES §10.5.
+     Allo Step 04 si e' aggiunto un SECONDO gradiente, orizzontale. Il
+     motivo: alzare ancora le tappe di quello verticale spegne la fotografia
+     su tutta la larghezza, mentre il testo dell'hero occupa solo la meta'
+     sinistra. Il gradiente laterale scurisce dove il testo c'e' davvero e
+     lascia intatto il lato destro dell'inquadratura — che nella fotografia
+     del bancone e' la parete di bottiglie, cioe' la parte che vale.
      Allo Step 03 sono state ritoccate una terza volta, e la storia merita di
      essere raccontata perche' e' un caso di misura sbagliata. Da quando il
      titolo entra parola per parola, la parola in ottone risultava a 2.77:1: la
@@ -393,14 +403,22 @@ main > section[id] {
      3.98:1 senza spegnere la fotografia: le tappe massime provate prima
      (96/84/46) davano 4.77:1 al prezzo di una meta' inferiore quasi nera. */
   .foto-leggibilita {
-    background-image: linear-gradient(
-      to top,
-      var(--color-tuff-deep) 0%,
-      color-mix(in oklab, var(--color-tuff-deep) 95%, transparent) 29%,
-      color-mix(in oklab, var(--color-tuff-deep) 78%, transparent) 46%,
-      color-mix(in oklab, var(--color-tuff-deep) 40%, transparent) 65%,
-      transparent 87%
-    );
+    background-image:
+      linear-gradient(
+        to top,
+        var(--color-tuff-deep) 0%,
+        color-mix(in oklab, var(--color-tuff-deep) 95%, transparent) 29%,
+        color-mix(in oklab, var(--color-tuff-deep) 78%, transparent) 46%,
+        color-mix(in oklab, var(--color-tuff-deep) 40%, transparent) 65%,
+        transparent 87%
+      ),
+      linear-gradient(
+        to right,
+        color-mix(in oklab, var(--color-tuff-deep) 89%, transparent) 0%,
+        color-mix(in oklab, var(--color-tuff-deep) 66%, transparent) 26%,
+        color-mix(in oklab, var(--color-tuff-deep) 26%, transparent) 48%,
+        transparent 62%
+      );
   }
 
   /* Sorgente di luce fuori campo. Massimo due per pagina: alla terza la
@@ -426,6 +444,41 @@ main > section[id] {
      che dipende dal movimento, che e' esattamente cio' che il contratto
      dello Step 01 vieta. */
   .discesa-palco { position: relative; }
+
+  /* Wordmark in contorno del footer. Lo spessore non e' costante: a corpo
+     enorme un tratto di 1px sparisce, a corpo piccolo un tratto di 2px
+     chiude le contropunte del serif e la parola diventa una macchia. Due
+     valori, uno per registro di dimensione. */
+  .wordmark-contorno {
+    color: color-mix(in oklab, var(--color-brass) 26%, transparent);
+  }
+  @supports (-webkit-text-stroke: 1px black) {
+    .wordmark-contorno {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--color-brass);
+    }
+    @media (max-width: 767px) {
+      .wordmark-contorno { -webkit-text-stroke-width: 1.25px; }
+    }
+  }
+
+  /* ------------------------------------------------------------- MAPPA
+     La mappa arriva da OpenStreetMap, che la disegna chiara. Non esiste un
+     tema scuro senza chiave d'accesso e senza un servizio a pagamento, e
+     una mappa bianca in mezzo a questa pagina e' una finestra accesa in una
+     stanza buia. L'inversione con rotazione di tinta e' il modo standard di
+     scurire una mappa raster: inverte le luminosita' e riporta le tinte al
+     punto di partenza, cosi il verde resta verde e non diventa magenta.
+     La saturazione scende perche' i colori di OSM sono da atlante, non da
+     questa palette, e lo strato in `color` li riporta verso il tufo. */
+  .mappa-scura {
+    filter: invert(0.92) hue-rotate(180deg) saturate(0.35) brightness(0.96) contrast(0.9);
+  }
+  .mappa-tinta {
+    background-color: var(--color-tuff);
+    mix-blend-mode: color;
+    opacity: 0.55;
+  }
 
   /* Contorno d'ottone del marquee. `-webkit-text-stroke` non ha ancora un
      equivalente standard con lo stesso supporto: dove manca, il testo resta

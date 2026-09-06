@@ -179,5 +179,24 @@ for (const file of pagine) {
 }
 pass(`${pagine.length} pagine entro il limite di ${MAX_GLOW}`);
 
+/* -------------------- 9. corpi tipografici noti a tailwind-merge */
+head("8. Corpi tipografici globals.css ↔ lib/utils.ts");
+const cssCorpi = [...CSS.matchAll(/--text-([a-z0-9]+):\s/g)].map((m) => m[1]);
+const utilsSrc = readFileSync(join(ROOT, "lib/utils.ts"), "utf8");
+const blocco = /export const CORPI_TESTO = \[([\s\S]*?)\] as const;/.exec(utilsSrc)?.[1] ?? "";
+const tsCorpi = [...blocco.matchAll(/"([a-z0-9]+)"/g)].map((m) => m[1]);
+// Senza questo elenco `cn()` cancella la dimensione ogni volta che nella
+// stessa chiamata compare anche un colore: tailwind-merge non conosce i token
+// di @theme e tratta `text-hero` e `text-brass` come lo stesso gruppo.
+for (const nome of cssCorpi) {
+  if (!tsCorpi.includes(nome)) {
+    fail(`--text-${nome} non è in CORPI_TESTO: cn() lo cancellerà accanto a un colore`);
+  }
+}
+for (const nome of tsCorpi) {
+  if (!cssCorpi.includes(nome)) fail(`CORPI_TESTO dichiara "${nome}" che non esiste in @theme`);
+}
+pass(`${cssCorpi.length} corpi noti a tailwind-merge`);
+
 head(failures ? `AUDIT FALLITO — ${failures} problemi` : "AUDIT SUPERATO");
 process.exit(failures ? 1 : 0);
