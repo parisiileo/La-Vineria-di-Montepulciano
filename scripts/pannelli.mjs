@@ -8,7 +8,7 @@ import { chromium } from "playwright";
 import { mkdirSync } from "node:fs";
 
 const BASE = process.argv[2] ?? "http://localhost:3111";
-const OUT = "artifacts/step-04";
+const OUT = "artifacts/step-06";
 mkdirSync(OUT, { recursive: true });
 
 const browser = await chromium.launch();

@@ -7,14 +7,14 @@
 //
 //   hero          A  5   fotografia piena, densità massima
 //   marquee       —  2   frattura
-//   01 famiglia   B  3   editoriale + inserto d'archivio
+//   famiglia      B  3   editoriale + inserto d'archivio
 //   respiro       D  1   tipografica, registro respiro     ← la discesa
-//   02 cantina    D  5   tipografica, registro monumento   ← il punto profondo
-//   03 vino       B  3   editoriale, lato opposto
-//   04 cucina     E  4   griglia asimmetrica + la carta
-//   05 locali     C  3   dittico con occlusione a tre livelli
+//   cantina       D  5   tipografica, registro monumento   ← il punto profondo
+//   vino          B  3   editoriale, lato opposto
+//   cucina        E  4   griglia asimmetrica + la carta
+//   locali        C  3   dittico con occlusione a tre livelli
 //   risalita      D  1   tipografica, registro respiro     ← la risalita
-//   06 prenota    —  2   funzionale
+//   prenota       —  2   funzionale
 //   footer        —  1   tipografica
 //
 // La cantina è tipografica e non fotografica perché la fotografia dei tunnel
@@ -57,18 +57,6 @@ export async function generateMetadata(props: {
   return { description: t("description"), alternates: alternatesFor("/") };
 }
 
-/** Stella disegnata: nessuna icona di libreria, nessun glifo di sistema. */
-function Stella() {
-  return (
-    <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5 shrink-0 text-brass">
-      <path
-        d="M8 1.5 10 6l4.5.4-3.4 3 1 4.4L8 11.5 3.9 13.8l1-4.4-3.4-3L6 6Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
 function Body() {
   const t = useTranslations("home");
   const tf = useTranslations("foto");
@@ -86,7 +74,6 @@ function Body() {
       {/* ---------------------------------------------------------- A · hero */}
       <FullBleedSection
         id="hero"
-        etichetta={t("hero.occhiello")}
         titoloTesto={t("hero.titolo")}
         accenti={[t("hero.accento")]}
         sommario={
@@ -115,10 +102,7 @@ function Body() {
                 una costante sola, così si toglie o si corregge con una riga.
                 Vedi DA-VERIFICARE.md. */}
             {VALUTAZIONE_DA_VERIFICARE ? (
-              <p className="flex items-center gap-2 font-mono text-mono text-cream/85">
-                <Stella />
-                {t("hero.valutazione")}
-              </p>
+              <p className="font-mono text-mono text-cream/85">{t("hero.valutazione")}</p>
             ) : null}
           </div>
         }
@@ -136,8 +120,6 @@ function Body() {
       {/* ------------------------------------------------------ B · famiglia */}
       <EditorialSection
         id="famiglia"
-        numero={t("famiglia.numero")}
-        etichetta={t("famiglia.etichetta")}
         titolo={t.rich("famiglia.titolo", em)}
         testo={
           <>
@@ -146,7 +128,6 @@ function Body() {
             <p>{t("famiglia.p3")}</p>
           </>
         }
-        dato={t("famiglia.dato")}
         // 4/5 e non il 3/2 nativo: le facce vendono, e un ritratto verticale
         // occupa l'occhio più a lungo di una veduta larga della stessa scena.
         foto={FOTO.squadraInVia}
@@ -169,11 +150,8 @@ function Body() {
       <Descent
         id="cantina"
         respiro={t.rich("discesa.testo", em)}
-        numero={t("cantina.numero")}
-        etichetta={t("cantina.etichetta")}
         titolo={t("cantina.titolo")}
         sottotesto={t("cantina.sottotesto")}
-        dato={t("cantina.dato")}
         // Trattamento primario: la degustazione è il prodotto a margine più
         // alto ed è quello meno promosso oggi.
         azione={<LinkAzione href="#prenota" size="lg">{t("cantina.cta")}</LinkAzione>}
@@ -182,8 +160,6 @@ function Body() {
       {/* ---------------------------------------------------------- B · vino */}
       <EditorialSection
         id="vino"
-        numero={t("vino.numero")}
-        etichetta={t("vino.etichetta")}
         titolo={t.rich("vino.titolo", em)}
         testo={
           <>
@@ -191,7 +167,6 @@ function Body() {
             <p>{t("vino.p2")}</p>
           </>
         }
-        dato={t("vino.dato")}
         foto={FOTO.caliceInciso}
         alt={tf("caliceInciso")}
         rapporto="4/5"
@@ -206,8 +181,6 @@ function Body() {
       {/* -------------------------------------------------------- C · locali */}
       <DiptychSection
         id="locali"
-        numero={t("locali.numero")}
-        etichetta={t("locali.etichetta")}
         titolo={t("locali.titolo")}
         sommario={t("locali.sommario")}
         primaria={{

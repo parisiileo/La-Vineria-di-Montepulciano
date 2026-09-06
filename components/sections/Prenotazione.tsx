@@ -34,7 +34,6 @@ import { Select } from "@/components/ui/Select";
 import { MappaLazy } from "@/components/chrome/MappaLazy";
 import { StatoAperturaBadge } from "@/components/ui/StatoApertura";
 import { Reveal } from "@/components/motion/Reveal";
-import { SectionNumber } from "@/components/sections/SectionNumber";
 
 type Esito = "fermo" | "invio" | "fatto" | "errore";
 
@@ -92,8 +91,7 @@ export function Prenotazione({ id = "prenota" }: { id?: string }) {
   return (
     <section id={id} className="section-y border-t border-border">
       <Reveal>
-        <SectionNumber numero="06" titolo={t("etichetta")} />
-        <h2 className="mt-6 text-h2">{t("titolo")}</h2>
+        <h2 className="text-h2">{t("titolo")}</h2>
         <p className="measure mt-6 text-lead text-stone">{t("testo")}</p>
       </Reveal>
 
@@ -200,7 +198,7 @@ export function Prenotazione({ id = "prenota" }: { id?: string }) {
                     <span className="font-display text-h3 text-cream">{tl(`${chiave}.nome`)}</span>
                   </p>
                   <p className="mt-2 text-body text-stone">
-                    {sede.via} {sede.civico} · {sede.cap} {sede.citta} ({sede.provincia})
+                    {sede.via} {sede.civico}, {sede.cap} {sede.citta} ({sede.provincia})
                   </p>
                   <p className="mt-1">
                     <a href={sede.telefonoHref} className="underline-grow relative font-mono text-mono text-stone">

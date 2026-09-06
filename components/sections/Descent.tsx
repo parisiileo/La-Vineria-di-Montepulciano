@@ -44,7 +44,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { duration } from "@/lib/motion";
-import { SectionNumber } from "@/components/sections/SectionNumber";
 import { cn } from "@/lib/utils";
 
 /** Lunghezza della corsa, in altezze di viewport. Sotto 2.5 la discesa è
@@ -55,12 +54,13 @@ export interface DescentProps {
   id?: string;
   /** Il testo del respiro: la discesa parte da qui. */
   respiro: React.ReactNode;
-  numero: string;
-  etichetta: string;
   /** Il monumento che arriva in fondo. */
   titolo: React.ReactNode;
   sottotesto: React.ReactNode;
-  dato: React.ReactNode;
+  /** Riga documentaria in mono. Opzionale: quasi sempre ripete il testo che
+   *  sta sopra, ed è la stessa micro-etichetta della numerazione in un'altra
+   *  posizione. */
+  dato?: React.ReactNode;
   /** Azione della sezione. Entra con la coda, non prima: comparire mentre il
    *  titolo sta ancora salendo la trasformerebbe nel soggetto. */
   azione?: React.ReactNode;
@@ -70,8 +70,6 @@ export interface DescentProps {
 export function Descent({
   id,
   respiro,
-  numero,
-  etichetta,
   titolo,
   sottotesto,
   dato,
@@ -231,7 +229,6 @@ export function Descent({
               } as React.CSSProperties
             }
           >
-            <span aria-hidden="true" className="mb-10 block h-px w-16 bg-brass" />
             <p data-display="" className="max-w-[17ch] text-balance font-display text-h2 text-cream">
               {respiro}
             </p>
@@ -245,13 +242,14 @@ export function Descent({
             data-motion-guard=""
             className="mt-24"
           >
-            <SectionNumber numero={numero} titolo={etichetta} className="mb-10" />
             <p data-display="" className="max-w-[15ch] text-balance font-display text-hero text-cream">
               {titolo}
             </p>
             <div data-discesa="coda" data-motion-guard="">
               <p className="measure mt-10 text-lead text-stone">{sottotesto}</p>
-              <p className="mt-10 font-mono text-mono uppercase text-brass">{dato}</p>
+              {dato ? (
+                <p className="mt-10 font-mono text-mono uppercase text-brass">{dato}</p>
+              ) : null}
               {azione ? <div className="mt-10">{azione}</div> : null}
             </div>
           </div>

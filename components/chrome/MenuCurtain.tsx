@@ -211,7 +211,10 @@ export function MenuCurtain({ voci, aperto, onCambio }: MenuCurtainProps) {
     >
       <div className="shell flex h-full flex-col justify-center py-24">
         <nav aria-label={t("menuLabel")}>
-          <ul className="space-y-2">
+          {/* Le voci sono più grandi e più distanziate di prima. Tolti i
+              numeri progressivi, il menu rischiava di sembrare spoglio: la
+              risposta è scala e respiro, non rimettere la decorazione. */}
+          <ul className="space-y-4 sm:space-y-6">
             {voci.map((voce, i) => (
               <motion.li
                 key={voce.href}
@@ -234,17 +237,24 @@ export function MenuCurtain({ voci, aperto, onCambio }: MenuCurtainProps) {
                   onMouseEnter={() => setInFocus(voce.href)}
                   onMouseLeave={() => setInFocus(null)}
                   className={cn(
-                    "flex items-baseline gap-6 py-2",
+                    // `block` e non `flex`: senza il numero davanti non c'è
+                    // più niente da allineare, e la voce parte dal bordo
+                    // della colonna come tutto il resto della pagina.
+                    "block py-1",
                     "transition-opacity duration-(--dur-micro) ease-(--ease-soft)",
                     puntatoreFine && inFocus && inFocus !== voce.href
                       ? "opacity-35"
                       : "opacity-100",
                   )}
                 >
-                  <span className="font-mono text-mono text-brass">
-                    {String(i + 1).padStart(2, "0")}
+                  {/* Più grande su schermo stretto, non più piccolo: la
+                      tenda occupa tutto lo schermo per sei voci, e a corpo
+                      h2 su 390px restava un elenco in mezzo al vuoto.
+                      Su desktop `text-hero` non entrerebbe: sei voci da
+                      128px sono più alte del viewport. */}
+                  <span className="font-display text-hero text-cream md:text-h2">
+                    {t(voce.chiave)}
                   </span>
-                  <span className="font-display text-h2 text-cream">{t(voce.chiave)}</span>
                 </Ancora>
               </motion.li>
             ))}

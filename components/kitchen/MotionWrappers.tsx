@@ -51,7 +51,7 @@ export function MotionWrappers() {
       <div className="border-t border-border pt-6">
         <p className="mb-4 font-mono text-mono text-brass">Magnetic</p>
         <Magnetic>
-          <Button variant="ghost" size="lg">{tc("scopri")}</Button>
+          <Button variant="ghost" size="lg">{tc("prenota")}</Button>
         </Magnetic>
       </div>
 

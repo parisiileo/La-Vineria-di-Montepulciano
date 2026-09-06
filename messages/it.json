@@ -30,7 +30,6 @@
     "telefono": "Telefono",
     "chiama": "Chiama",
     "prenota": "Prenota un tavolo",
-    "scopri": "Scendi nella cantina",
     "indirizzo": "Indirizzo",
     "civico": "Civico",
     "chiudi": "Chiudi",
@@ -181,7 +180,6 @@
       "titolo": "Sopra la tavola,<br></br>sotto la <em>storia</em>",
       "sommario": "A Montepulciano si mangia sopra la storia e si beve quello che nasce sotto i tuoi piedi.",
       "dato": "Via di Gracciano nel Corso · 101 · 72",
-      "occhiello": "Montepulciano · dal cuore del Corso",
       "titoloPiano": "Sopra la tavola, sotto la storia",
       "accento": "storia",
       "indicatore": "Scendi"
@@ -190,8 +188,6 @@
       "voci": "Il Brillo|Famiglia Ercolani|Via di Gracciano nel Corso|Montepulciano|Numero 101|Numero 72|Tunnel medievali"
     },
     "famiglia": {
-      "numero": "01",
-      "etichetta": "La famiglia",
       "titolo": "Cresciuti <em>insieme</em> tra queste colline",
       "p1": "Siamo un team di giovani amici, cresciuti insieme tra le colline toscane, e il nostro amore per questa terra è la nostra bussola.",
       "p2": "La Vineria è il nostro modo di condividere la bellezza e l'autenticità di questi luoghi. Niente fronzoli: un'accoglienza sincera e un'atmosfera familiare.",
@@ -202,23 +198,17 @@
       "testo": "Niente fronzoli,<br></br>solo <em>autenticità</em>."
     },
     "cantina": {
-      "numero": "02",
-      "etichetta": "La cantina",
       "titolo": "La cantina non si fotografa.<br></br><em>Si scende.</em>",
       "sottotesto": "Sotto la sala del 101 il tufo è fresco e poroso, e i tunnel medievali si visitano. È il posto dove il vino di famiglia riposa: la scala è stretta, il percorso è breve, e vale la discesa.",
       "dato": "Tunnel medievali · Visitabili · Ingresso dal 101"
     },
     "vino": {
-      "numero": "03",
-      "etichetta": "Il vino",
       "titolo": "L'etichetta di casa si chiama <em>Il Brillo</em>",
       "p1": "È il vino che la famiglia produce e che trovi aperto in tutte e due le sale.",
       "p2": "Il resto della carta viene dai piccoli produttori della zona: ti guidiamo nella scelta e nell'abbinamento, e ti raccontiamo la storia di ogni bottiglia.",
       "dato": "Il Brillo · Produzione propria"
     },
     "cucina": {
-      "numero": "04",
-      "etichetta": "La cucina",
       "titolo": "Materie prime scelte una per una",
       "testo": "Selezioniamo con cura le materie prime, privilegiando i piccoli produttori locali. I taglieri si compongono al bancone, davanti a te.",
       "d1": "Pecorino di Pienza e Val d'Orcia",
@@ -226,8 +216,6 @@
       "d3": "Al bancone"
     },
     "locali": {
-      "numero": "05",
-      "etichetta": "I locali",
       "titolo": "Due porte sulla stessa via",
       "sommario": "Due sale a pochi passi l'una dall'altra, su Via di Gracciano nel Corso."
     },
@@ -235,14 +223,12 @@
       "testo": "Si beve quello che nasce sotto i tuoi <em>piedi</em>."
     },
     "prenota": {
-      "etichetta": "Prenotazione",
       "titolo": "Chiamaci",
       "testo": "Per un tavolo in una delle due sale, o per concordare l'orario della visita in cantina."
     }
   },
   "home": {
     "hero": {
-      "occhiello": "Montepulciano · dal cuore del Corso",
       "titolo": "Sopra la tavola, sotto la storia",
       "accento": "storia",
       "sommario": "Due locali su Via di Gracciano nel Corso, una cantina scavata nel tufo e il vino che facciamo noi. La famiglia Ercolani vi aspetta a tavola.",
@@ -250,45 +236,33 @@
       "ctaPrimaria": "Prenota un tavolo",
       "ctaSecondaria": "Scendi in cantina",
       "valutazione": "4,5 su 5 — oltre 5.500 recensioni",
-      "indicatore": "Scendi",
-      "dato": "Via di Gracciano nel Corso · 101 · 72"
+      "indicatore": "Scendi"
     },
     "marquee": {
       "voci": "Il Brillo|Famiglia Ercolani|Via di Gracciano nel Corso|Montepulciano|Numero 101|Numero 72|Tunnel medievali"
     },
     "famiglia": {
-      "numero": "01",
-      "etichetta": "La famiglia",
       "titolo": "Cresciuti su <em>questo</em> corso",
       "p1": "Siamo cresciuti insieme tra queste colline, e facciamo i tre mestieri che servono: coltivare, vinificare, apparecchiare.",
       "p2": "Al 101 c'è la sala, e la scala che scende in cantina. Al 72, sotto il pavimento di vetro, si vede il pozzo medievale: c'era prima di noi e ci sarà dopo.",
       "p3": "Il resto è quello che portiamo in tavola ogni giorno.",
-      "dato": "Famiglia Ercolani · Montepulciano (SI)",
       "didascalia": "Archivio di famiglia"
     },
     "discesa": {
       "testo": "Sotto Montepulciano corre una città che <em>non si vede</em>"
     },
     "cantina": {
-      "numero": "02",
-      "etichetta": "La cantina",
       "titolo": "Sotto il corso",
-      "sottotesto": "Gallerie scavate nel tufo, fresche tutto l'anno, dove il vino riposa come si faceva prima che esistessero le cantine moderne. Le nostre sono visitabili: si scende, si cammina, si assaggia. Dura meno di quanto pensiate, ed è la cosa che i nostri ospiti si ricordano più a lungo.",
-      "dato": "Tunnel medievali · Visitabili · Ingresso dal 101",
+      "sottotesto": "Gallerie scavate nel tufo, fresche tutto l'anno, dove il vino riposa come si faceva prima che esistessero le cantine moderne. Le nostre sono visitabili: si scende, si cammina, si assaggia. L'ingresso è al 101.",
       "cta": "Prenota una degustazione"
     },
     "vino": {
-      "numero": "03",
-      "etichetta": "Il vino",
       "titolo": "Il vino è <em>nostro</em>",
       "p1": "Il Nobile di Montepulciano lo trovate ovunque, in paese. Da noi trovate anche quello che facciamo noi — compreso Il Brillo, l'etichetta che porta il nome giusto per come si beve.",
       "p2": "Ve lo raccontiamo al tavolo. È la parte del lavoro che ci piace di più.",
-      "etichettaCasa": "Etichetta di casa",
-      "dato": "Il Brillo · Produzione propria"
+      "etichettaCasa": "Etichetta di casa"
     },
     "cucina": {
-      "numero": "04",
-      "etichetta": "La cucina",
       "titolo": "Quello che si mangia qui",
       "testo": "Pici all'aglione tirati come si deve. Il tagliere, che è il modo migliore per cominciare. Il cinghiale in umido quando è stagione. E il Cantuccimisù, che ci siamo inventati noi e ormai ci chiedono prima ancora di sedersi.",
       "cta": "Guarda la carta",
@@ -297,16 +271,13 @@
       "d3": "Al bancone"
     },
     "locali": {
-      "numero": "05",
-      "etichetta": "I locali",
       "titolo": "Due porte sullo stesso corso",
-      "sommario": "Due sale a pochi passi l'una dall'altra, su Via di Gracciano nel Corso."
+      "sommario": "Meno di trenta numeri civici separano l'una dall'altra."
     },
     "risalita": {
-      "testo": "Un tavolo, un tagliere, un bicchiere. Il resto viene <em>da sé</em>."
+      "testo": "Si beve quello che riposa <em>sotto la sala</em>."
     },
     "prenota": {
-      "etichetta": "Prenotazione",
       "titolo": "Vi aspettiamo",
       "testo": "Per un tavolo in una delle due sale, o per concordare l'orario della visita in cantina. Al telefono rispondiamo noi.",
       "chiamaEtichetta": "Chiamaci",
@@ -363,7 +334,7 @@
   },
   "carta": {
     "titolo": "La carta",
-    "sottotitolo": "Una selezione. La carta completa cambia con la stagione e ve la portiamo al tavolo.",
+    "sottotitolo": "Otto piatti che trovate quasi sempre. Il resto cambia con la stagione e ve lo diciamo al tavolo.",
     "filtriEtichetta": "Filtra",
     "filtroTutti": "Tutto",
     "filtroVegetariano": "Vegetariano",

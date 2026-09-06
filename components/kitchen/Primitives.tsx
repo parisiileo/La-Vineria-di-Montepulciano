@@ -56,7 +56,7 @@ export function Primitives() {
 
         <Row label="lg">
           <Button size="lg">{tc("prenota")}</Button>
-          <Button variant="ghost" size="lg">{tc("scopri")}</Button>
+          <Button variant="ghost" size="lg">{tc("prenota")}</Button>
         </Row>
       </section>
 

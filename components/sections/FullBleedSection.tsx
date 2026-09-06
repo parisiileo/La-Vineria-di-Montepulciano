@@ -14,15 +14,10 @@ import { Parallax, ParallaxShift } from "@/components/motion/Parallax";
 import { Reveal } from "@/components/motion/Reveal";
 import { SplitText } from "@/components/motion/SplitText";
 import { ScrollIndicator } from "@/components/chrome/ScrollIndicator";
-import { SectionNumber } from "@/components/sections/SectionNumber";
 import { cn } from "@/lib/utils";
 
 export interface FullBleedSectionProps {
   id?: string;
-  /** Numerazione della partitura. Assente sull'hero: l'hero non è una voce. */
-  numero?: string;
-  /** Titoletto della numerazione, in mono. */
-  etichetta?: string;
   /** Il protagonista. Un solo elemento a --t-hero o --t-h2, mai due. */
   titolo?: React.ReactNode;
   /**
@@ -54,8 +49,6 @@ export interface FullBleedSectionProps {
 
 export function FullBleedSection({
   id,
-  numero,
-  etichetta,
   titolo,
   titoloTesto,
   accenti,
@@ -75,26 +68,37 @@ export function FullBleedSection({
   // solo sotto i 768px: su schermo stretto si scrolla veloce, e una sequenza
   // lunga un secondo arriverebbe a hero già passato.
   //
-  // I numeri non sono arrotondati a caso: l'occhiello
-  // entra per primo perché è piccolo e non ruba attenzione, il titolo dopo,
-  // e le due CTA per ultime perché una chiamata all'azione che appare prima
-  // di ciò che la motiva è rumore. Sotto la piega la cronologia non serve:
-  // la sezione entra già scorrendo, e uno scaglionamento lungo un secondo
-  // arriverebbe quando l'utente è passato oltre.
+  // Ricalibrata dopo la rimozione dell'occhiello. Prima la sequenza partiva
+  // da lui a 0.15 e il titolo entrava a 0.30; togliendo l'occhiello e
+  // lasciando gli altri numeri, il primo terzo di secondo sarebbe stato uno
+  // schermo fermo — un buco, non un'attesa. Il titolo prende il posto e
+  // l'orario di partenza dell'occhiello, e tutto il resto si stringe di
+  // conseguenza mantenendo gli intervalli relativi: 0.45 fra titolo e
+  // sommario, 0.20 fra sommario e azione.
+  //
+  // Le CTA restano per ultime: una chiamata all'azione che appare prima di
+  // ciò che la motiva è rumore.
   const hero = altezza === "piena";
   const t = {
-    occhiello: hero ? 0.15 : 0,
-    titolo: hero ? 0.3 : 0,
-    sommario: hero ? 0.75 : 0.08,
-    dato: hero ? 0.85 : 0.12,
-    azione: hero ? 0.95 : 0.16,
+    titolo: hero ? 0.15 : 0,
+    sommario: hero ? 0.6 : 0.08,
+    dato: hero ? 0.7 : 0.12,
+    azione: hero ? 0.8 : 0.16,
   };
   return (
     <section
       id={id}
       className={cn(
         "full-bleed relative isolate flex items-end overflow-hidden",
-        altezza === "piena" ? "min-h-[88svh]" : "min-h-[72svh]",
+        // `dvh` e non `vh`: su iOS Safari `100vh` ignora la barra
+        // dell'indirizzo e taglia il fondo della sezione, cioè proprio dove
+        // stanno le CTA, sul dispositivo da cui arriva la maggior parte del
+        // traffico. `dvh` dà l'altezza reale disponibile.
+        //
+        // In orizzontale su telefono l'altezza piena non è una scelta ma un
+        // problema: a 390px di altezza il titolo da solo occupa lo schermo.
+        // Sotto i 500px di viewport l'hero torna alto quanto il suo contenuto.
+        altezza === "piena" ? "hero-piena" : "min-h-[72svh]",
         className,
       )}
     >
@@ -123,19 +127,6 @@ export function FullBleedSection({
               respiro in più finisce sopra l'ultima riga del blocco di testo,
               e due elementi diversi si leggono come uno solo mal composto. */}
           <div className={cn("shell pt-40", indicatore ? "pb-32 sm:pb-40" : "pb-(--section-py)")}>
-            {/* L'hero non è una voce della partitura e quindi non ha un
-                numero, ma ha un occhiello: senza questo ramo l'etichetta
-                passata da sola non veniva disegnata affatto. */}
-            {etichetta ? (
-              <Reveal direction="up" delay={t.occhiello}>
-                {numero ? (
-                  <SectionNumber numero={numero} titolo={etichetta} suFoto className="mb-6" />
-                ) : (
-                  <p className="mb-6 w-fit font-mono text-mono uppercase text-brass">{etichetta}</p>
-                )}
-              </Reveal>
-            ) : null}
-
             {/* La misura sta sull'elemento che porta il corpo display: su un
                 contenitore, `ch` varrebbe il corpo del body. */}
             {titoloTesto ? (

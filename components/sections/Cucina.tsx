@@ -24,8 +24,6 @@ export function Cucina({ id = "cucina" }: { id?: string }) {
     <>
       <AsymmetricGrid
         id={id}
-        numero={t("numero")}
-        etichetta={t("etichetta")}
         titolo={t("titolo")}
         testo={t("testo")}
         azione={

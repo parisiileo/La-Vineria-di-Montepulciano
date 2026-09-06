@@ -20,7 +20,6 @@ import type { Foto } from "@/lib/data/foto";
 import { Figure, type Rapporto } from "@/components/media/Figure";
 import { RevealImage } from "@/components/media/RevealImage";
 import { Reveal } from "@/components/motion/Reveal";
-import { SectionNumber } from "@/components/sections/SectionNumber";
 import { SplitDigits } from "@/components/motion/SplitDigits";
 import { cn } from "@/lib/utils";
 
@@ -42,8 +41,6 @@ export interface AnteDittico {
 
 export interface DiptychSectionProps {
   id?: string;
-  numero: string;
-  etichetta: string;
   titolo: React.ReactNode;
   sommario?: React.ReactNode;
   /** L'anta grande: 7 colonne, il civico che sborda, il peso della sezione. */
@@ -57,8 +54,7 @@ function Tratti({ voci }: { voci: readonly string[] }) {
   return (
     <ul className="mt-6 space-y-2">
       {voci.map((voce) => (
-        <li key={voce} className="flex items-baseline gap-3 font-sans text-label uppercase text-stone-dim">
-          <span aria-hidden="true" className="h-px w-3 shrink-0 translate-y-[-0.3em] bg-brass-dim" />
+        <li key={voce} className="font-sans text-label uppercase text-stone-dim">
           {voce}
         </li>
       ))}
@@ -68,8 +64,6 @@ function Tratti({ voci }: { voci: readonly string[] }) {
 
 export function DiptychSection({
   id,
-  numero,
-  etichetta,
   titolo,
   sommario,
   primaria,
@@ -79,7 +73,6 @@ export function DiptychSection({
   return (
     <section id={id} className={cn("section-y", className)}>
       <Reveal direction="up">
-        <SectionNumber numero={numero} titolo={etichetta} className="mb-6" />
         <h2 className="max-w-[16ch] text-h2">{titolo}</h2>
         {sommario ? <p className="mt-6 max-w-[46ch] text-lead text-stone">{sommario}</p> : null}
       </Reveal>

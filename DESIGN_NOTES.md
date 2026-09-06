@@ -1330,3 +1330,186 @@ pena scriverlo: **una suite che non è mai in torto misura se stessa.**
   dello Step 05.
 * **La cantina resta tipografica** finché non arrivano le due fotografie
   critiche. Vedi `FOTOGRAFIE-DA-FARE.md`.
+
+---
+
+## 13. Sottrazione (Step 06)
+
+Questo step non ha aggiunto niente. Ha tolto i **tic**: elementi che sembrano
+intenzionali mentre li scrivi e sanno di template appena li vedi montati.
+
+Il criterio applicato: *se un elemento potrebbe stare identico su un sito
+completamente diverso senza che nessuno se ne accorga, va tolto.*
+
+### 13.1 La numerazione delle sezioni
+
+Via `01 — LA FAMIGLIA`, `02 — LA CANTINA`, fino a `06 — PRENOTAZIONE`.
+
+Non era una riga di CSS: `SectionNumber` era **cablato dentro sei archetipi**
+come prop obbligatoria, più un `numero="06"` scritto a mano nella
+prenotazione. Il file è stato eliminato, le prop `numero` ed `etichetta` sono
+sparite dalle firme di `FullBleedSection`, `EditorialSection`,
+`AsymmetricGrid`, `DiptychSection`, `TypeSection` e `Descent`, e con loro
+venti chiavi di messaggio in due lingue.
+
+Se ne è andato anche il **filetto d'ottone** che il componente portava con sé,
+e che era la fonte silenziosa di metà delle linee ornamentali della pagina.
+
+Restano gli unici numeri grandi del sito: i civici **101** e **72**. Sono dati
+veri dell'attività, e ora che non competono con una numerazione decorativa
+valgono di più.
+
+### 13.2 L'occhiello e la sua versione mascherata
+
+Via `MONTEPULCIANO · DAL CUORE DEL CORSO`. Era una didascalia del titolo: il
+titolo dice già tutto, e «Montepulciano» resta nel `<title>`, nella meta
+description, nel sottotitolo dell'hero, nel footer e negli indirizzi.
+
+Ma l'occhiello aveva **una seconda forma che il brief non nominava**: la riga
+`dato` in mono ottone *sotto* tre sezioni — `FAMIGLIA ERCOLANI ·
+MONTEPULCIANO (SI)`, `IL BRILLO · PRODUZIONE PROPRIA`, `TUNNEL MEDIEVALI ·
+VISITABILI · INGRESSO DAL 101`. Stessa funzione, stesso corpo, stesso colore,
+posizione opposta. Due su tre ripetevano il testo che stavano sotto.
+
+Tutte e tre rimosse. L'unico fatto che solo la terza portava — l'ingresso è al
+101 — è entrato nel corpo del testo, dove è una frase e non un'etichetta.
+
+### 13.3 I numeri nell'hamburger
+
+Via `01`–`06` dalle voci del menu. Le voci erano allineate rispetto al numero
+con un `flex gap-6`; ora sono `block` e partono dal bordo della colonna come
+tutto il resto della pagina.
+
+Il menu sembrava spoglio dopo il taglio, e la risposta è stata scala e
+respiro, non rimettere la decorazione: spaziatura da `space-y-2` a
+`space-y-4 sm:space-y-6`, e le voci a **`text-hero` sotto i 768px**,
+`text-h2` sopra. È l'unico posto del sito dove il corpo *cresce* su schermo
+stretto, e ha una ragione: la tenda occupa tutto lo schermo per sei voci, e a
+corpo h2 su 390px restava un elenco in mezzo al vuoto. Su desktop il contrario
+non è possibile — sei voci da 128px sono più alte del viewport.
+
+### 13.4 L'hero a piena altezza
+
+Era `min-h-[88svh]`, cioè né piena né dinamica. Ora è `100dvh` con `100vh`
+come ricaduta dichiarata *prima* per i browser che non conoscono `dvh`.
+
+La differenza non è estetica: `100vh` su iOS Safari ignora la barra
+dell'indirizzo e manda la CTA sotto la piega, sul dispositivo da cui arriva la
+maggior parte del traffico.
+
+**In orizzontale l'altezza piena è controproducente** e non basta liberarla:
+il blocco di testo porta `pt-40 pb-32`, cioè 288px di respiro pensati per uno
+schermo alto, che su un viewport da 390px valgono tre quarti dello schermo.
+Sotto i 500px di altezza l'hero torna alto quanto il contenuto **e** il
+respiro interno si accorcia. Da 780px a 436px.
+
+La verifica è ora nel codice, non nell'occhio: `scripts/pagina.mjs` misura
+l'hero a **390×745** — l'altezza utile reale di un iPhone con la barra
+aperta — e in orizzontale a 844×390.
+
+### 13.5 La cronologia dell'hero, ricalibrata
+
+La sequenza partiva dall'occhiello a 0.15 e il titolo entrava a 0.30.
+Togliendo l'occhiello e lasciando gli altri numeri, il primo terzo di secondo
+sarebbe stato uno schermo fermo — un buco, non un'attesa.
+
+Il titolo prende il posto e l'orario di partenza dell'occhiello, e tutto si
+stringe mantenendo gli intervalli relativi:
+
+| | prima | dopo |
+|---|---|---|
+| occhiello | 0.15 | — |
+| titolo | 0.30 | **0.15** |
+| sommario | 0.75 | 0.60 |
+| azione | 0.95 | 0.80 |
+
+### 13.6 Il puntino mediano
+
+Undici `·` nel copy visibile, contro un budget di due. Ora sono **zero**: le
+righe `dato` che ne contenevano sette non esistono più, l'indirizzo della
+prenotazione usa una virgola, e il badge di stato manda a capo invece di
+separare.
+
+**Eccezione dichiarata:** il marquee ne usa uno fra una voce e l'altra. È una
+banda decorativa `aria-hidden`, e senza separatore le parole si toccherebbero.
+Un separatore che separa davvero non è un tic.
+
+### 13.7 Frasi riscritte
+
+| prima | dopo | perché |
+|---|---|---|
+| «Una selezione. La carta completa cambia con la stagione e ve la portiamo al tavolo.» | «Otto piatti che trovate quasi sempre. Il resto cambia con la stagione e ve lo diciamo al tavolo.» | «una selezione» vale per qualunque carta; «otto» è un numero vero |
+| «…Dura meno di quanto pensiate, ed è la cosa che i nostri ospiti si ricordano più a lungo.» | «…si scende, si cammina, si assaggia. L'ingresso è al 101.» | la seconda metà era atmosfera; l'ingresso è un fatto utile |
+| «Due sale a pochi passi l'una dall'altra, su Via di Gracciano nel Corso.» | «Meno di trenta numeri civici separano l'una dall'altra.» | «a pochi passi» è di tutti; la distanza fra 101 e 72 è solo nostra |
+| «Un tavolo, un tagliere, un bicchiere. Il resto viene da sé.» | «Si beve quello che riposa *sotto la sala*.» | la prima funzionava per qualunque osteria; la seconda chiude l'arco verticale aperto dalla discesa |
+
+### 13.8 Altri tagli
+
+* **La stella** accanto alla valutazione: l'unica icona non funzionale del
+  sito, accanto a un dato già scritto in lettere.
+* **I trattini** davanti a ogni tratto del dittico: erano un punto elenco
+  travestito da filetto.
+* **Il filetto sopra i due respiri**, che se ne va con la numerazione.
+* `common.scopri` — stringa orfana mai usata in pagina.
+
+### 13.9 Quello che ho tenuto pur essendo nella lista
+
+Le eccezioni motivate sono legittime; quelle silenziose no.
+
+* **Il filetto del dittico** (`h-px flex-1`, DiptychSection). Sembra una linea
+  ornamentale ed è il contrario: **porta il nome della via**, parte dentro la
+  fotografia che ne nasconde l'inizio e riemerge sul tufo. È il livello 1
+  dell'occlusione a tre piani dell'archetipo C. Toglierlo smonta la tecnica di
+  profondità più forte del sito.
+* **L'indicatore di scroll** dell'hero. È l'unico orpello rimasto in quella
+  sezione e ha una ragione enunciabile in una frase: esiste per l'istante in
+  cui l'utente non si è ancora mosso, e sparisce al primo scroll.
+* **Il separatore del marquee**, per la ragione della §13.6.
+* **Il glow della risalita**. Uno solo in tutta la pagina, e la sezione è
+  tipografica pura: senza, quel blocco è testo su fondo piatto.
+
+### 13.10 Densità di orpelli
+
+Contati come orpello: occhiello, numerazione, icone decorative, badge,
+divisori, linee ornamentali, glow, sottotitoli esplicativi.
+
+| sezione | prima | dopo |
+|---|---|---|
+| hero | 3 | **1** — indicatore di scroll |
+| famiglia | 3 | **0** |
+| cantina | 4 | **0** |
+| vino | 3 | **0** |
+| cucina | 2 | **0** |
+| locali | 4 | **1** — il filetto che porta la via |
+| risalita | 2 | **1** — glow |
+| prenota | 2 | **0** |
+| footer | 0 | 0 |
+
+Sei sezioni erano sopra la soglia di due. Ora **nessuna**.
+
+### 13.11 Il test dello screenshot sostituito
+
+Sostituendo foto e nomi propri con quelli di un altro ristorante, quali
+sezioni continuerebbero a funzionare?
+
+| sezione | cosa la lega a La Vineria | tenuta |
+|---|---|---|
+| hero | il titolo È il concetto verticale del posto | copy, non struttura |
+| marquee | Il Brillo, Ercolani, 101, 72, i tunnel: solo nomi propri | forte |
+| famiglia | la scala che scende al 101, il pozzo sotto il vetro al 72 | forte |
+| **discesa** | **una sezione che si mangia da sola mentre la cantina sale: ha senso solo perché sotto questa sala c'è davvero una cantina** | **struttura** |
+| vino | Il Brillo, etichetta di proprietà | forte |
+| cucina | i piatti per nome, il Cantuccimisù inventato qui | copy, non struttura |
+| **locali** | **i civici sono la composizione: il 101 esce dalla fotografia e finisce sul tufo** | **struttura** |
+| risalita | riscritta in questo step; ora chiude l'arco verticale | copy |
+| prenota | due sale, due numeri di telefono diversi | dati |
+
+Due sezioni su nove reggono per **struttura** e non per contenuto: la discesa
+e il dittico dei civici. Sono le uniche che, con altre foto e altri nomi, non
+funzionerebbero affatto — ed è esattamente ciò che le rende il sito.
+
+Le due più deboli restano **cucina** (la griglia asimmetrica starebbe su
+qualunque ristorante) e **hero** (la fotografia piena è un archetipo comune).
+Non le ho forzate: cambiare la griglia della cucina per renderla «più nostra»
+significherebbe rompere la partitura di densità dello Step 02 per un problema
+che il copy già risolve.

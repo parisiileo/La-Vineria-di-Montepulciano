@@ -256,6 +256,32 @@
   max-width: none;
 }
 
+/* Hero a piena altezza.
+   `100vh` esiste solo come ricaduta per i browser che non conoscono `dvh`:
+   dove `dvh` è supportato vince la seconda dichiarazione. Su iOS Safari la
+   differenza non è estetica — `100vh` non tiene conto della barra
+   dell'indirizzo e manda la CTA sotto la piega. */
+.hero-piena {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* In orizzontale su telefono l'altezza piena è controproducente: a 390px di
+   altezza utile il titolo occupa lo schermo intero e il resto non entra in
+   nessun caso. Qui l'hero torna alto quanto il suo contenuto. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-piena {
+    min-height: 0;
+  }
+  /* Non basta liberare l'altezza: il blocco di testo dell'hero porta
+     `pt-40 pb-32`, cioè 288px di respiro pensati per uno schermo alto. In
+     orizzontale quel respiro da solo vale tre quarti del viewport. */
+  .hero-piena .shell {
+    padding-top: 5.5rem;
+    padding-bottom: 2rem;
+  }
+}
+
 /* Le ancore della navigazione si fermano sotto la barra fissa, non dietro.
    Vale anche senza JavaScript, dove il salto lo fa il browser e non Lenis. */
 main > section[id] {

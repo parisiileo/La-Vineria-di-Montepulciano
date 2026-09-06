@@ -9,12 +9,12 @@
 //
 //   hero          A  5   fotografia piena, densità massima
 //   marquee       —  2   frattura
-//   01 famiglia   B  3   editoriale + inserto d'archivio
+//   famiglia      B  3   editoriale + inserto d'archivio
 //   respiro       D  1   tipografica, registro respiro     ← la discesa
-//   02 cantina    D  5   tipografica, registro monumento   ← il punto profondo
-//   03 vino       B  3   editoriale, lato opposto
-//   04 cucina     E  4   griglia asimmetrica
-//   05 locali     C  3   dittico con occlusione a tre livelli
+//   cantina       D  5   tipografica, registro monumento   ← il punto profondo
+//   vino          B  3   editoriale, lato opposto
+//   cucina        E  4   griglia asimmetrica
+//   locali        C  3   dittico con occlusione a tre livelli
 //   risalita      D  1   tipografica, registro respiro     ← la risalita
 //   prenota       —  2   funzionale
 //   footer        —  1   tipografica
@@ -65,8 +65,6 @@ function Body() {
 
       {/* ---------------------------------------------------------- A · hero */}
       <FullBleedSection
-        numero=""
-        etichetta={t("hero.occhiello")}
         titoloTesto={t("hero.titoloPiano")}
         accenti={[t("hero.accento")]}
         sommario={t("hero.sommario")}
@@ -85,8 +83,6 @@ function Body() {
       {/* ------------------------------------------------------ B · famiglia */}
       <EditorialSection
         id="famiglia"
-        numero={t("famiglia.numero")}
-        etichetta={t("famiglia.etichetta")}
         titolo={t.rich("famiglia.titolo", em)}
         testo={
           <>
@@ -115,8 +111,6 @@ function Body() {
       <Descent
         id="cantina"
         respiro={t.rich("respiro.testo", { ...em, ...br })}
-        numero={t("cantina.numero")}
-        etichetta={t("cantina.etichetta")}
         titolo={t.rich("cantina.titolo", { ...em, ...br })}
         sottotesto={t("cantina.sottotesto")}
         dato={t("cantina.dato")}
@@ -125,8 +119,6 @@ function Body() {
       {/* ---------------------------------------------------------- B · vino */}
       <EditorialSection
         id="vino"
-        numero={t("vino.numero")}
-        etichetta={t("vino.etichetta")}
         titolo={t.rich("vino.titolo", em)}
         testo={
           <>
@@ -146,8 +138,6 @@ function Body() {
       {/* -------------------------------------------------------- E · cucina */}
       <AsymmetricGrid
         id="cucina"
-        numero={t("cucina.numero")}
-        etichetta={t("cucina.etichetta")}
         titolo={t("cucina.titolo")}
         testo={t("cucina.testo")}
         dominante={{
@@ -175,8 +165,6 @@ function Body() {
       {/* -------------------------------------------------------- C · locali */}
       <DiptychSection
         id="locali"
-        numero={t("locali.numero")}
-        etichetta={t("locali.etichetta")}
         titolo={t("locali.titolo")}
         sommario={t("locali.sommario")}
         primaria={{
@@ -213,8 +201,7 @@ function Body() {
       <section id="prenota" className="section-y border-t border-border">
         <div className="grid-editorial items-baseline">
           <div className="col-span-12 md:col-span-5">
-            <p className="font-mono text-mono uppercase text-brass">{t("prenota.etichetta")}</p>
-            <h2 className="mt-6 text-h3">{t("prenota.titolo")}</h2>
+            <h2 className="text-h3">{t("prenota.titolo")}</h2>
           </div>
           <div className="col-span-12 mt-8 md:col-span-6 md:col-start-7 md:mt-0">
             <p className="measure text-body text-stone">{t("prenota.testo")}</p>

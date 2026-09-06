@@ -12,13 +12,10 @@ import { Figure, type Rapporto } from "@/components/media/Figure";
 import { RevealImage } from "@/components/media/RevealImage";
 import { Reveal } from "@/components/motion/Reveal";
 import { ParallaxShift } from "@/components/motion/Parallax";
-import { SectionNumber } from "@/components/sections/SectionNumber";
 import { cn } from "@/lib/utils";
 
 export interface EditorialSectionProps {
   id?: string;
-  numero: string;
-  etichetta: string;
   titolo: React.ReactNode;
   /** La colonna di lettura. Mai oltre 60ch: è il vincolo, non lo stile. */
   testo: React.ReactNode;
@@ -47,8 +44,6 @@ export interface EditorialSectionProps {
 
 export function EditorialSection({
   id,
-  numero,
-  etichetta,
   titolo,
   testo,
   dato,
@@ -84,7 +79,6 @@ export function EditorialSection({
           )}
         >
           <Reveal direction="up">
-            <SectionNumber numero={numero} titolo={etichetta} className="mb-6" />
             <h2 className="text-h2">{titolo}</h2>
             <div className="measure mt-8 space-y-5 text-body text-stone">{testo}</div>
             {dato ? (

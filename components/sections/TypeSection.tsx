@@ -23,14 +23,11 @@
 
 import { Reveal } from "@/components/motion/Reveal";
 import { ParallaxShift } from "@/components/motion/Parallax";
-import { SectionNumber } from "@/components/sections/SectionNumber";
 import { cn } from "@/lib/utils";
 
 export interface TypeSectionProps {
   id?: string;
   registro: "respiro" | "monumento";
-  numero?: string;
-  etichetta?: string;
   /** Il protagonista assoluto: qui non c'è una fotografia a contenderglielo. */
   testo: React.ReactNode;
   /** Riga di appoggio. Sul registro respiro va usata con parsimonia. */
@@ -55,8 +52,6 @@ export interface TypeSectionProps {
 export function TypeSection({
   id,
   registro,
-  numero,
-  etichetta,
   testo,
   sottotesto,
   dato,
@@ -86,14 +81,6 @@ export function TypeSection({
       <div className={cn("relative", monumento && "shell")}>
         <ParallaxShift intensity={monumento ? 0.5 : 0.25}>
           <Reveal direction="up">
-            {numero && etichetta ? (
-              <SectionNumber numero={numero} titolo={etichetta} className="mb-10" />
-            ) : (
-              // Il dettaglio in ottone. Sul registro respiro è l'unico
-              // elemento non testuale della sezione, e basta.
-              <span aria-hidden="true" className="mb-10 block h-px w-16 bg-brass" />
-            )}
-
             {/* La misura sta qui e non sul contenitore: `ch` si calcola sul
                 corpo dell'elemento che lo porta, e sul contenitore varrebbe
                 il corpo del body — un ventesimo di quello del display. */}

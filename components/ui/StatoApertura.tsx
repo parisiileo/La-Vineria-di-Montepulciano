@@ -48,7 +48,7 @@ export function StatoAperturaBadge({
       // `polite` e non `assertive`: il passaggio da aperto a chiuso è
       // un'informazione, non un allarme.
       aria-live="polite"
-      className={cn("flex items-center gap-2 font-mono text-mono uppercase", className)}
+      className={cn("flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-mono uppercase", className)}
     >
       <span
         aria-hidden="true"
@@ -59,7 +59,7 @@ export function StatoAperturaBadge({
       />
       <span className={stato === "aperto" ? "text-brass" : "text-stone-dim"}>{etichetta}</span>
       {stato === "sconosciuto" ? (
-        <span className="text-stone-dim">· {t("chiamaPerConferma")}</span>
+        <span className="text-stone-dim">{t("chiamaPerConferma")}</span>
       ) : null}
     </p>
   );

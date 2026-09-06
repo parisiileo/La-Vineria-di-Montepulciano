@@ -15,7 +15,6 @@ import type { Foto } from "@/lib/data/foto";
 import { Figure, type Rapporto } from "@/components/media/Figure";
 import { RevealImage } from "@/components/media/RevealImage";
 import { Reveal } from "@/components/motion/Reveal";
-import { SectionNumber } from "@/components/sections/SectionNumber";
 import { cn } from "@/lib/utils";
 
 export interface CellaGriglia {
@@ -28,8 +27,6 @@ export interface CellaGriglia {
 
 export interface AsymmetricGridProps {
   id?: string;
-  numero: string;
-  etichetta: string;
   titolo: React.ReactNode;
   testo?: React.ReactNode;
   /** La cella che comanda: larga 8 colonne su 12, rapporto 3/2. */
@@ -58,8 +55,6 @@ function Cella({ cella, sizes, delay }: { cella: CellaGriglia; sizes: string; de
 
 export function AsymmetricGrid({
   id,
-  numero,
-  etichetta,
   titolo,
   testo,
   dominante,
@@ -73,7 +68,6 @@ export function AsymmetricGrid({
     <section id={id} className={cn("section-y", className)}>
       <div className="grid-editorial items-end">
         <Reveal direction="up" className="col-span-12 md:col-span-5">
-          <SectionNumber numero={numero} titolo={etichetta} className="mb-6" />
           <h2 className="text-h2">{titolo}</h2>
         </Reveal>
         {testo ? (
