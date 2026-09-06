@@ -182,7 +182,6 @@ function Body() {
       <DiptychSection
         id="locali"
         titolo={t("locali.titolo")}
-        sommario={t("locali.sommario")}
         primaria={{
           civico: centoUno.civico,
           via: centoUno.via,

@@ -1513,3 +1513,95 @@ qualunque ristorante) e **hero** (la fotografia piena è un archetipo comune).
 Non le ho forzate: cambiare la griglia della cucina per renderla «più nostra»
 significherebbe rompere la partitura di densità dello Step 02 per un problema
 che il copy già risolve.
+
+## 14. I controlli di modulo
+
+Il modulo di prenotazione era l'ultimo posto del sito in cui il design system
+finiva e cominciava il sistema operativo. Non per trascuratezza: `<input
+type="date">`, `<input type="time">` e `<input type="number">` **non sono
+vestibili**. Il loro pannello lo disegna il browser, fuori dal documento, e
+nessuna regola CSS lo raggiunge. Su un sito dove il nero delle fotografie è
+stato calibrato in CIELAB, un calendario azzurro di Chrome è una finestra su
+un'altra applicazione.
+
+C'era anche un problema di lingua, meno visibile e peggiore: il segnaposto di
+formato del campo data — `mm/dd/yyyy` — viene dalla lingua del **browser**,
+non da quella della pagina. Su un sito italiano aperto da un telefono
+configurato in inglese, la data si chiedeva in americano, con giorno e mese
+invertiti rispetto a come li scrive un italiano. Non è un dettaglio estetico:
+è il campo in cui l'ospite dice quando viene a cena.
+
+### 14.1 Che cosa è stato costruito
+
+| controllo | sostituisce | perché |
+|---|---|---|
+| `Calendario` | `type="date"` | pannello di sistema, segnaposto nella lingua sbagliata |
+| `Orario` | `type="time"` | pannello di sistema, e su alcune piattaforme il formato a 12 ore con AM/PM |
+| `Contatore` | `type="number"` | le frecce native sono alte otto pixel: non tappabili col pollice |
+
+Il **guscio** è condiviso — `components/ui/campo.ts` — e questo è il punto:
+bordo, fondo, stati e etichetta flottante vivono in un posto solo. Prima
+`Select` aveva l'etichetta **fuori** dal riquadro, in maiuscoletto, mentre
+tutti gli altri campi la portavano dentro: due trattamenti per la stessa cosa
+nello stesso modulo, che si notano subito anche senza saper dire cosa non
+torna. Ora `Input`, `Select`, `Calendario`, `Orario` e `Contatore` sono lo
+stesso campo con contenuti diversi.
+
+### 14.2 Le decisioni che non sono estetiche
+
+**Il valore non cambia formato.** Il calendario scrive `YYYY-MM-DD` e l'orario
+`HH:MM`, esattamente come i controlli nativi. Lo schema del server non è stato
+toccato di una riga, e un campo nascosto porta il valore ISO anche senza
+JavaScript.
+
+**Si può ancora scrivere.** Sotto ogni pannello c'è un campo di testo vero, non
+un bottone travestito. Chi ha la data in testa la digita; il pannello è un
+aiuto. La lettura di ciò che viene digitato usa l'ordine dei campi della
+lingua attiva, ricavato da `Intl.DateTimeFormat().formatToParts()` e non da una
+tabella scritta a mano: è la ragione per cui `03/04` non viene interpretato al
+contrario. Una data inesistente — il 31 febbraio — viene scartata da un giro
+completo di andata e ritorno, non da una tabella di giorni per mese.
+
+**Ore e minuti, non turni di servizio.** È una decisione di contenuto: gli
+orari di apertura non sono confermati dal cliente (DA-VERIFICARE.md §3), e
+offrire «19:30 / 20:00 / 21:30» significherebbe pubblicare orari inventati
+dentro un menu a tendina, dove sembrano ancora più veri.
+
+**I pannelli si ribaltano.** Aperti verso il basso quando c'è spazio, verso
+l'alto quando non ce n'è — e «non c'è spazio» include la **barra fissa
+mobile**, che non fa parte del viewport ma copre lo stesso l'ultimo pezzo. Un
+selettore d'orario la cui metà inferiore finisce dietro «CHIAMA» è un
+selettore che non si usa. La misura si fa all'apertura, non al montaggio:
+fra i due momenti la pagina è scorsa.
+
+**Nessun `outline: none`.** Il campo del contatore riempie il proprio riquadro
+e l'anello di focus è l'unica cosa che dice a chi naviga da tastiera dove si
+trova. `scripts/audit.mjs` lo verifica.
+
+**Il textarea cresce da solo.** La maniglia di ridimensionamento è un glifo
+del sistema operativo, diverso su ogni piattaforma e impossibile da vestire.
+È stata tolta e sostituita dalla funzione che la faceva desiderare.
+
+### 14.3 La rete di sicurezza
+
+`app/globals.css` disattiva comunque le frecce del numero e ricolora l'icona
+nativa di data e ora, per il caso in cui uno di quei tipi rientri per errore.
+`scripts/campi.mjs` lo verifica dall'esterno: nessun `type` con pannello di
+sistema dentro `#prenota`, nessuna maniglia di ridimensionamento, **nessun
+campo sotto i 16px** — sotto quella soglia iOS zooma al focus e manda in pezzi
+il layout — e il pannello dell'orario sopra la barra fissa. Dodici controlli,
+desktop e mobile.
+
+### 14.4 Un errore commesso qui
+
+Scurendo la mappa ho inserito un commento CSS **senza chiuderlo**, e il
+commento si è mangiato la regola `.mappa-scura` che veniva subito dopo. Nessun
+errore di build, nessun avviso: solo una mappa bianca al posto di una scura.
+L'ho vista perché la misura di luminanza è passata da 0.049 a 0.67 — cioè da
+«troppo chiara» a «bianca» — e un numero che peggiora di dodici volte dopo una
+correzione non è mai la correzione che funziona.
+
+La mappa era comunque troppo chiara davvero: luminanza mediana 0.049 contro
+0.013 del pannello che la contiene, quasi quattro volte. Con `brightness(0.72)`
+scende a 0.030 — ancora leggermente più chiara del fondo, che è giusto, perché
+una mappa che sparisce nella pagina non è più una mappa.

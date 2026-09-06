@@ -233,10 +233,23 @@
   /* Nessun elemento nativo sfugge: il reset è qui, lo stile completo sta
      nelle primitive di components/ui. */
   input, textarea, select, button { font: inherit; color: inherit; }
-  input[type="date"]::-webkit-calendar-picker-indicator {
+  /* Rete di sicurezza sui controlli nativi.
+     Data, orario e numero hanno componenti propri (Calendario, Orario,
+     Contatore) perché i loro pannelli li disegna il sistema operativo e non
+     sono vestibili in nessun modo. Queste righe coprono il caso in cui uno
+     di quei tipi rientri per errore: le frecce del numero sono alte otto
+     pixel e non tappabili, l'icona della data è azzurra. */
+  input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
     filter: invert(1) sepia(1) saturate(0.4) hue-rotate(5deg);
     cursor: pointer;
   }
+  /* La correzione automatica del browser sui campi in errore disegna una
+     sottolineatura rossa di sistema sopra il nostro bordo. */
+  input:invalid, textarea:invalid { box-shadow: none; }
 }
 
 /* ========================================================== UTILITIES === */
@@ -497,8 +510,13 @@ main > section[id] {
      punto di partenza, cosi il verde resta verde e non diventa magenta.
      La saturazione scende perche' i colori di OSM sono da atlante, non da
      questa palette, e lo strato in `color` li riporta verso il tufo. */
+  /* La luminanza mediana della mappa, misurata sul riquadro renderizzato,
+     era 0.049 contro 0.013 del pannello che la contiene: quasi quattro volte
+     piu chiara, cioe' una finestra accesa in una stanza buia. La luminosita'
+     scende finche' le due si assomigliano senza che i nomi delle vie
+     smettano di leggersi. Metodo in DESIGN_NOTES. */
   .mappa-scura {
-    filter: invert(0.92) hue-rotate(180deg) saturate(0.35) brightness(0.96) contrast(0.9);
+    filter: invert(0.92) hue-rotate(180deg) saturate(0.35) brightness(0.72) contrast(0.92);
   }
   .mappa-tinta {
     background-color: var(--color-tuff);

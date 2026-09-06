@@ -4,6 +4,7 @@
 // coerente su Windows e Android: qui il pannello è un elemento sollevato.
 
 import * as RadixSelect from "@radix-ui/react-select";
+import { ERRORE, etichettaCampo, guscioCampo } from "@/components/ui/campo";
 import { cn } from "@/lib/utils";
 
 export interface SelectOption {
@@ -45,8 +46,6 @@ export function Select({
 }: SelectProps) {
   return (
     <div className={cn("relative", error && "shake")}>
-      <span className="mb-2 block font-sans text-label uppercase text-stone-dim">{label}</span>
-
       <RadixSelect.Root
         value={value}
         defaultValue={defaultValue}
@@ -57,13 +56,15 @@ export function Select({
         <RadixSelect.Trigger
           aria-label={label}
           aria-invalid={error ? true : undefined}
+          // Stesso guscio degli altri campi, ed è il punto: prima l'etichetta
+          // di questo controllo stava FUORI dal riquadro, in maiuscoletto,
+          // mentre tutti gli altri campi la portano dentro. Due trattamenti
+          // per la stessa cosa nello stesso modulo si notano subito, anche
+          // senza saper dire cosa non torna.
           className={cn(
-            "flex min-h-(--tap-min) w-full items-center justify-between gap-3 rounded-sm border bg-tuff-light px-4 py-3 text-field text-cream",
-            "transition-[border-color,box-shadow] duration-(--dur-micro) ease-(--ease-soft)",
-            "data-[placeholder]:text-stone-dim disabled:cursor-not-allowed disabled:opacity-40",
-            error
-              ? "border-error shadow-(--glow-error)"
-              : "border-border-control hover:border-border-hover data-[state=open]:border-brass",
+            guscioCampo({ error }),
+            "flex min-h-(--tap-min) items-center justify-between gap-3 pb-2 pt-6 text-start",
+            "data-[placeholder]:text-stone-dim data-[state=open]:border-brass data-[state=open]:shadow-(--glow-focus)",
           )}
         >
           <RadixSelect.Value placeholder={placeholder} />
@@ -101,8 +102,16 @@ export function Select({
         </RadixSelect.Portal>
       </RadixSelect.Root>
 
+      {/* L'etichetta sta dentro il riquadro e sempre in alto, come nei campi
+          di testo: il grilletto mostra già un valore o un segnaposto, quindi
+          non esiste lo stato «campo vuoto» in cui l'etichetta starebbe al
+          centro. È `aria-hidden` perché il grilletto porta già `aria-label`. */}
+      <span aria-hidden="true" className={etichettaCampo({ alta: true, error })}>
+        {label}
+      </span>
+
       {error ? (
-        <p role="alert" className="mt-2 font-sans text-mono text-error">
+        <p role="alert" className={ERRORE}>
           {error}
         </p>
       ) : null}

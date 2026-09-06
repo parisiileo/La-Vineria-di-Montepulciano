@@ -28,8 +28,11 @@ import {
   type Prenotazione as Dati,
 } from "@/lib/data/prenotazione";
 import { Button } from "@/components/ui/Button";
+import { Calendario } from "@/components/ui/Calendario";
 import { Checkbox } from "@/components/ui/Checkbox";
+import { Contatore } from "@/components/ui/Contatore";
 import { Input } from "@/components/ui/Input";
+import { Orario } from "@/components/ui/Orario";
 import { Select } from "@/components/ui/Select";
 import { MappaLazy } from "@/components/chrome/MappaLazy";
 import { StatoAperturaBadge } from "@/components/ui/StatoApertura";
@@ -72,6 +75,11 @@ export function Prenotazione({ id = "prenota" }: { id?: string }) {
   // lascerebbe inviare senza consenso.
   register("sede", { required: true });
   register("privacy", { validate: (valore) => valore === true });
+  // Data, orario e ospiti hanno controlli propri e nessun `<input>` da
+  // agganciare: senza registrazione esplicita le loro regole non esistono.
+  register("data", { required: true });
+  register("orario", { required: true });
+  register("ospiti", { required: true, min: OSPITI_MIN, max: OSPITI_MAX });
 
   async function invia(dati: Dati) {
     setEsito("invio");
@@ -112,10 +120,45 @@ export function Prenotazione({ id = "prenota" }: { id?: string }) {
               <div className="sm:col-span-2">
                 <Input label={tf("nome")} autoComplete="name" error={errors.nome ? tf("erroreNome") : undefined} {...register("nome", { required: true, minLength: NOME_MIN })} />
               </div>
-              <Input label={tf("telefono")} type="tel" inputMode="tel" autoComplete="tel" error={errors.telefono ? tf("erroreTelefono") : undefined} {...register("telefono", { required: true, pattern: TELEFONO_RE })} />
-              <Input label={tf("ospiti")} type="number" inputMode="numeric" min={1} max={20} error={errors.ospiti ? tf("erroreOspiti") : undefined} {...register("ospiti", { required: true, valueAsNumber: true, min: OSPITI_MIN, max: OSPITI_MAX })} />
-              <Input label={tf("data")} type="date" error={errors.data ? tf("erroreData") : undefined} {...register("data", { required: true })} />
-              <Input label={tf("orario")} type="time" error={errors.orario ? tf("erroreOrario") : undefined} {...register("orario", { required: true })} />
+              <Input
+                label={tf("telefono")}
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                error={errors.telefono ? tf("erroreTelefono") : undefined}
+                {...register("telefono", { required: true, pattern: TELEFONO_RE })}
+              />
+
+              <Contatore
+                label={tf("ospiti")}
+                value={watch("ospiti")}
+                onChange={(n) => setValue("ospiti", n, { shouldValidate: true })}
+                min={OSPITI_MIN}
+                max={OSPITI_MAX}
+                error={errors.ospiti ? tf("erroreOspiti") : undefined}
+                etichettaMeno={tf("unOspiteInMeno")}
+                etichettaPiu={tf("unOspiteInPiu")}
+              />
+
+              <Calendario
+                label={tf("data")}
+                value={watch("data") ?? ""}
+                onChange={(v) => setValue("data", v, { shouldValidate: true })}
+                error={errors.data ? tf("erroreData") : undefined}
+                etichettaApri={tf("apriCalendario")}
+                etichettaMesePrecedente={tf("mesePrecedente")}
+                etichettaMeseSuccessivo={tf("meseSuccessivo")}
+              />
+
+              <Orario
+                label={tf("orario")}
+                value={watch("orario") ?? ""}
+                onChange={(v) => setValue("orario", v, { shouldValidate: true })}
+                error={errors.orario ? tf("erroreOrario") : undefined}
+                etichettaApri={tf("apriOrario")}
+                etichettaOre={tf("ore")}
+                etichettaMinuti={tf("minuti")}
+              />
 
               <div className="sm:col-span-2">
                 <Select

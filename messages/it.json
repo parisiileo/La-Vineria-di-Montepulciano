@@ -41,8 +41,6 @@
     "torna": "Torna su",
     "oraiNonDisponibili": "Orari in aggiornamento: chiamaci per conferma.",
     "guarda": "Guarda",
-    "guardaLaCarta": "Guarda la carta",
-    "vediSuMappa": "Apri nelle mappe",
     "nuovaScheda": "Si apre in una nuova scheda"
   },
   "locali": {
@@ -254,25 +252,23 @@
     "cantina": {
       "titolo": "Sotto il corso",
       "sottotesto": "Gallerie scavate nel tufo, fresche tutto l'anno, dove il vino riposa come si faceva prima che esistessero le cantine moderne. Le nostre sono visitabili: si scende, si cammina, si assaggia. L'ingresso è al 101.",
-      "cta": "Prenota una degustazione"
+      "cta": "Prenota una degustazione",
+      "dato": "Tunnel medievali visitabili, ingresso dal 101"
     },
     "vino": {
       "titolo": "Il vino è <em>nostro</em>",
       "p1": "Il Nobile di Montepulciano lo trovate ovunque, in paese. Da noi trovate anche quello che facciamo noi — compreso Il Brillo, l'etichetta che porta il nome giusto per come si beve.",
-      "p2": "Ve lo raccontiamo al tavolo. È la parte del lavoro che ci piace di più.",
-      "etichettaCasa": "Etichetta di casa"
+      "p2": "Ve lo raccontiamo al tavolo. È la parte del lavoro che ci piace di più."
     },
     "cucina": {
       "titolo": "Quello che si mangia qui",
       "testo": "Pici all'aglione tirati come si deve. Il tagliere, che è il modo migliore per cominciare. Il cinghiale in umido quando è stagione. E il Cantuccimisù, che ci siamo inventati noi e ormai ci chiedono prima ancora di sedersi.",
       "cta": "Guarda la carta",
       "d1": "Pecorino di Pienza e Val d'Orcia",
-      "d2": "Pasta fatta a mano",
       "d3": "Al bancone"
     },
     "locali": {
-      "titolo": "Due porte sullo stesso corso",
-      "sommario": "Meno di trenta numeri civici separano l'una dall'altra."
+      "titolo": "Due porte sullo stesso corso"
     },
     "risalita": {
       "testo": "Si beve quello che riposa <em>sotto la sala</em>."
@@ -280,8 +276,6 @@
     "prenota": {
       "titolo": "Vi aspettiamo",
       "testo": "Per un tavolo in una delle due sale, o per concordare l'orario della visita in cantina. Al telefono rispondiamo noi.",
-      "chiamaEtichetta": "Chiamaci",
-      "oppure": "Oppure",
       "theFork": "Prenota su TheFork",
       "formTitolo": "Scrivici i tuoi dati",
       "informazioniTitolo": "Dove siamo",
@@ -312,7 +306,15 @@
       "erroreOspiti": "Da 1 a 20 ospiti; per gruppi più grandi chiamateci",
       "erroreSede": "Scegli in quale sala",
       "errorePrivacy": "Serve il consenso per potervi ricontattare",
-      "nota": "La richiesta non è una prenotazione confermata: vi richiamiamo noi."
+      "nota": "La richiesta non è una prenotazione confermata: vi richiamiamo noi.",
+      "apriCalendario": "Apri il calendario",
+      "mesePrecedente": "Mese precedente",
+      "meseSuccessivo": "Mese successivo",
+      "apriOrario": "Scegli l'orario",
+      "ore": "Ore",
+      "minuti": "Minuti",
+      "unOspiteInMeno": "Un ospite in meno",
+      "unOspiteInPiu": "Un ospite in più"
     },
     "stato": {
       "apertoOra": "Aperto ora",
@@ -324,7 +326,6 @@
       "wordmark": "La Vineria",
       "seguici": "Seguici",
       "legale": "P.IVA",
-      "credits": "Via di Gracciano nel Corso, Montepulciano (SI)",
       "tornaSu": "Torna in cima"
     },
     "barra": {
@@ -338,7 +339,6 @@
     "filtriEtichetta": "Filtra",
     "filtroTutti": "Tutto",
     "filtroVegetariano": "Vegetariano",
-    "filtroSenzaCarne": "Senza carne",
     "abbinamento": "In abbinamento",
     "prezzoAssente": "Prezzo al tavolo",
     "signature": "Il nostro",

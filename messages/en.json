@@ -41,8 +41,6 @@
     "torna": "Back to top",
     "oraiNonDisponibili": "Opening hours are being updated — please call to confirm.",
     "guarda": "Look",
-    "guardaLaCarta": "See the menu",
-    "vediSuMappa": "Open in maps",
     "nuovaScheda": "Opens in a new tab"
   },
   "locali": {
@@ -254,25 +252,23 @@
     "cantina": {
       "titolo": "Under the corso",
       "sottotesto": "Tunnels dug into the tufa, cool all year round, where the wine rests the way it did before modern cellars existed. Ours can be visited: you go down, you walk, you taste. The entrance is at 101.",
-      "cta": "Book a tasting"
+      "cta": "Book a tasting",
+      "dato": "Medieval tunnels open to visits, entrance at 101"
     },
     "vino": {
       "titolo": "The wine is <em>ours</em>",
       "p1": "You will find Nobile di Montepulciano everywhere in town. Here you will also find what we make ourselves — Il Brillo among them, a label named for the way it is drunk.",
-      "p2": "We will tell you about it at your table. It is the part of the job we like best.",
-      "etichettaCasa": "House label"
+      "p2": "We will tell you about it at your table. It is the part of the job we like best."
     },
     "cucina": {
       "titolo": "What you eat here",
       "testo": "Pici with aglione, rolled properly. The board, which is the best way to begin. Wild boar stew when the season allows. And the Cantuccimisù, which we invented and which people now ask for before they sit down.",
       "cta": "See the menu",
       "d1": "Pecorino from Pienza and the Val d'Orcia",
-      "d2": "Hand-rolled pasta",
       "d3": "At the counter"
     },
     "locali": {
-      "titolo": "Two doors on the same corso",
-      "sommario": "Fewer than thirty street numbers apart."
+      "titolo": "Two doors on the same corso"
     },
     "risalita": {
       "testo": "You drink what rests <em>below the room</em>."
@@ -280,8 +276,6 @@
     "prenota": {
       "titolo": "We are keeping a table",
       "testo": "For a table in either room, or to arrange a time for the cellar visit. When you call, you get one of us.",
-      "chiamaEtichetta": "Call us",
-      "oppure": "Or",
       "theFork": "Book on TheFork",
       "formTitolo": "Leave us your details",
       "informazioniTitolo": "Where we are",
@@ -312,7 +306,15 @@
       "erroreOspiti": "From 1 to 20 guests; for larger parties, please call",
       "erroreSede": "Choose which room",
       "errorePrivacy": "We need your consent in order to reply",
-      "nota": "A request is not a confirmed booking: we will call you back."
+      "nota": "A request is not a confirmed booking: we will call you back.",
+      "apriCalendario": "Open the calendar",
+      "mesePrecedente": "Previous month",
+      "meseSuccessivo": "Next month",
+      "apriOrario": "Choose a time",
+      "ore": "Hours",
+      "minuti": "Minutes",
+      "unOspiteInMeno": "One guest fewer",
+      "unOspiteInPiu": "One guest more"
     },
     "stato": {
       "apertoOra": "Open now",
@@ -324,7 +326,6 @@
       "wordmark": "La Vineria",
       "seguici": "Follow us",
       "legale": "VAT no.",
-      "credits": "Via di Gracciano nel Corso, Montepulciano (SI)",
       "tornaSu": "Back to top"
     },
     "barra": {
@@ -338,7 +339,6 @@
     "filtriEtichetta": "Filter",
     "filtroTutti": "Everything",
     "filtroVegetariano": "Vegetarian",
-    "filtroSenzaCarne": "No meat",
     "abbinamento": "Paired with",
     "prezzoAssente": "Price at the table",
     "signature": "Ours",

@@ -29,6 +29,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const fieldId = id ?? autoId;
   const errorId = `${fieldId}-error`;
 
+  /** Altezza del textarea pari al suo contenuto. L'azzeramento prima della
+   *  lettura è necessario: senza, `scrollHeight` non scende mai. */
+  const cresci = (el: HTMLTextAreaElement) => {
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  };
+
   const [focused, setFocused] = useState(false);
   const [filled, setFilled] = useState<boolean>(
     String(value ?? defaultValue ?? "").length > 0,
@@ -43,7 +50,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     error
       ? "border-error shadow-(--glow-error)"
       : "border-border-control hover:border-border-hover focus-visible:border-brass focus-visible:shadow-(--glow-focus)",
-    multiline ? "min-h-32 resize-y" : "min-h-(--tap-min)",
+    // `resize-none` e altezza automatica: la maniglia di ridimensionamento è
+    // un glifo del sistema operativo, diverso su ogni piattaforma e
+    // impossibile da vestire. Il campo cresce da solo mentre si scrive, che
+    // è anche il motivo per cui la maniglia esisteva.
+    multiline ? "min-h-32 resize-none overflow-hidden" : "min-h-(--tap-min)",
     className,
   );
 
@@ -64,6 +75,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     },
     onChange: (e: React.ChangeEvent<HTMLInputElement & HTMLTextAreaElement>) => {
       setFilled(e.target.value.length > 0);
+      if (multiline) cresci(e.target);
       onChange?.(e as React.ChangeEvent<HTMLInputElement>);
     },
   };
