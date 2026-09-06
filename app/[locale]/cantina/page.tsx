@@ -22,9 +22,10 @@ import { LOCALI, SOTTOSUOLO, TELEFONO, TELEFONO_HREF } from "@/lib/data/locali";
 import { alternatesFor } from "@/lib/seo";
 import { Figure } from "@/components/media/Figure";
 import { RevealImage } from "@/components/media/RevealImage";
-import { Reveal } from "@/components/motion/Reveal";
+import { Reveal, RevealItem } from "@/components/motion/Reveal";
 import { SplitText } from "@/components/motion/SplitText";
 import { LinkAzione } from "@/components/ui/LinkAzione";
+import { BottoneCarta } from "@/components/sections/BottoneCarta";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -86,6 +87,36 @@ function Body() {
 
       <div className="grid-editorial section-y border-t border-border">
         <Reveal className="col-span-12 md:col-span-5">
+          <h2 className="text-h2">{t("perchéTitolo")}</h2>
+        </Reveal>
+        <Reveal className="col-span-12 space-y-6 md:col-span-6 md:col-start-7" delay={0.08}>
+          <p className="measure text-body text-stone">{t("perchéP1")}</p>
+          <p className="measure text-body text-stone">{t("perchéP2")}</p>
+        </Reveal>
+      </div>
+
+      {/* Spezza una pagina che senza sarebbe cinque blocchi di testo in
+          fila, e sta a metà, dove il lettore comincia a stancarsi.
+          NON è la parete di bottiglie, che pure sarebbe più vicina al
+          soggetto: in quello scatto c'è un cartello «FREE SHIPPING ON ALL
+          OUR PRODUCTS». Su una pagina che parla di gallerie medievali è
+          fuori tono, e soprattutto annuncia un servizio che non sappiamo se
+          esiste — una fotografia può fare una promessa quanto una frase.
+          16/9 perché è un ripiano lungo una parete: è il rapporto della
+          stanza, non del soggetto. */}
+      <div className="grid-editorial">
+        <RevealImage className="col-span-12 md:col-span-7 md:col-start-6">
+          <Figure
+            foto={FOTO.caliciSulRipiano}
+            alt={tf("caliciSulRipiano")}
+            rapporto="16/9"
+            sizes="(max-width: 768px) 100vw, 55vw"
+          />
+        </RevealImage>
+      </div>
+
+      <div className="grid-editorial section-y border-t border-border">
+        <Reveal className="col-span-12 md:col-span-5">
           <h2 className="text-h2">{t("visitaTitolo")}</h2>
         </Reveal>
         <Reveal className="col-span-12 md:col-span-6 md:col-start-7" delay={0.08}>
@@ -103,6 +134,48 @@ function Body() {
               </a>
             </p>
           </div>
+        </Reveal>
+      </div>
+
+      {/* Quattro righe pratiche, non un elenco di caratteristiche. Sono le
+          conseguenze dei fatti che conosciamo — una scala vera, il tufo che
+          resta fresco — e sono le sole risposte che possiamo dare senza
+          inventare durata, prezzo e accessibilità. */}
+      <section className="section-y border-t border-border">
+        <Reveal>
+          <h2 className="text-h2">{t("primaTitolo")}</h2>
+        </Reveal>
+        <Reveal className="mt-10" staggerChildren="tight">
+          <ul className="grid gap-x-(--grid-gap) gap-y-6 md:grid-cols-2">
+            {(["primaScala", "primaFresco", "primaScarpe", "primaOrario"] as const).map((k) => (
+              <RevealItem as="li" key={k} className="border-t border-border pt-4">
+                <p className="measure text-body text-stone">{t(k)}</p>
+              </RevealItem>
+            ))}
+          </ul>
+        </Reveal>
+      </section>
+
+      <div className="grid-editorial section-y border-t border-border">
+        <Reveal className="col-span-12 md:col-span-5">
+          <h2 className="text-h2">{t("vinoTitolo")}</h2>
+        </Reveal>
+        <Reveal className="col-span-12 md:col-span-6 md:col-start-7" delay={0.08}>
+          <p className="measure text-body text-stone">{t("vinoP1")}</p>
+          {/* La carta è un pannello: si apre, non si va. */}
+          <BottoneCarta etichetta={t("vinoCta")} className="mt-8" />
+        </Reveal>
+      </div>
+
+      <div className="grid-editorial section-y border-t border-border">
+        <Reveal className="col-span-12 md:col-span-5">
+          <h2 className="text-h2">{t("fineTitolo")}</h2>
+        </Reveal>
+        <Reveal className="col-span-12 md:col-span-6 md:col-start-7" delay={0.08}>
+          <p className="measure text-body text-stone">{t("fineP1")}</p>
+          <LinkAzione href="/locali" variant="ghost" size="lg" className="mt-8">
+            {t("fineCta")}
+          </LinkAzione>
         </Reveal>
       </div>
 

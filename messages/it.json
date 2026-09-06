@@ -401,7 +401,21 @@
       "visitaP2": "L'ingresso è dal 101. Chiamateci per concordare l'orario: non c'è un turno fisso, ci mettiamo d'accordo.",
       "dettaglio": "La fotografia qui sopra è la sala da cui si scende, non le gallerie: quelle non le abbiamo ancora fotografate come meritano.",
       "cta": "Prenota una degustazione",
-      "chiama": "Oppure chiamateci"
+      "chiama": "Oppure chiamateci",
+      "perchéTitolo": "Perché sotto",
+      "perchéP1": "Montepulciano sta su una lingua di tufo, e il tufo si scava con poco. Sotto le case del corso, da secoli, ci sono cantine: era il posto dove il vino stava senza che nessuno dovesse raffreddarlo.",
+      "perchéP2": "Non sono state costruite per essere visitate. È il motivo per cui non somigliano a niente di allestito: sono strette dove serviva passare e larghe dove serviva mettere le botti.",
+      "vinoTitolo": "Il vino che ci riposa",
+      "vinoP1": "Sotto c'è quello che facciamo noi, Il Brillo compreso. Il resto della carta viene dai piccoli produttori della zona, e ve lo raccontiamo al tavolo.",
+      "vinoCta": "Guarda la carta",
+      "primaTitolo": "Prima di scendere",
+      "primaScala": "La scala è stretta e i gradini sono pietra vera.",
+      "primaFresco": "Sotto è fresco tutto l'anno, agosto compreso: una maglia leggera non è una precauzione eccessiva.",
+      "primaScarpe": "Scarpe comode. Il pavimento non è a livello dappertutto.",
+      "primaOrario": "Non c'è un turno fisso. Si chiama, ci si mette d'accordo.",
+      "fineTitolo": "E poi si risale",
+      "fineP1": "Si torna in sala, ci si siede, e quello che avete assaggiato sotto ve lo portiamo sopra. Le sale sono due, a pochi passi l'una dall'altra.",
+      "fineCta": "Guarda le due sale"
     },
     "carta": {
       "titoloMeta": "La carta — La Vineria di Montepulciano",

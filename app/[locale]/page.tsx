@@ -29,6 +29,7 @@ import { useTranslations } from "next-intl";
 import { routing, type Locale } from "@/i18n/routing";
 import { FOTO } from "@/lib/data/foto";
 import { LOCALI, VALUTAZIONE_DA_VERIFICARE } from "@/lib/data/locali";
+import { CARTA, CATEGORIE } from "@/lib/data/menu";
 import { alternatesFor } from "@/lib/seo";
 import { DuotoneDefs } from "@/components/media/DuotoneDefs";
 import { AmbientGlow } from "@/components/sections/AmbientGlow";
@@ -62,6 +63,7 @@ function Body() {
   const tf = useTranslations("foto");
   const tc = useTranslations("common");
   const tl = useTranslations("locali");
+  const tCarta = useTranslations("carta");
   const em = { em: (chunks: React.ReactNode) => <em>{chunks}</em> };
 
   const [centoUno, settantaDue] = LOCALI;
@@ -214,6 +216,34 @@ function Body() {
 
       {/* ------------------------------------------------------ · funzionale */}
       <Prenotazione id="prenota" />
+
+      {/* La carta è un pannello e non ha un indirizzo proprio, ma i piatti
+          restano un dato che i motori sanno leggere: il nodo `Menu` vive
+          qui, sulla pagina che la carta la contiene davvero. I prezzi non
+          compaiono affatto — un `offers` a zero è peggio di nessun `offers`,
+          perché Google lo mostra. Vedi DA-VERIFICARE.md §4. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Menu",
+            name: tCarta("titolo"),
+            hasMenuSection: CATEGORIE.map((categoria) => ({
+              "@type": "MenuSection",
+              name: tCarta(`categorie.${categoria}`),
+              hasMenuItem: CARTA.filter((voce) => voce.categoria === categoria).map((voce) => ({
+                "@type": "MenuItem",
+                name: tCarta(`piatti.${voce.id}.nome`),
+                description: tCarta(`piatti.${voce.id}.descrizione`),
+                ...(voce.tag.includes("vegetariano")
+                  ? { suitableForDiet: "https://schema.org/VegetarianDiet" }
+                  : {}),
+              })),
+            })),
+          }),
+        }}
+      />
     </main>
 
     {/* Il footer sta FUORI da `main`: il contenuto principale del documento

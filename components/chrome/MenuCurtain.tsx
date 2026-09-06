@@ -40,11 +40,58 @@ import { Ancora } from "@/components/chrome/Ancora";
 import { duration, ease, stagger } from "@/lib/motion";
 import { bloccaScroll, sbloccaScroll } from "@/lib/scroll/lenis";
 import { segnalaOverlay } from "@/lib/ui/overlay";
+import { apriCarta } from "@/lib/ui/carta";
+import type { VoceNav } from "@/lib/data/navigazione";
 import { useReducedMotion } from "@/components/motion/useReducedMotion";
 import { cn } from "@/lib/utils";
 
+/**
+ * Una voce della tenda: link o bottone, a seconda che porti da qualche parte
+ * o apra un pannello. La trappola del focus di questa tenda cerca
+ * `a[href], button`, quindi entrambe le forme ci finiscono dentro senza
+ * bisogno di sapere quale sia.
+ */
+function VoceTenda({
+  voce,
+  onChiudi,
+  onEntra,
+  onEsce,
+  className,
+  children,
+}: {
+  voce: VoceNav;
+  onChiudi: () => void;
+  onEntra: () => void;
+  onEsce: () => void;
+  className: string;
+  children: React.ReactNode;
+}) {
+  const comune = { className, onMouseEnter: onEntra, onMouseLeave: onEsce };
+
+  if (voce.azione === "carta") {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          onChiudi();
+          apriCarta();
+        }}
+        {...comune}
+      >
+        {children}
+      </button>
+    );
+  }
+
+  return (
+    <Ancora href={voce.href!} onClick={onChiudi} {...comune}>
+      {children}
+    </Ancora>
+  );
+}
+
 interface MenuCurtainProps {
-  voci: readonly { href: string; chiave: string }[];
+  voci: readonly VoceNav[];
   aperto: boolean;
   onCambio: (aperto: boolean) => void;
 }
@@ -217,7 +264,7 @@ export function MenuCurtain({ voci, aperto, onCambio }: MenuCurtainProps) {
           <ul className="space-y-4 sm:space-y-6">
             {voci.map((voce, i) => (
               <motion.li
-                key={voce.href}
+                key={voce.chiave}
                 data-motion-guard=""
                 initial={false}
                 animate={
@@ -231,18 +278,18 @@ export function MenuCurtain({ voci, aperto, onCambio }: MenuCurtainProps) {
                   delay: aperto && !reduced ? 0.18 + i * stagger.base : 0,
                 }}
               >
-                <Ancora
-                  href={voce.href}
-                  onClick={chiudi}
-                  onMouseEnter={() => setInFocus(voce.href)}
-                  onMouseLeave={() => setInFocus(null)}
+                <VoceTenda
+                  voce={voce}
+                  onChiudi={chiudi}
+                  onEntra={() => setInFocus(voce.chiave)}
+                  onEsce={() => setInFocus(null)}
                   className={cn(
                     // `block` e non `flex`: senza il numero davanti non c'è
                     // più niente da allineare, e la voce parte dal bordo
                     // della colonna come tutto il resto della pagina.
                     "block py-1",
                     "transition-opacity duration-(--dur-micro) ease-(--ease-soft)",
-                    puntatoreFine && inFocus && inFocus !== voce.href
+                    puntatoreFine && inFocus && inFocus !== voce.chiave
                       ? "opacity-35"
                       : "opacity-100",
                   )}
@@ -255,7 +302,7 @@ export function MenuCurtain({ voci, aperto, onCambio }: MenuCurtainProps) {
                   <span className="font-display text-hero text-cream md:text-h2">
                     {t(voce.chiave)}
                   </span>
-                </Ancora>
+                </VoceTenda>
               </motion.li>
             ))}
           </ul>

@@ -27,6 +27,7 @@ import { Magnetic } from "@/components/motion/Magnetic";
 import { LinkAzione } from "@/components/ui/LinkAzione";
 import { TELEFONO, TELEFONO_HREF } from "@/lib/data/locali";
 import type { VoceNav } from "@/lib/data/navigazione";
+import { apriCarta } from "@/lib/ui/carta";
 import { cn } from "@/lib/utils";
 
 /** Oltre questa soglia la barra prende il fondo. Bassa di proposito: il
@@ -131,15 +132,24 @@ export function Navbar({
         </Ancora>
 
         <nav aria-label={t("menuLabel")} className="hidden items-center gap-8 lg:flex">
-          {barra.map((voce) => (
-            <Ancora
-              key={voce.href}
-              href={voce.href}
-              className="underline-grow relative font-sans text-label uppercase text-stone hover:text-cream"
-            >
-              {t(voce.chiave)}
-            </Ancora>
-          ))}
+          {barra.map((voce) => {
+            const classe =
+              "underline-grow relative font-sans text-label uppercase text-stone hover:text-cream";
+            // La carta apre un pannello: è un bottone. Un link che non porta
+            // da nessuna parte resta un link rotto anche quando funziona —
+            // niente apertura in una scheda nuova, niente indirizzo da
+            // copiare, e uno screen reader che annuncia un viaggio che non
+            // avviene.
+            return voce.azione === "carta" ? (
+              <button key={voce.chiave} type="button" onClick={apriCarta} className={classe}>
+                {t(voce.chiave)}
+              </button>
+            ) : (
+              <Ancora key={voce.chiave} href={voce.href!} className={classe}>
+                {t(voce.chiave)}
+              </Ancora>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-3 sm:gap-4">

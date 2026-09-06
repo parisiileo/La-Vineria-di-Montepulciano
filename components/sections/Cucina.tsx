@@ -1,35 +1,31 @@
 "use client";
 
-// 04 — La cucina. Griglia asimmetrica più la carta.
+// La cucina: griglia asimmetrica più il bottone che apre la carta.
 //
-// Esiste come componente a sé solo per una ragione: la carta è uno stato, e
-// uno stato costringe il ramo a essere client. Isolandolo qui, la pagina
-// resta un componente server e l'unico JavaScript in più è quello che serve
-// ad aprire un pannello.
+// Esiste come componente a sé perché il bottone ha un gestore, e un gestore
+// costringe il ramo a essere client. Isolandolo qui, la pagina resta un
+// componente server. Lo stato del pannello non è più suo: la carta la
+// aprono in tre da punti diversi del sito, e vive in `lib/ui/carta.ts`.
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { FOTO } from "@/lib/data/foto";
 import { AsymmetricGrid } from "@/components/sections/AsymmetricGrid";
-import { CartaDialog } from "@/components/sections/CartaDialog";
 import { Button } from "@/components/ui/Button";
+import { apriCarta } from "@/lib/ui/carta";
 
 export function Cucina({ id = "cucina" }: { id?: string }) {
   const t = useTranslations("home.cucina");
   const tf = useTranslations("foto");
-  const [carta, setCarta] = useState(false);
-
   return (
-    <>
-      <AsymmetricGrid
+    <AsymmetricGrid
         id={id}
         titolo={t("titolo")}
         testo={t("testo")}
         azione={
-          <Button variant="ghost" size="lg" onClick={() => setCarta(true)}>
-            {t("cta")}
-          </Button>
+        <Button variant="ghost" size="lg" onClick={apriCarta}>
+          {t("cta")}
+        </Button>
         }
         dominante={{
           foto: FOTO.taglieroAffettati,
@@ -51,9 +47,6 @@ export function Cucina({ id = "cucina" }: { id?: string }) {
             didascalia: t("d3"),
           },
         ]}
-      />
-
-      <CartaDialog open={carta} onOpenChange={setCarta} />
-    </>
+    />
   );
 }

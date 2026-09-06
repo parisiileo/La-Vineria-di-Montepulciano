@@ -13,6 +13,7 @@ import { SmoothScroll } from "@/components/chrome/SmoothScroll";
 import { Cursor } from "@/components/chrome/Cursor";
 import { PageTransition } from "@/components/chrome/PageTransition";
 import { Navbar } from "@/components/chrome/Navbar";
+import { CartaMontata } from "@/components/sections/CartaMontata";
 import { VOCI_BARRA, VOCI_NAV } from "@/lib/data/navigazione";
 import { MotionBootScript } from "@/components/MotionRuntime";
 import { MotionReady } from "@/components/MotionReady";
@@ -84,6 +85,9 @@ export default async function LocaleLayout(props: {
               silenzio il `backdrop-filter` del velo. */}
           <Navbar voci={VOCI_NAV} barra={VOCI_BARRA} />
           {props.children}
+          {/* La carta è montata una volta sola: la aprono la barra, la tenda
+              e la sezione della cucina, da tre rami diversi dell'albero. */}
+          <CartaMontata />
           <Cursor />
           <PageTransition />
         </NextIntlClientProvider>

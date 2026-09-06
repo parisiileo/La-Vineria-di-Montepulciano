@@ -12,10 +12,8 @@ mkdirSync(OUT, { recursive: true });
 const PAGINE = [
   ["it", "/it", "home"],
   ["it", "/it/cantina", "cantina"],
-  ["it", "/it/carta", "carta"],
   ["it", "/it/locali", "locali"],
   ["en", "/en/the-cellar", "cantina-en"],
-  ["en", "/en/menu", "carta-en"],
   ["en", "/en/the-rooms", "locali-en"],
 ];
 

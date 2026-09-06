@@ -12,14 +12,16 @@ import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale, type Percorso } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo";
 
-const PUBBLICHE: readonly Percorso[] = ["/", "/cantina", "/carta", "/locali"];
+// La carta non è qui perché non è una pagina: è un pannello, e un
+// pannello non ha un indirizzo da elencare. I suoi dati restano leggibili
+// dai motori grazie al JSON-LD `Menu` sulla home.
+const PUBBLICHE: readonly Percorso[] = ["/", "/cantina", "/locali"];
 
 /** Priorità relative. La home e la cantina sono le due porte d'ingresso. */
 const PRIORITA: Record<string, number> = {
   "/": 1,
   "/cantina": 0.9,
-  "/carta": 0.8,
-  "/locali": 0.7,
+  "/locali": 0.8,
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {

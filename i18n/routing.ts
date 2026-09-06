@@ -17,7 +17,6 @@ export const routing = defineRouting({
   pathnames: {
     "/": "/",
     "/cantina": { it: "/cantina", en: "/the-cellar" },
-    "/carta": { it: "/carta", en: "/menu" },
     "/locali": { it: "/locali", en: "/the-rooms" },
     "/composizione": "/composizione",
     "/kitchen-sink": "/kitchen-sink",

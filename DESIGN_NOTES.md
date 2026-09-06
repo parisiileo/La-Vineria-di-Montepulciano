@@ -1687,3 +1687,82 @@ che punta a un redirect è un hreflang che Google ignora.
   sbagliata a chi chiama dal risultato di ricerca.
 - **`sitemap.ts` e `robots.ts`**, con le pagine di lavoro escluse da entrambi:
   una sitemap che elenca pagine `noindex` è un segnale contrastante.
+
+## 16. La carta torna un pannello, e la cantina si allunga
+
+Tre correzioni allo Step 07, e la prima ne rovescia una decisione.
+
+### 16.1 `/carta` non esiste più
+
+La carta era diventata una pagina per una ragione buona — «menu» è la domanda
+numero uno di chi sceglie dal telefono, e un pannello non ha un indirizzo —
+ma il costo era una voce di navigazione che portava fuori dalla home proprio
+mentre l'utente stava leggendo della cucina. Ora è di nuovo un pannello, e la
+voce nella barra lo **apre** invece di navigare.
+
+Il dato non si perde: il nodo JSON-LD `Menu`, con le quattro sezioni e gli
+otto piatti, è stato spostato sulla home. I motori continuano a leggere la
+carta; quello che sparisce è l'URL, non il contenuto strutturato.
+
+`/it/carta` e `/en/menu` rispondono con un redirect permanente alla home.
+Sono esistiti fra due deploy, ed è abbastanza perché qualcuno li abbia
+salvati.
+
+**Tre punti aprono la carta** — la barra, la tenda del menu, la sezione della
+cucina — e stanno in tre rami diversi dell'albero. Lo stato vive in
+`lib/ui/carta.ts`, un booleano con dei sottoscrittori: un contesto React
+costringerebbe a rimontare tutto ciò che sta sotto, e passarsi lo stato da un
+antenato comune significherebbe farlo salire fino al layout e ridiscendere per
+tre strade.
+
+**Il pannello è montato una volta sola nel layout, ma caricato a tempo perso.**
+Vivendo nel layout sarebbe scaricato da ogni pagina anche da chi non lo apre
+mai: misurato, 18 kB su ciascuna. Con l'import dinamico e un
+`requestIdleCallback` il codice è già in memoria quando arriva il clic, e chi
+non clicca non lo ha mai atteso.
+
+**Una voce che apre un pannello è un `<button>`, non un link.** Un link che
+non porta da nessuna parte resta un link rotto anche quando funziona: niente
+apertura in una scheda nuova, niente indirizzo da copiare, e uno screen reader
+che annuncia un viaggio che non avviene. La trappola del focus della tenda
+cerca `a[href], button`, quindi entrambe le forme ci finiscono dentro senza
+sapere quale sia.
+
+### 16.2 Contatti nella barra
+
+```
+La Vineria    LA CANTINA  LA CARTA  CONTATTI    IT EN  [PRENOTA]  ☰
+```
+
+Tre voci, e nessuna fa la stessa cosa: una pagina, un pannello, un salto in
+fondo. «Contatti» punta a `/#prenota`, e serve a un caso concreto — la home è
+alta diecimila pixel, e chi vuole solo il numero non deve attraversarla.
+
+### 16.3 La pagina della cantina, il doppio
+
+Era la più corta delle tre: titolo, una fotografia, due blocchi. Ora ha sei
+sezioni, e **nessuna delle aggiunte inventa un fatto**:
+
+| blocco | da dove viene |
+|---|---|
+| «Perché sotto» | il tufo di Montepulciano e le cantine sotto il corso: conoscenza generale del luogo, verificabile, non un'affermazione sulla loro cantina |
+| «Prima di scendere» | conseguenze dei fatti confermati — scala stretta, fresco tutto l'anno — e un consiglio pratico dichiarato come tale |
+| «Il vino che ci riposa» | Il Brillo è confermato; il bottone apre la carta |
+| «E poi si risale» | rimanda alle due sale, che è dove il visitatore finisce davvero |
+
+Quello che **non** è stato aggiunto: durata della visita, prezzo,
+accessibilità, e una sezione di domande frequenti. Sono le domande che la
+gente fa davvero, e sono esattamente quelle a cui non possiamo rispondere
+(DA-VERIFICARE.md §11). Una FAQ in cui tre risposte su quattro dicono
+«chiamateci» è peggio di nessuna FAQ: promette informazioni e consegna un
+rinvio. Resta un debito, e il `FAQPage` JSON-LD con esso.
+
+### 16.4 Una fotografia scartata per il suo contenuto
+
+Il blocco centrale doveva ospitare la parete di bottiglie — lo scatto più
+vicino al soggetto che esista nel corpus. In quell'immagine c'è una cassa di
+legno con scritto **FREE SHIPPING ON ALL OUR PRODUCTS**. Su una pagina che
+parla di gallerie medievali è fuori tono, ma il problema vero è un altro:
+annuncia un servizio che non sappiamo se esiste. **Una fotografia può fare
+una promessa quanto una frase**, e questa la faceva a caratteri cubitali in
+mezzo alla pagina. Al suo posto ci sono i calici sul ripiano.

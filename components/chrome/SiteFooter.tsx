@@ -20,6 +20,7 @@ import { LOCALI, PARTITA_IVA, SOCIAL, TELEFONO, TELEFONO_HREF } from "@/lib/data
 import { spring } from "@/lib/motion";
 import { useReducedMotion } from "@/components/motion/useReducedMotion";
 import { getLenis } from "@/lib/scroll/lenis";
+import { apriCarta } from "@/lib/ui/carta";
 import type { VoceNav } from "@/lib/data/navigazione";
 
 /** Raggio dell'anello di progresso, in unità del viewBox. */
@@ -92,15 +93,21 @@ export function SiteFooter({ voci }: { voci: readonly VoceNav[] }) {
           </div>
 
           <nav aria-label={tn("menuLabel")} className="flex flex-wrap gap-x-8 gap-y-3">
-            {voci.map((voce) => (
-              <Ancora
-                key={voce.href}
-                href={voce.href}
-                className="underline-grow relative font-sans text-label uppercase text-stone hover:text-cream"
-              >
-                {tn(voce.chiave)}
-              </Ancora>
-            ))}
+            {voci.map((voce) => {
+              const classe =
+                "underline-grow relative font-sans text-label uppercase text-stone hover:text-cream";
+              // La carta apre un pannello anche da qui: stessa regola della
+              // barra, un bottone e non un link.
+              return voce.azione === "carta" ? (
+                <button key={voce.chiave} type="button" onClick={apriCarta} className={classe}>
+                  {tn(voce.chiave)}
+                </button>
+              ) : (
+                <Ancora key={voce.chiave} href={voce.href!} className={classe}>
+                  {tn(voce.chiave)}
+                </Ancora>
+              );
+            })}
           </nav>
 
           <TornaSu etichetta={t("tornaSu")} />
