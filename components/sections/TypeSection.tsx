@@ -9,9 +9,9 @@
 //
 // Due registri, e la distinzione non è decorativa ma di densità:
 //
-//   respiro    contenuto nello shell, molto bianco, densità minima. È la
-//              discesa e la risalita della partitura, il momento in cui il
-//              sito rallenta. Il rallentamento è ciò che rende memorabile
+//   respiro    testo contenuto nella colonna, molto bianco, densità minima.
+//              È la discesa e la risalita della partitura, il momento in cui
+//              il sito rallenta. Il rallentamento è ciò che rende memorabile
 //              quello che viene dopo.
 //
 //   monumento  full-bleed su tufo profondo, corpo hero, densità massima.
@@ -65,9 +65,20 @@ export function TypeSection({
     <section
       id={id}
       className={cn(
-        "relative isolate",
+        // `full-bleed` su ENTRAMBI i registri, e non solo sul monumento.
+        // Non è il fondo a chiederlo — il respiro non ne ha uno — ma la luce:
+        // il glow è posizionato `right-0` ed è largo 42vw, cioè è una lampada
+        // FUORI CAMPO. Dentro una colonna larga 90rem non era più fuori campo,
+        // era dentro un rettangolo: il contenitore la ritagliava sul bordo
+        // dello shell e il degradare del blur finiva contro uno spigolo netto,
+        // visibile su ogni schermo più largo di ~1630px. Una sorgente di luce
+        // con un bordo dritto ha smesso di essere una sorgente di luce.
+        //
+        // Il testo non si sposta di un pixel: la colonna la ristabilisce lo
+        // `shell` qui sotto, che ora vale per tutti e due i registri.
+        "full-bleed relative isolate",
         monumento
-          ? "full-bleed overflow-hidden bg-tuff-deep py-[max(var(--section-py),18vh)]"
+          ? "overflow-hidden bg-tuff-deep py-[max(var(--section-py),18vh)]"
           : "py-[max(var(--section-py),16vh)]",
         className,
       )}
@@ -78,7 +89,7 @@ export function TypeSection({
         </div>
       ) : null}
 
-      <div className={cn("relative", monumento && "shell")}>
+      <div className="relative shell">
         <ParallaxShift intensity={monumento ? 0.5 : 0.25}>
           <Reveal direction="up">
             {/* La misura sta qui e non sul contenitore: `ch` si calcola sul

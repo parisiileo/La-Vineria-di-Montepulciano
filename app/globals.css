@@ -180,6 +180,17 @@
     background-color: var(--color-tuff);
     color-scheme: dark;
     -webkit-text-size-adjust: 100%;
+    /* Le sezioni full-bleed sono larghe `100vw`, e `100vw` comprende la barra
+       di scorrimento dove la barra occupa spazio: senza questa riga la pagina
+       acquisterebbe sei pixel di scorrimento orizzontale.
+       `clip` e non `hidden`: `hidden` farebbe della radice un contenitore di
+       scorrimento, e ogni `position: sticky` del sito smetterebbe di aderire. */
+    overflow-x: clip;
+    /* Lo spazio della barra di scorrimento è riservato sempre. Quando si apre
+       un pannello la radice passa a `overflow: hidden` (vedi bloccaScroll), la
+       barra sparisce e senza questa riga tutta la pagina sotto il velo
+       scivolerebbe di sei pixel a ogni apertura e altrettanti alla chiusura. */
+    scrollbar-gutter: stable;
     scrollbar-color: rgba(176, 141, 87, 0.25) transparent;
     scrollbar-width: thin;
   }
@@ -262,11 +273,30 @@
   padding-inline: var(--gutter);
 }
 
-/* Annulla il gutter dello shell: marquee, caroselli, immagini di apertura. */
+/* Esce dallo shell: marquee, caroselli, immagini di apertura, fondi di sezione.
+
+   Prima annullava solo il GUTTER — `margin-inline: -gutter`, `width: 100% +
+   2*gutter` — e per questo funzionava solo fino a una certa larghezza. Lo
+   shell è largo al massimo 90rem: sotto i ~1630px il suo contenuto più i due
+   gutter coprono ancora tutta la finestra e l'illusione regge, sopra no. Su
+   uno schermo da 1920 una sezione «a tutta larghezza» era larga 1620 e si
+   fermava a 150px dai bordi — con il fondo che finiva a metà del nulla e uno
+   stacco verticale visibile su entrambi i lati.
+
+   Ora il calcolo non parte dal gutter ma dalla finestra: `50% - 50vw` è la
+   distanza fra il centro del contenitore e il bordo dello schermo, quale che
+   sia la larghezza del contenitore. Vale dentro lo shell, dentro una colonna
+   di griglia, dentro qualsiasi cosa.
+
+   `100vw` include la barra di scorrimento, dove la barra occupa spazio: sono
+   i sei pixel che diventerebbero uno scorrimento orizzontale di tutta la
+   pagina. Li assorbe `overflow-x: clip` sull'elemento radice — `clip` e non
+   `hidden`, perché `hidden` creerebbe un contenitore di scorrimento e
+   ammazzerebbe ogni `position: sticky` del sito, discesa e cantina comprese. */
 @utility full-bleed {
-  margin-inline: calc(var(--gutter) * -1);
-  width: calc(100% + var(--gutter) * 2);
-  max-width: none;
+  width: 100vw;
+  max-width: 100vw;
+  margin-inline: calc(50% - 50vw);
 }
 
 /* Hero a piena altezza.
@@ -484,6 +514,100 @@ main > section[id] {
      dello Step 01 vieta. */
   .discesa-palco { position: relative; }
 
+  /* ------------------------------------------------- SEQUENZA DELLA CANTINA
+     Il palco della sequenza a fotogrammi. Come per la discesa, il pin e la
+     sovrapposizione dei tre blocchi esistono SOLO con `data-motion="on"`:
+     senza movimento la sezione torna alta quanto il suo contenuto e i tre
+     testi si leggono uno sotto l'altro. Tre paragrafi sovrapposti sono
+     contenuto che dipende dal movimento, ed è ciò che il contratto vieta. */
+  .cantina-palco {
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+    /* Il fondo è dichiarato anche qui e non solo sul canvas: fra il primo
+       paint e l'arrivo del fotogramma 001 il palco non deve essere un buco. */
+    background-color: var(--color-tuff-deep);
+    /* Respiro dello stato impilato — reduced-motion, JS spento. Il di più in
+       cima non è simmetria: è l'altezza della barra fissa, che altrimenti si
+       appoggia sull'occhiello del primo blocco. Con il movimento acceso i tre
+       blocchi sono assoluti e centrati, e questo respiro sparisce. */
+    padding-block: calc(var(--section-py) + 3rem) var(--section-py);
+  }
+
+  /* Vignettatura + velo di leggibilità in un unico strato.
+     Il radiale non è decorazione: la sorgente luminosa della sequenza è in
+     fondo alla galleria, cioè al centro dell'inquadratura, e senza chiusura
+     ai bordi l'immagine si stacca dal fondo della pagina invece di finirci
+     dentro. Il gradiente orizzontale scurisce solo la metà in cui i tre
+     blocchi vivono davvero — stessa logica di `.foto-leggibilita`: alzare il
+     radiale fino a reggere il crema spegnerebbe anche il fondo galleria, che
+     è il soggetto. */
+  .cantina-velo {
+    background-image:
+      /* 1 — LA POZZA. Un'ellisse di buio ancorata alla colonna del testo, che
+         è l'unico punto dove il contrasto deve essere garantito. Esiste
+         perché lo scrim laterale da solo non bastava, e alzarlo fino a
+         bastare spegneva anche il fondo della galleria — che è il soggetto.
+         Misurato sul composito (fotografia + velo, non la sola fotografia):
+         il titolo stava a 1,85–2,35:1 e l'accento in ottone a 1,16:1 sopra le
+         volte illuminate, cioè sotto la soglia di 3:1 del testo grande. La
+         pozza porta il caso peggiore dentro la soglia lasciando intatti il
+         centro e la destra dell'inquadratura. */
+      radial-gradient(
+        56% 46% at 20% 50%,
+        color-mix(in oklab, var(--color-tuff-deep) 84%, transparent) 0%,
+        color-mix(in oklab, var(--color-tuff-deep) 72%, transparent) 44%,
+        color-mix(in oklab, var(--color-tuff-deep) 38%, transparent) 74%,
+        transparent 100%
+      ),
+      /* 2 — LO SCRIM. Tiene insieme la pozza e il bordo sinistro del quadro:
+         senza, l'ellisse si legge come un alone. */
+        linear-gradient(
+          to right,
+          color-mix(in oklab, var(--color-tuff-deep) 88%, transparent) 0%,
+          color-mix(in oklab, var(--color-tuff-deep) 66%, transparent) 32%,
+          color-mix(in oklab, var(--color-tuff-deep) 26%, transparent) 56%,
+          transparent 72%
+        ),
+      /* 3 — LA VIGNETTATURA. Chiude i bordi: senza, l'immagine si stacca dal
+         fondo della pagina invece di finirci dentro. */
+        radial-gradient(
+          124% 88% at 50% 46%,
+          transparent 34%,
+          color-mix(in oklab, var(--color-tuff-deep) 46%, transparent) 72%,
+          color-mix(in oklab, var(--color-tuff-deep) 88%, transparent) 100%
+        );
+  }
+
+  /* Su schermo stretto la pozza cambia forma, perché cambia forma il testo. In
+     orizzontale il titolo occupa un terzo dello schermo e il buio può stare
+     tutto a sinistra; a 390px occupa TUTTA la larghezza, e una pozza ancorata
+     al 20% lascia scoperte le ultime due parole di ogni riga. Misurato con la
+     stessa sonda: titolo a 1,5–2,3:1 e sottotitolo fino a 1,06:1, cioè testo
+     praticamente illeggibile sopra le volte chiare.
+     Qui la pozza diventa una fascia larga quanto lo schermo e alta quanto il
+     blocco di testo: scurisce la banda centrale e lascia intatti il cielo
+     della volta in alto e il pavimento in basso, che è quel che resta della
+     profondità su uno schermo stretto. */
+  @media (max-width: 1023px) {
+    .cantina-velo {
+      background-image:
+        radial-gradient(
+          124% 54% at 50% 50%,
+          color-mix(in oklab, var(--color-tuff-deep) 88%, transparent) 0%,
+          color-mix(in oklab, var(--color-tuff-deep) 78%, transparent) 48%,
+          color-mix(in oklab, var(--color-tuff-deep) 34%, transparent) 80%,
+          transparent 100%
+        ),
+        radial-gradient(
+          124% 88% at 50% 46%,
+          transparent 34%,
+          color-mix(in oklab, var(--color-tuff-deep) 46%, transparent) 72%,
+          color-mix(in oklab, var(--color-tuff-deep) 88%, transparent) 100%
+        );
+    }
+  }
+
   /* Wordmark in contorno del footer. Lo spessore non e' costante: a corpo
      enorme un tratto di 1px sparisce, a corpo piccolo un tratto di 2px
      chiude le contropunte del serif e la parola diventa una macchia. Due
@@ -558,10 +682,51 @@ main > section[id] {
     justify-content: center;
     margin-top: 0;
     padding-inline: var(--gutter);
+    /* Le stesse due righe dello shell, ripetute qui perché un elemento in
+       `position: absolute` non eredita la misura del contenitore che salta.
+       Prima non servivano: `full-bleed` si fermava a 90rem più due gutter, e
+       quel limite faceva da shell per caso. Da quando la fascia arriva
+       davvero ai bordi dello schermo, senza queste righe il monumento si
+       appoggia al bordo sinistro della finestra invece che alla colonna —
+       su 1920 partiva a 77px dal vetro, contro i 336 di ogni altro titolo
+       della pagina. `margin-inline: auto` centra anche in assoluto, quando
+       ci sono `left: 0`, `right: 0` e una larghezza massima. */
+    max-width: var(--shell-max);
+    margin-inline: auto;
   }
 }
 
-@layer components {
+/* --------------------------------------------- SEQUENZA: LAYOUT IN MOVIMENTO
+   La corsa è alta 300vh su telefono e 400vh da tablet in su. Non è una
+   proporzione: è il numero di pixel di scroll che servono perché 205
+   fotogrammi passino senza che due dita di gesto ne saltino venti. Su schermo
+   stretto la stessa corsa in vh vale molti meno pixel reali, ma il pollice
+   percorre anche molto meno spazio per volta — 300vh è il punto in cui la
+   sequenza resta continua senza che la sezione sembri bloccata.
+
+   `svh` e non `vh`: su iOS la barra dell'indirizzo si ritrae durante lo
+   scroll, e con `vh` la corsa cambierebbe lunghezza a metà della sequenza. */
+html[data-motion="on"] .cantina-corsa { height: 300svh; }
+html[data-motion="on"] .cantina-palco {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 0;
+  padding-block: 0;
+}
+
+/* I tre blocchi occupano lo stesso palco: è la sovrapposizione a farli leggere
+   come tre momenti di una discesa invece che come tre sezioni in fila. */
+html[data-motion="on"] .cantina-testo { position: absolute; inset: 0; }
+
+/* Lo stato iniziale delle righe è dichiarato in CSS e non da GSAP: fra il
+   primo paint e l'esecuzione dell'effetto passano dei frame, e in quei frame
+   i tre blocchi sarebbero visibili tutti insieme, sovrapposti. Senza
+   `data-motion` la regola non esiste e il testo è visibile da subito. */
+html[data-motion="on"] .cantina-testo [data-riga] { opacity: 0; }
+
+@media (min-width: 768px) {
+  html[data-motion="on"] .cantina-corsa { height: 400svh; }
 }
 
 @keyframes shake-x {

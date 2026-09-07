@@ -172,3 +172,86 @@ dei «due locali» diventa tre e la sezione va ripensata, non allargata.
 
 Vedi `FOTOGRAFIE-DA-FARE.md`: due soggetti critici non esistono nella libreria
 del cliente, ed è il motivo per cui la sezione della cantina è tipografica.
+
+## 14. I fotogrammi della sequenza in cantina
+
+La pagina `/cantina` si apre con 205 fotogrammi (`public/cellar/001–205.webp`,
+1920×1080) legati allo scroll. Due cose vanno confermate, una editoriale e una
+tecnica.
+
+**Editoriale.** Quelle volte in mattoni con le botti allineate non sono state
+girate nelle gallerie del 101: sono materiale generico. Il resto della pagina
+è scrupoloso su questo punto — la didascalia sotto la fotografia della sala
+dice, testualmente, che le gallerie «non le abbiamo ancora fotografate come
+meritano». Una sequenza a schermo intero di una cantina che non è la loro dice
+il contrario, e lo dice più forte di qualsiasi didascalia.
+
+**Da chiedere:** possiamo girare la discesa vera? Sono duecento fotogrammi,
+cioè sette secondi di ripresa: un telefono su uno stabilizzatore che scende la
+scala e percorre il tunnel una volta sola. Vedi `FOTOGRAFIE-DA-FARE.md`.
+
+**Tecnica.** 205 fotogrammi a 1920×1080 fanno 19 MB in rete e circa 1,7 GB di
+bitmap decodificate: nessuna cache del browser li tiene, quindi durante uno
+scorrimento veloce vengono ridecodificati in continuazione. Una traccia CDP
+attribuisce il costo a `Decode Image` (2,2 s su 6 s di scorrimento) più che al
+disegno, al pin o allo scrub — tutti e tre esclusi per misura, non per
+intuito.
+
+Misurato con `npm run fps` a CPU rallentata 4×, servendo in rete un fotogramma
+ogni N e lasciando che il componente si arrangi con quelli:
+
+| fotogrammi serviti | frame saltati |
+| --- | --- |
+| 205 (tutti) | 18–24% su quattro prove |
+| 103 | 15,7% |
+| 21 | 11,7% |
+| *home e locali, per confronto* | *1–4%* |
+
+La misura è rumorosa e va letta come banda. Il verso è netto: meno decodifiche,
+meno frame persi.
+
+**Il passaggio a 1920×1080 è costato.** Con i fotogrammi precedenti a 1600×900
+la stessa scala dava 15,6% con tutti e 4,3% con uno su dieci: +44% di pixel da
+decodificare ha spostato la banda da 12–16% a 18–24%.
+
+Il codice mitiga (`passoDiCampionamento` dimezza i fotogrammi sulle macchine
+che dichiarano poca memoria o pochi core), ma la correzione vera è negli asset:
+**gli stessi 205 fotogrammi riesportati a 1280×720** costano meno della metà
+dei pixel da decodificare di adesso. A schermo intero, dietro il velo e la
+vignettatura, la differenza di nitidezza non si vede — quella sui frame saltati
+sì.
+
+→ `components/sections/SequenzaCantina.tsx` `passoDiCampionamento` · `public/cellar/` 
+## 15. Le regole del React Compiler, dopo Next 16
+
+La migrazione a Next 16 ha acceso le regole di lint del React Compiler, che in
+Next 15 non esistevano. Segnalano cinque punti, tutti scritti prima della
+migrazione e nessuno dei quali produce un difetto visibile:
+
+| dove | cosa |
+| --- | --- |
+| `Cursor`, `MappaLazy`, `MenuCurtain` (×2) | `setState` dentro un effetto, dopo un `matchMedia` |
+| `PageTransition` | `setState` al cambio di rotta |
+| `Prenotazione` | `watch()` di react-hook-form non memoizzabile (avviso della libreria) |
+
+I primi quattro sono la stessa cosa: una domanda al browser — «il puntatore è
+fine?», «è tattile?» — che durante il render non si può fare, e la cui risposta
+finisce in uno stato. La correzione giusta non è una soppressione riga per
+riga: è **un `useMediaQuery` condiviso, costruito su `useSyncExternalStore`**,
+che è il modo che React raccomanda per leggere una sorgente esterna. Toglie il
+problema in tutti e tre i componenti in una volta.
+
+Non è stato fatto insieme alla migrazione per una ragione di rischio: cursore,
+mappa e tenda del menu sono tre componenti animati, e vanno riguardati a occhio
+uno per uno dopo la modifica. È mezz'ora di lavoro con una verifica visiva, non
+la coda di un aggiornamento di versione.
+
+`PageTransition` è un falso positivo — mostrare un velo quando cambia il
+percorso è precisamente il mestiere di quel componente — e quando gli altri
+saranno sistemati vorrà una soppressione motivata, non una riscrittura.
+
+**In linea oggi:** le due regole sono `warn` invece di `error` in
+`eslint.config.mjs`, con la motivazione scritta lì. `npm run check` passa e i
+sei avvisi restano visibili a ogni lint.
+
+→ `eslint.config.mjs` · `components/chrome/{Cursor,MappaLazy,MenuCurtain,PageTransition}.tsx`

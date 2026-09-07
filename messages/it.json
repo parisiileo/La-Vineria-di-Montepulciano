@@ -153,7 +153,9 @@
     "grana": "Trama decorativa",
     "esterno": "Si apre in una nuova scheda",
     "corrente": "Pagina corrente",
-    "chiudiDialogo": "Chiudi la finestra"
+    "chiudiDialogo": "Chiudi la finestra",
+    "listaCarta": "Elenco dei piatti",
+    "trascinaPerChiudere": "Trascina verso il basso per chiudere"
   },
   "foto": {
     "salaBancone": "Il bancone della Vineria, con i salumi appesi e le lampade accese sopra il ripiano di legno",
@@ -384,13 +386,14 @@
         "nome": "Panna cotta al Vin Santo",
         "descrizione": "Panna cotta con una riduzione di Vin Santo. Il modo più corto per finire in Toscana."
       }
-    }
+    },
+    "conteggio": "{n, plural, =0 {Nessun piatto} one {Un piatto} other {# piatti}}",
+    "scorriPerVedere": "Scorri per vedere tutta la carta"
   },
   "pagine": {
     "cantina": {
       "titoloMeta": "Visita in cantina a Montepulciano — tunnel medievali nel tufo",
       "descrizioneMeta": "Le gallerie sotto Via di Gracciano nel Corso si visitano: si scende dal 101, si cammina nel tufo, si assaggia. Chiamateci per concordare l'orario.",
-      "occhiello": "Ingresso dal 101",
       "titolo": "Sotto il corso si cammina",
       "sommario": "Le gallerie sotto la sala sono scavate nel tufo e sono medievali. Ci si scende, e la temperatura cambia prima ancora dell'ultimo gradino.",
       "cosaTitolo": "Che cos'è",
@@ -415,7 +418,16 @@
       "primaOrario": "Non c'è un turno fisso. Si chiama, ci si mette d'accordo.",
       "fineTitolo": "E poi si risale",
       "fineP1": "Si torna in sala, ci si siede, e quello che avete assaggiato sotto ve lo portiamo sopra. Le sale sono due, a pochi passi l'una dall'altra.",
-      "fineCta": "Guarda le due sale"
+      "fineCta": "Guarda le due sale",
+      "sequenzaDescrizione": "Sequenza fotografica della discesa in cantina: le volte di mattoni, le botti di rovere allineate lungo la galleria, il fondo illuminato del tunnel.",
+      "seqTitolo1": "La <em>Cantina</em>",
+      "seqTesto1": "Volte di mattoni sopra il tufo, e un silenzio che si sente prima di vederlo. Sopra la testa il corso continua: qui sotto smette di arrivare.",
+      "seqTitolo2": "Il <em>Tempo</em>",
+      "seqTesto2": "Il rovere non fa niente in fretta. Le botti stanno ferme per anni, al fresco che la pietra tiene da sola, e il vino cambia senza che nessuno lo tocchi.",
+      "seqTitolo3": "Il Vino <em>Nobile</em>",
+      "seqTesto3": "Quello che si assaggia in fondo alla galleria viene dalle colline che stanno sopra queste volte. Montepulciano è tutta qui: la collina, il tufo, la botte.",
+      "ogAlt": "La galleria della cantina, le botti di rovere lungo le volte di mattoni.",
+      "accento": "cammina"
     },
     "carta": {
       "titoloMeta": "La carta — La Vineria di Montepulciano",

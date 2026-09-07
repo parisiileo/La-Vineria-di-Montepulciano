@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="La Vineria di Montepulciano">
+  <!--
+    IL MARCHIO — la volta illuminata in fondo alla galleria.
+
+    È l'unico soggetto del sito che sopravvive a sedici pixel. Una «V» in
+    grazie sarebbe illeggibile a quella misura (le grazie spariscono, resta un
+    triangolo), un calice è il disegno che ha ogni enoteca del mondo, e il
+    wordmark per esteso a 16px è una macchia. L'arco no: è una silhouette
+    piena, simmetrica, con un solo contorno da riconoscere — ed è letteralmente
+    la fotografia con cui si apre /cantina.
+
+    Nessun testo, per due ragioni: a sedici pixel non si leggerebbe, e un file
+    senza testo non dipende da nessun font — lo stesso disegno serve al
+    favicon, all'icona di iOS e alle immagini social, che li genera satori e
+    satori i font li vuole in TTF, non nel woff2 che questo progetto usa.
+
+    I colori sono i token del sistema, scritti per esteso perché un SVG servito
+    come file non vede le variabili CSS del documento:
+      fondo  token tuff-deep  #14100D
+      arco   token brass      #B08D57
+
+    I nomi dei token sono citati SENZA le due lineette che li precedono in CSS:
+    dentro un commento XML la sequenza di due trattini è vietata, e rende il
+    file illegale. Un SVG illegale continua a disegnarsi se lo si incolla
+    dentro l'HTML — il parser dell'HTML perdona — ma smette di funzionare
+    esattamente dove serve: come favicon e dentro un tag img, dove il browser
+    lo legge come documento XML e lo rifiuta senza dire niente.
+  -->
+  <rect width="32" height="32" rx="6" fill="#14100D" />
+
+  <!--
+    L'arco: due montanti dritti e una volta a tutto sesto, in un solo tracciato
+    pieno. Parte dal piede sinistro, sale, gira, ridiscende e rientra a
+    scavare l'apertura. Raggio esterno 8 e interno 4, entrambi centrati a
+    (16,16): due semicerchi esatti, che è come sono scavate le cantine.
+
+    I piedi arrivano alla base del riquadro e non si fermano a mezz'aria: un
+    arco che galleggia si legge come un ferro di cavallo — o, peggio a sedici
+    pixel, come una «n». Poggiato a terra è una porta.
+
+    L'apertura è larga quanto i due montanti messi insieme (8 contro 4+4): più
+    stretta e a sedici pixel si chiude e diventa una macchia piena.
+  -->
+  <path
+    d="M8 27V16a8 8 0 0 1 16 0v11h-4V16a4 4 0 0 0-8 0v11Z"
+    fill="#B08D57"
+  />
+</svg>

@@ -38,6 +38,7 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const { locale } = await props.params;
   const t = await getTranslations({ locale, namespace: "metadata" });
+  const tf = await getTranslations({ locale, namespace: "foto" });
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -50,7 +51,29 @@ export async function generateMetadata(props: {
       title: t("title"),
       description: t("description"),
       locale: HREFLANG[locale as keyof typeof HREFLANG],
+      // Le lingue alternative servono a Facebook per capire che le due
+      // versioni sono la stessa pagina e non due contenuti scollegati.
+      alternateLocale: routing.locales
+        .filter((l) => l !== locale)
+        .map((l) => HREFLANG[l]),
+      // La cartolina la genera `npm run cartoline` e vive in `public/og`.
+      // L'URL è relativo perché `metadataBase` lo rende assoluto: gli scraper
+      // non risolvono i percorsi relativi, e un `og:image` relativo è un
+      // `og:image` che non si vede.
+      images: [
+        {
+          url: "/og/home.jpg",
+          width: 1200,
+          height: 630,
+          alt: tf("salaBancone"),
+        },
+      ],
     },
+    // Senza questa riga X mostra il quadratino piccolo accanto al testo invece
+    // della fotografia larga. Titolo e descrizione li eredita dall'`openGraph`.
+    twitter: { card: "summary_large_image" },
+    // Il nome che iOS propone quando si aggiunge il sito alla schermata home.
+    appleWebApp: { title: "La Vineria", capable: false },
   };
 }
 

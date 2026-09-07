@@ -7,7 +7,7 @@
 // cerca e condivide. Sono due lavori diversi, ma è la stessa carta: tenerla
 // in due file significa che un giorno un prezzo cambierà in uno solo.
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { CARTA, CATEGORIE, TAG_CONFERMATI, formatPrezzo, type Categoria } from "@/lib/data/menu";
@@ -19,6 +19,9 @@ export function ListaCarta({
   classeFiltri,
   classeVoci,
   classeGruppi,
+  onRisultati,
+  riferimentoVoci,
+  onScrollVoci,
 }: {
   className?: string;
   /** Il pannello e la pagina impaginano i filtri in modo diverso. */
@@ -31,8 +34,19 @@ export function ListaCarta({
    * assomiglia più a una carta.
    */
   classeGruppi?: string;
+  /**
+   * Quante voci restano dopo i filtri. Serve a chi ci sta intorno, non a
+   * questo componente: il pannello ne fa un conteggio dichiarato a voce e lo
+   * usa per rimandare in cima la lista quando i filtri cambiano — restare a
+   * metà di un elenco che non è più lo stesso disorienta.
+   */
+  onRisultati?: (voci: number) => void;
+  /** Il nodo che scorre. Lo vuole chi ci sta intorno per misurarne i bordi. */
+  riferimentoVoci?: React.Ref<HTMLDivElement>;
+  onScrollVoci?: React.UIEventHandler<HTMLDivElement>;
 }) {
   const t = useTranslations("carta");
+  const ta = useTranslations("a11y");
   const locale = useLocale();
   const [categoria, setCategoria] = useState<Categoria | "tutte">("tutte");
   const [soloVegetariano, setSoloVegetariano] = useState(false);
@@ -51,6 +65,13 @@ export function ListaCarta({
     categoria: c,
     voci: voci.filter((v) => v.categoria === c),
   })).filter((gruppo) => gruppo.voci.length > 0);
+
+  // Si annuncia il RISULTATO, non il gesto: chi ascolta con uno screen reader
+  // preme «Primi» e non ha modo di sapere che cosa è cambiato sotto, e chi
+  // guarda vede solo il pezzo di lista che gli sta davanti.
+  useEffect(() => {
+    onRisultati?.(voci.length);
+  }, [voci.length, onRisultati]);
 
   return (
     <div className={className}>
@@ -91,9 +112,39 @@ export function ListaCarta({
             onCheckedChange={setSoloVegetariano}
           />
         </div>
+
+        {/* Il conteggio sta accanto ai filtri, che è ciò che lo cambia.
+            `aria-live`: chi preme «Primi» senza vedere la lista sotto non ha
+            nessun altro modo di sapere che cosa è successo. `ms-auto` lo
+            spinge a fine riga dove c'è spazio, e su schermo stretto resta in
+            coda alla riga che scorre. */}
+        <p
+          aria-live="polite"
+          className="shrink-0 font-mono text-mono text-stone-dim md:ms-auto"
+        >
+          {t("conteggio", { n: voci.length })}
+        </p>
       </div>
 
-      <div className={classeVoci}>
+      {/* Che questo elenco scorra dipende da `allowNestedScroll` di Lenis,
+          acceso in lib/scroll/lenis.ts — senza, Lenis si prendeva la rotella
+          e la lista restava ferma. La ragione per cui NON basta un
+          `data-lenis-prevent` qui sopra è spiegata lì, con i numeri.
+
+          `data-lista-carta` è solo un'etichetta per le prove automatiche.
+
+          `tabindex=0` con un nome: un contenitore che scorre e non riceve il
+          fuoco è irraggiungibile da tastiera. Con questi due attributi si
+          arriva dai filtri con Tab e si scorre con le frecce. */}
+      <div
+        ref={riferimentoVoci}
+        onScroll={onScrollVoci}
+        data-lista-carta=""
+        tabIndex={classeVoci ? 0 : undefined}
+        role={classeVoci ? "region" : undefined}
+        aria-label={classeVoci ? ta("listaCarta") : undefined}
+        className={classeVoci}
+      >
         {perCategoria.length === 0 ? (
           <p className="text-body text-stone-dim">{t("vuoto")}</p>
         ) : null}
